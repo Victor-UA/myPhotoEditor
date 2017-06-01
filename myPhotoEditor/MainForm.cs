@@ -79,6 +79,12 @@ namespace myPhotoEditor
             tSSL_SelectionHeight.Text = size.Height.ToString();
         }
 
+        private void Original_BackGround_ReDraw()
+        {
+            Bitmap bitmap = new Bitmap(pb_Original.Width, pb_Original.Height, PixelFormat.Format32bppArgb);
+            Selection.Draw(bitmap);
+            pb_Original.BackgroundImage = bitmap;
+        }
         private void pb_Original_MouseMove(object sender, MouseEventArgs e)
         {
             tSSL_X.Text = e.X.ToString();
@@ -87,9 +93,10 @@ namespace myPhotoEditor
             if (Selection.isEditable)
             {
                 Selection.Size = new Size(
-                    Selection.Position.X - e.X,
-                    Selection.Position.Y - e.Y
+                    e.X - Selection.Position.X,
+                    e.Y - Selection.Position.Y
                 );
+                Original_BackGround_ReDraw();    
             }
         }
 

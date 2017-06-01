@@ -11,8 +11,11 @@ namespace myPhotoEditor.Base
     {
         Point Position { get; set; }
         Size Size { get; set; }
+        
         bool isEditable { get; set; }
 
         event EventHandler<EventArgs> Changed;
+
+        void Draw(Image image);
     }
 }

@@ -74,8 +74,8 @@
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.pb_Crop);
             this.splitContainer1.Panel2MinSize = 200;
-            this.splitContainer1.Size = new System.Drawing.Size(434, 362);
-            this.splitContainer1.SplitterDistance = 230;
+            this.splitContainer1.Size = new System.Drawing.Size(485, 357);
+            this.splitContainer1.SplitterDistance = 257;
             this.splitContainer1.TabIndex = 0;
             // 
             // pb_Original
@@ -84,7 +84,7 @@
             this.pb_Original.ImageLocation = "";
             this.pb_Original.Location = new System.Drawing.Point(0, 0);
             this.pb_Original.Name = "pb_Original";
-            this.pb_Original.Size = new System.Drawing.Size(228, 360);
+            this.pb_Original.Size = new System.Drawing.Size(255, 355);
             this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
@@ -98,7 +98,7 @@
             this.pb_Crop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Crop.Location = new System.Drawing.Point(0, 0);
             this.pb_Crop.Name = "pb_Crop";
-            this.pb_Crop.Size = new System.Drawing.Size(198, 360);
+            this.pb_Crop.Size = new System.Drawing.Size(222, 355);
             this.pb_Crop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pb_Crop.TabIndex = 0;
             this.pb_Crop.TabStop = false;
@@ -109,7 +109,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(434, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(485, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -160,9 +160,9 @@
             this.tSSL_SelectionWidth,
             this.toolStripStatusLabel4,
             this.tSSL_SelectionHeight});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 364);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 359);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(434, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(485, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -238,7 +238,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(434, 386);
+            this.ClientSize = new System.Drawing.Size(485, 381);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
