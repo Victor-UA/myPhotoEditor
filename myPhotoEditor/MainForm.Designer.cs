@@ -81,12 +81,16 @@
             // pb_Original
             // 
             this.pb_Original.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pb_Original.ImageLocation = "";
             this.pb_Original.Location = new System.Drawing.Point(0, 0);
             this.pb_Original.Name = "pb_Original";
             this.pb_Original.Size = new System.Drawing.Size(228, 360);
             this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
+            this.pb_Original.Click += new System.EventHandler(this.pb_Original_Click);
+            this.pb_Original.MouseEnter += new System.EventHandler(this.pb_Original_MouseEnter);
+            this.pb_Original.MouseLeave += new System.EventHandler(this.pb_Original_MouseLeave);
             this.pb_Original.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Original_MouseMove);
             // 
             // pb_Crop
