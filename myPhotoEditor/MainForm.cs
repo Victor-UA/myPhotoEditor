@@ -22,11 +22,19 @@ namespace myPhotoEditor
         private Selection Selection;
 
         private Point Original_MousePosition { get; set; }
-        private bool Original_MouseInside { get; set; }
+        private bool MouseInside { get; set; }
 
         public MainForm()
         {
             InitializeComponent();
+
+            pb_Original.Controls.Add(pb_Selection);
+            pb_Selection.Size = pb_Original.Size;
+            pb_Selection.Location = new Point(0, 0);
+            pb_Selection.BackColor = Color.Transparent;
+            pb_Selection.BorderStyle = BorderStyle.None;
+            pb_Selection.BringToFront();
+
             OriginalImageFile = "";
             ImageLoaded = false;
             Selection = new Selection(new Point(0, 0))
@@ -35,7 +43,7 @@ namespace myPhotoEditor
             };
             Selection.Changed += SelectionChanged;
             Original_MousePosition = new Point();
-            Original_MouseInside = false;
+            MouseInside = false;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -58,11 +66,13 @@ namespace myPhotoEditor
                     {
                         pb_Original.Load(OriginalImageFile);
                         ImageLoaded = true;
+                        Selection.isEditable = false;
                     }
                     catch (Exception)
                     {
                         OriginalImageFile = "";
                         ImageLoaded = false;
+                        Selection.isEditable = false;
                     }
                 }
             }
@@ -79,45 +89,88 @@ namespace myPhotoEditor
             tSSL_SelectionHeight.Text = size.Height.ToString();
         }
 
-        private void Original_BackGround_ReDraw()
+        private void SelectionReDraw()
         {
-            Bitmap bitmap = new Bitmap(pb_Original.Width, pb_Original.Height, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
             Selection.Draw(bitmap);
-            pb_Original.BackgroundImage = bitmap;
+            pb_Selection.BackgroundImage = bitmap;
+            pb_Selection.Refresh();
         }
-        private void pb_Original_MouseMove(object sender, MouseEventArgs e)
+        private Bitmap CopyRegionIntoImage(Bitmap srcBitmap, Rectangle srcRegion)
+        {
+            try
+            {
+                Bitmap destBitmap = new Bitmap(srcRegion.Width, srcRegion.Height, PixelFormat.Format32bppArgb);            
+                using (Graphics grD = Graphics.FromImage(destBitmap))
+                {
+                    grD.DrawImage(srcBitmap, srcRegion, srcRegion, GraphicsUnit.Pixel);
+                }
+                return destBitmap;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }        
+
+        private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
             tSSL_X.Text = e.X.ToString();
             tSSL_Y.Text = e.Y.ToString();
             Original_MousePosition = new Point(e.X, e.Y);
-            if (Selection.isEditable)
+            if (Selection.isEditable && ImageLoaded)
             {
                 Selection.Size = new Size(
-                    e.X - Selection.Position.X,
-                    e.Y - Selection.Position.Y
+                    Math.Abs(e.X - Selection.MiddlePointPosition.X) * 2,
+                    Math.Abs(e.Y - Selection.MiddlePointPosition.Y) * 2
                 );
-                Original_BackGround_ReDraw();    
+                SelectionReDraw();
+                CropImage();
             }
         }
 
-        private void pb_Original_Click(object sender, EventArgs e)
+        private void CropImage()
         {
-            if (!Selection.isEditable)
+            Rectangle srcRegion = new Rectangle(
+                    new Point(
+                        Selection.MiddlePointPosition.X - Selection.Size.Width / 2,
+                        Selection.MiddlePointPosition.Y - Selection.Size.Height / 2
+                    ),
+                    Selection.Size
+                );
+            Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), srcRegion);
+            if (cropBitmap != null)
             {
-                Selection.Position = Original_MousePosition;
-                Selection.Size = new Size();
+                pb_Crop.Image = cropBitmap;
+                pb_Crop.Refresh();
             }
-            Selection.isEditable = !Selection.isEditable;
         }
 
-        private void pb_Original_MouseEnter(object sender, EventArgs e)
+        private void pb_Selection_MouseLeave(object sender, EventArgs e)
         {
-            Original_MouseInside = true;
+            MouseInside = false;
         }
 
-        private void pb_Original_MouseLeave(object sender, EventArgs e)
+        private void pb_Selection_MouseClick(object sender, MouseEventArgs e)
         {
-            Original_MouseInside = false;
+            if (ImageLoaded)
+            {
+                if (!Selection.isEditable)
+                {
+                    Selection.MiddlePointPosition = Original_MousePosition;
+                    Selection.Size = new Size();
+                }
+                else
+                {
+                    CropImage();
+                }
+                Selection.isEditable = !Selection.isEditable;
+            }
+        }
+
+        private void pb_Selection_MouseEnter(object sender, EventArgs e)
+        {
+            MouseInside = true;
         }
     }
 }

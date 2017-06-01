@@ -9,7 +9,7 @@ namespace myPhotoEditor.Base
 {
     interface ISelection
     {
-        Point Position { get; set; }
+        Point MiddlePointPosition { get; set; }
         Size Size { get; set; }
         
         bool isEditable { get; set; }

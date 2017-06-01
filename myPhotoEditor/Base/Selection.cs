@@ -9,15 +9,16 @@ namespace myPhotoEditor.Base
 {
     class Selection : ISelection
     {
-        private Point _Position;        
-        public Point Position {
+        private Point _middlePointPosition;
+        
+        public Point MiddlePointPosition {
             get
             {
-                return _Position;
+                return _middlePointPosition;
             }
             set
             {
-                _Position = value;
+                _middlePointPosition = value;
                 Changed(this, new EventArgs());
             }
         }
@@ -43,7 +44,7 @@ namespace myPhotoEditor.Base
 
         public Selection(Point position, int width, int height)
         {
-            Position = position;
+            MiddlePointPosition = position;
             Size = new Size(width, height);
             isEditable = true;
         }
@@ -55,22 +56,19 @@ namespace myPhotoEditor.Base
             Graphics g = null;
             Graphics gImage = null;
             try
-            {
-                int dX = Math.Abs(Size.Width);
-                int dY = Math.Abs(Size.Height);
-
-                Bitmap bitmap = new Bitmap(dX * 2 + 1, dY * 2 + 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            {               
+                Bitmap bitmap = new Bitmap(Size.Width + 1, Size.Height + 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 bitmap.MakeTransparent();
                 g = Graphics.FromImage(bitmap);
                 Pen pen = new Pen(Brushes.Lime, 1);
                 {
                     //g.DrawLine(new Pen(Brushes.Lime, 1), dX, dY, Size.Width + dX, Size.Height + dY);
-                    g.DrawLine(pen, 0, 0, dX * 2, dY * 2);
-                    g.DrawLine(pen, 0, dY * 2, dX * 2, 0);
-                    g.DrawRectangle(pen, 0, 0, dX * 2, dY * 2);
+                    g.DrawLine(pen, 0, 0, Size.Width, Size.Height);
+                    g.DrawLine(pen, 0, Size.Height, Size.Width, 0);
+                    g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
                 }
-                gImage = Graphics.FromImage(image);
-                gImage.DrawImage(bitmap, Position.X - dX, Position.Y - dY);
+                gImage = Graphics.FromImage(image); 
+                gImage.DrawImage(bitmap, MiddlePointPosition.X - Size.Width / 2, MiddlePointPosition.Y - Size.Height / 2);
                 
             }
             catch (Exception)

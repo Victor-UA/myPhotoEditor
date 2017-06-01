@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.pb_Selection = new System.Windows.Forms.PictureBox();
             this.pb_Original = new System.Windows.Forms.PictureBox();
             this.pb_Crop = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -50,6 +51,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Selection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -66,6 +68,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.AutoScroll = true;
+            this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
             this.splitContainer1.Panel1.Controls.Add(this.pb_Original);
             this.splitContainer1.Panel1MinSize = 200;
             // 
@@ -78,6 +81,19 @@
             this.splitContainer1.SplitterDistance = 257;
             this.splitContainer1.TabIndex = 0;
             // 
+            // pb_Selection
+            // 
+            this.pb_Selection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pb_Selection.Location = new System.Drawing.Point(0, 0);
+            this.pb_Selection.Name = "pb_Selection";
+            this.pb_Selection.Size = new System.Drawing.Size(255, 355);
+            this.pb_Selection.TabIndex = 1;
+            this.pb_Selection.TabStop = false;
+            this.pb_Selection.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
+            this.pb_Selection.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
+            this.pb_Selection.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
+            this.pb_Selection.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
+            // 
             // pb_Original
             // 
             this.pb_Original.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -88,10 +104,6 @@
             this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
-            this.pb_Original.Click += new System.EventHandler(this.pb_Original_Click);
-            this.pb_Original.MouseEnter += new System.EventHandler(this.pb_Original_MouseEnter);
-            this.pb_Original.MouseLeave += new System.EventHandler(this.pb_Original_MouseLeave);
-            this.pb_Original.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Original_MouseMove);
             // 
             // pb_Crop
             // 
@@ -251,6 +263,7 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Selection)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -282,6 +295,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionWidth;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionHeight;
+        private System.Windows.Forms.PictureBox pb_Selection;
     }
 }
 
