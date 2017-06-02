@@ -10,12 +10,13 @@ namespace myPhotoEditor.Base
     interface ISelection
     {
         Point MiddlePointPosition { get; set; }
-        Size Size { get; set; }
+        Size Size { get; set; }        
         
         bool isEditable { get; set; }
 
         event EventHandler<EventArgs> Changed;
 
         void Draw(Image image);
+        Rectangle getRegion();
     }
 }

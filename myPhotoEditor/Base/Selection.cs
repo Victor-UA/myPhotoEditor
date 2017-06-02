@@ -84,5 +84,23 @@ namespace myPhotoEditor.Base
             }
             
         }
+
+        public Rectangle getRegion()
+        {
+            try
+            {
+                Point TopLeft = new Point()
+                {
+                    X = MiddlePointPosition.X - Size.Width / 2,
+                    Y = MiddlePointPosition.Y - Size.Height / 2
+                };
+                return new Rectangle(TopLeft, Size);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

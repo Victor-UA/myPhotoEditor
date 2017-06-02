@@ -100,10 +100,11 @@ namespace myPhotoEditor
         {
             try
             {
+                Rectangle destRegion = new Rectangle(0, 0, srcRegion.Width, srcRegion.Height);                
                 Bitmap destBitmap = new Bitmap(srcRegion.Width, srcRegion.Height, PixelFormat.Format32bppArgb);            
                 using (Graphics grD = Graphics.FromImage(destBitmap))
                 {
-                    grD.DrawImage(srcBitmap, srcRegion, srcRegion, GraphicsUnit.Pixel);
+                    grD.DrawImage(srcBitmap, destRegion, srcRegion, GraphicsUnit.Pixel);
                 }
                 return destBitmap;
             }
@@ -138,7 +139,7 @@ namespace myPhotoEditor
                     ),
                     Selection.Size
                 );
-            Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), srcRegion);
+            Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion());
             if (cropBitmap != null)
             {
                 pb_Crop.Image = cropBitmap;

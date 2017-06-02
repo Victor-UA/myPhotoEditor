@@ -77,16 +77,17 @@
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.pb_Crop);
             this.splitContainer1.Panel2MinSize = 200;
-            this.splitContainer1.Size = new System.Drawing.Size(485, 357);
-            this.splitContainer1.SplitterDistance = 257;
+            this.splitContainer1.Size = new System.Drawing.Size(789, 397);
+            this.splitContainer1.SplitterDistance = 418;
             this.splitContainer1.TabIndex = 0;
             // 
             // pb_Selection
             // 
+            this.pb_Selection.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pb_Selection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Selection.Location = new System.Drawing.Point(0, 0);
             this.pb_Selection.Name = "pb_Selection";
-            this.pb_Selection.Size = new System.Drawing.Size(255, 355);
+            this.pb_Selection.Size = new System.Drawing.Size(416, 395);
             this.pb_Selection.TabIndex = 1;
             this.pb_Selection.TabStop = false;
             this.pb_Selection.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
@@ -100,8 +101,7 @@
             this.pb_Original.ImageLocation = "";
             this.pb_Original.Location = new System.Drawing.Point(0, 0);
             this.pb_Original.Name = "pb_Original";
-            this.pb_Original.Size = new System.Drawing.Size(255, 355);
-            this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pb_Original.Size = new System.Drawing.Size(416, 395);
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
             // 
@@ -110,8 +110,8 @@
             this.pb_Crop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Crop.Location = new System.Drawing.Point(0, 0);
             this.pb_Crop.Name = "pb_Crop";
-            this.pb_Crop.Size = new System.Drawing.Size(222, 355);
-            this.pb_Crop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_Crop.Size = new System.Drawing.Size(365, 395);
+            this.pb_Crop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Crop.TabIndex = 0;
             this.pb_Crop.TabStop = false;
             // 
@@ -121,7 +121,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(485, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(789, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -172,9 +172,9 @@
             this.tSSL_SelectionWidth,
             this.toolStripStatusLabel4,
             this.tSSL_SelectionHeight});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 359);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 399);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(485, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(789, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -250,7 +250,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(485, 381);
+            this.ClientSize = new System.Drawing.Size(789, 421);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
@@ -260,7 +260,6 @@
             this.Text = "myPhotoEditor";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Selection)).EndInit();
