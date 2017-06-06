@@ -21,22 +21,38 @@ namespace myPhotoEditor
         private string OriginalImageFile;
         private Selection Selection;
         private Size Offset;
-        private double Scale;
+        private double _ImageScale;
+        public double ImageScale
+        {
+            get
+            {
+                return _ImageScale;
+            }
+
+            set
+            {
+                _ImageScale = value;
+                tSSL_ImageScale.Text = Math.Round(value, 2).ToString();
+            }
+        }
         private Point MiddleButtonDown;
 
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
+
 
         public MainForm()
         {
             InitializeComponent();
 
             pb_Original.Controls.Add(pb_Selection);
-            pb_Selection.Size = pb_Original.Size;
+            //pb_Selection.Size = pb_Original.Size;
             pb_Selection.Location = new Point(0, 0);
             pb_Selection.BackColor = Color.Transparent;
             pb_Selection.BorderStyle = BorderStyle.None;
-            pb_Selection.BringToFront();            
+            //pb_Selection.BringToFront();         
+            
+            splitContainer1.Panel1.MouseWheel += pb_Selection_MouseWheel;
 
             OriginalImageFile = "";
             ImageLoaded = false;
@@ -46,9 +62,14 @@ namespace myPhotoEditor
             };
             Selection.Changed += SelectionChanged;
             Offset = Size.Empty;
-            Scale = 1;
+            ImageScale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
+        }
+
+        private void Pb_Selection_MouseWheel(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -71,6 +92,8 @@ namespace myPhotoEditor
                     {
                         pb_Original.Load(OriginalImageFile);
                         pb_Original.Size = pb_Original.Image.Size;
+                        pb_Original.Location = new Point(0, 0);
+                        splitContainer1.Panel1.Focus();
                         ImageLoaded = true;
                         Selection.isEditable = false;
                     }
@@ -194,6 +217,7 @@ namespace myPhotoEditor
                     }
                     Selection.isEditable = !Selection.isEditable;
                 }
+                splitContainer1.Panel1.Focus();
             }
         }
 
@@ -227,6 +251,63 @@ namespace myPhotoEditor
 
                 pb_Original.Location = new Point(newX, newY);
             }
+        }
+        private void pb_Selection_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int newWidth = pb_Original.Width, newHeight = pb_Original.Height, newX = pb_Original.Location.X, newY = pb_Original.Location.Y;
+
+            if (e.Delta > 0)
+            {
+                newWidth = pb_Original.Size.Width + (pb_Original.Size.Width / 10);
+                newHeight = pb_Original.Size.Height + (pb_Original.Size.Height / 10);
+                newX = pb_Original.Location.X - ((pb_Original.Size.Width / 10) / 2);
+                newY = pb_Original.Location.Y - ((pb_Original.Size.Height / 10) / 2);                
+            }
+
+            else if (e.Delta < 0)
+            {
+                newWidth = pb_Original.Size.Width - (pb_Original.Size.Width / 10);
+                newHeight = pb_Original.Size.Height - (pb_Original.Size.Height / 10);
+                newX = pb_Original.Location.X + ((pb_Original.Size.Width / 10) / 2);
+                newY = pb_Original.Location.Y + ((pb_Original.Size.Height / 10) / 2);
+
+                // Prevent image from zooming out beyond original size
+                //if (newWidth < pb_Original.Width)
+                //{
+                //    newWidth = pb_Original.Width;
+                //    newHeight = pb_Original.Height;
+                //    newX = 0;
+                //    newY = 0;
+                //}
+            }
+            pb_Original.Size = new Size(newWidth, newHeight);
+            ImageScale = (double)newWidth / pb_Original.Image.Size.Width;
+            Debug.WriteLine(ImageScale);
+            pb_Original.Location = new Point(newX, newY);
+        }
+
+        private void pb_Selection_DoubleClick(object sender, EventArgs e)
+        {
+            MouseEventArgs mouse = e as MouseEventArgs;
+            if (ImageLoaded)
+            {
+                if (mouse.Button == MouseButtons.Middle)
+                {
+                    pb_Original.Size = pb_Original.Image.Size;
+                    pb_Selection.Size = pb_Original.Size;
+                    splitContainer1.Panel1.HorizontalScroll.Value = 0;
+                    splitContainer1.Panel1.VerticalScroll.Value = 0;
+                    pb_Original.Location = new Point(0, 0);
+                    
+                    ImageScale = 1;
+                    
+                }
+            }
+        }
+
+        private void splitContainer1_Panel1_DoubleClick(object sender, EventArgs e)
+        {
+            pb_Selection_DoubleClick(sender, e);
         }
     }
 }
