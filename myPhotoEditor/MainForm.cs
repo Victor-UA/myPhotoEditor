@@ -123,11 +123,13 @@ namespace myPhotoEditor
         {
             try
             {
-                Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
-                Selection.Draw(bitmap);
-                pb_Selection.BackgroundImage = bitmap;
-                bitmap.Dispose();
-                pb_Selection.Refresh();
+                using (Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb))
+                {                    
+                    Selection.Draw(bitmap);
+                    pb_Selection.BackgroundImage = bitmap;
+                    bitmap.Dispose();
+                    pb_Selection.Refresh();                                    
+                }
             }
             catch (Exception ex)
             {
@@ -221,6 +223,7 @@ namespace myPhotoEditor
 
         private void pb_Selection_MouseClick(object sender, MouseEventArgs e)
         {
+            
             MouseEventArgs mouse = e as MouseEventArgs;
             if (ImageLoaded)
             {
@@ -239,6 +242,7 @@ namespace myPhotoEditor
                 }
                 splitContainer1.Panel1.Focus();
             }
+            
         }
 
         private void pb_Selection_MouseEnter(object sender, EventArgs e)
