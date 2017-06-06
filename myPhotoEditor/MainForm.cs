@@ -20,6 +20,9 @@ namespace myPhotoEditor
         private bool ImageLoaded;
         private string OriginalImageFile;
         private Selection Selection;
+        private Size Offset;
+        private double Scale;
+        private Point MiddleButtonDown;
 
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
@@ -33,7 +36,7 @@ namespace myPhotoEditor
             pb_Selection.Location = new Point(0, 0);
             pb_Selection.BackColor = Color.Transparent;
             pb_Selection.BorderStyle = BorderStyle.None;
-            pb_Selection.BringToFront();
+            pb_Selection.BringToFront();            
 
             OriginalImageFile = "";
             ImageLoaded = false;
@@ -42,6 +45,8 @@ namespace myPhotoEditor
                 isEditable = false
             };
             Selection.Changed += SelectionChanged;
+            Offset = Size.Empty;
+            Scale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
         }
@@ -65,6 +70,7 @@ namespace myPhotoEditor
                     try
                     {
                         pb_Original.Load(OriginalImageFile);
+                        pb_Original.Size = pb_Original.Image.Size;
                         ImageLoaded = true;
                         Selection.isEditable = false;
                     }
@@ -116,17 +122,35 @@ namespace myPhotoEditor
 
         private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
+            MouseEventArgs mouse = e as MouseEventArgs;
             tSSL_X.Text = e.X.ToString();
             tSSL_Y.Text = e.Y.ToString();
             Original_MousePosition = new Point(e.X, e.Y);
-            if (Selection.isEditable && ImageLoaded)
+
+            if (mouse.Button == MouseButtons.Middle)
             {
-                Selection.Size = new Size(
-                    Math.Abs(e.X - Selection.MiddlePointPosition.X) * 2,
-                    Math.Abs(e.Y - Selection.MiddlePointPosition.Y) * 2
-                );
-                SelectionReDraw();
-                CropImage();
+                Point mousePosNow = mouse.Location;
+
+                int deltaX = mousePosNow.X - MiddleButtonDown.X;
+                int deltaY = mousePosNow.Y - MiddleButtonDown.Y;
+
+                int newX = pb_Original.Location.X + deltaX;
+                int newY = pb_Original.Location.Y + deltaY;
+
+                pb_Original.Location = new Point(newX, newY);
+            }
+            else
+            {
+                
+                if (Selection.isEditable && ImageLoaded)
+                {
+                    Selection.Size = new Size(
+                        Math.Abs(e.X - Selection.MiddlePointPosition.X) * 2,
+                        Math.Abs(e.Y - Selection.MiddlePointPosition.Y) * 2
+                    );
+                    SelectionReDraw();
+                    CropImage();
+                }
             }
         }
 
@@ -154,24 +178,55 @@ namespace myPhotoEditor
 
         private void pb_Selection_MouseClick(object sender, MouseEventArgs e)
         {
+            MouseEventArgs mouse = e as MouseEventArgs;
             if (ImageLoaded)
             {
-                if (!Selection.isEditable)
+                if (mouse.Button == MouseButtons.Left)
                 {
-                    Selection.MiddlePointPosition = Original_MousePosition;
-                    Selection.Size = new Size();
+                    if (!Selection.isEditable)
+                    {
+                        Selection.MiddlePointPosition = Original_MousePosition;
+                        Selection.Size = new Size();
+                    }
+                    else
+                    {
+                        CropImage();
+                    }
+                    Selection.isEditable = !Selection.isEditable;
                 }
-                else
-                {
-                    CropImage();
-                }
-                Selection.isEditable = !Selection.isEditable;
             }
         }
 
         private void pb_Selection_MouseEnter(object sender, EventArgs e)
         {
             MouseInside = true;
+        }
+
+        private void pb_Selection_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseEventArgs mouse = e as MouseEventArgs;
+            if (mouse.Button == MouseButtons.Middle)
+            {
+                MiddleButtonDown = mouse.Location;
+            }
+        }
+
+        private void pb_Selection_MouseUp(object sender, MouseEventArgs e)
+        {
+            MouseEventArgs mouse = e as MouseEventArgs;
+
+            if (mouse.Button == MouseButtons.Middle)
+            {
+                Point mousePosNow = mouse.Location;
+
+                int deltaX = mousePosNow.X - MiddleButtonDown.X;
+                int deltaY = mousePosNow.Y - MiddleButtonDown.Y;
+
+                int newX = pb_Original.Location.X + deltaX;
+                int newY = pb_Original.Location.Y + deltaY;
+
+                pb_Original.Location = new Point(newX, newY);
+            }
         }
     }
 }

@@ -68,8 +68,8 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.AutoScroll = true;
-            this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
             this.splitContainer1.Panel1.Controls.Add(this.pb_Original);
+            this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
             this.splitContainer1.Panel1MinSize = 200;
             // 
             // splitContainer1.Panel2
@@ -77,7 +77,7 @@
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.pb_Crop);
             this.splitContainer1.Panel2MinSize = 200;
-            this.splitContainer1.Size = new System.Drawing.Size(789, 397);
+            this.splitContainer1.Size = new System.Drawing.Size(789, 375);
             this.splitContainer1.SplitterDistance = 418;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -87,21 +87,25 @@
             this.pb_Selection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Selection.Location = new System.Drawing.Point(0, 0);
             this.pb_Selection.Name = "pb_Selection";
-            this.pb_Selection.Size = new System.Drawing.Size(416, 395);
+            this.pb_Selection.Size = new System.Drawing.Size(416, 373);
             this.pb_Selection.TabIndex = 1;
             this.pb_Selection.TabStop = false;
             this.pb_Selection.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
+            this.pb_Selection.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseDown);
             this.pb_Selection.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
             this.pb_Selection.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
             this.pb_Selection.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
+            this.pb_Selection.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseUp);
             // 
             // pb_Original
             // 
-            this.pb_Original.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pb_Original.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pb_Original.ImageLocation = "";
             this.pb_Original.Location = new System.Drawing.Point(0, 0);
             this.pb_Original.Name = "pb_Original";
-            this.pb_Original.Size = new System.Drawing.Size(416, 395);
+            this.pb_Original.Size = new System.Drawing.Size(416, 374);
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
             // 
@@ -110,7 +114,7 @@
             this.pb_Crop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Crop.Location = new System.Drawing.Point(0, 0);
             this.pb_Crop.Name = "pb_Crop";
-            this.pb_Crop.Size = new System.Drawing.Size(365, 395);
+            this.pb_Crop.Size = new System.Drawing.Size(365, 373);
             this.pb_Crop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Crop.TabIndex = 0;
             this.pb_Crop.TabStop = false;
@@ -251,8 +255,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 421);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(450, 400);
