@@ -207,7 +207,7 @@ namespace myPhotoEditor
                 if (mouse.Button == MouseButtons.Left)
                 {
                     if (!Selection.isEditable)
-                    {
+                    {                        
                         Selection.MiddlePointPosition = Original_MousePosition;
                         Selection.Size = new Size();
                     }
@@ -254,36 +254,23 @@ namespace myPhotoEditor
         }
         private void pb_Selection_MouseWheel(object sender, MouseEventArgs e)
         {
-            int newWidth = pb_Original.Width, newHeight = pb_Original.Height, newX = pb_Original.Location.X, newY = pb_Original.Location.Y;
+            int newWidth = pb_Original.Width,
+                newHeight = pb_Original.Height,
+                newX = pb_Original.Location.X,
+                newY = pb_Original.Location.Y;
 
-            if (e.Delta > 0)
-            {
-                newWidth = pb_Original.Size.Width + (pb_Original.Size.Width / 10);
-                newHeight = pb_Original.Size.Height + (pb_Original.Size.Height / 10);
-                newX = pb_Original.Location.X - ((pb_Original.Size.Width / 10) / 2);
-                newY = pb_Original.Location.Y - ((pb_Original.Size.Height / 10) / 2);                
-            }
+            double step = 0.1;
+            double k = (e.Delta > 0) ? 1 + step : 1 - step;
+            ImageScale *= k;
 
-            else if (e.Delta < 0)
-            {
-                newWidth = pb_Original.Size.Width - (pb_Original.Size.Width / 10);
-                newHeight = pb_Original.Size.Height - (pb_Original.Size.Height / 10);
-                newX = pb_Original.Location.X + ((pb_Original.Size.Width / 10) / 2);
-                newY = pb_Original.Location.Y + ((pb_Original.Size.Height / 10) / 2);
+            newWidth =  (int)(pb_Original.Image.Size.Width  * ImageScale);
+            newHeight = (int)(pb_Original.Image.Size.Height * ImageScale);
 
-                // Prevent image from zooming out beyond original size
-                //if (newWidth < pb_Original.Width)
-                //{
-                //    newWidth = pb_Original.Width;
-                //    newHeight = pb_Original.Height;
-                //    newX = 0;
-                //    newY = 0;
-                //}
-            }
-            pb_Original.Size = new Size(newWidth, newHeight);
-            ImageScale = (double)newWidth / pb_Original.Image.Size.Width;
-            Debug.WriteLine(ImageScale);
+            newX = pb_Original.Location.X - (int)((e.X - pb_Original.Location.X) * (k - 1));
+            newY = pb_Original.Location.Y - (int)((e.Y - pb_Original.Location.Y) * (k - 1));
+
             pb_Original.Location = new Point(newX, newY);
+            pb_Original.Size = new Size(newWidth, newHeight);
         }
 
         private void pb_Selection_DoubleClick(object sender, EventArgs e)
@@ -298,9 +285,7 @@ namespace myPhotoEditor
                     splitContainer1.Panel1.HorizontalScroll.Value = 0;
                     splitContainer1.Panel1.VerticalScroll.Value = 0;
                     pb_Original.Location = new Point(0, 0);
-                    
                     ImageScale = 1;
-                    
                 }
             }
         }
@@ -308,6 +293,12 @@ namespace myPhotoEditor
         private void splitContainer1_Panel1_DoubleClick(object sender, EventArgs e)
         {
             pb_Selection_DoubleClick(sender, e);
+        }
+
+        private void splitContainer1_Panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Selection.isEditable)
+                pb_Selection_MouseClick(sender, e);
         }
     }
 }
