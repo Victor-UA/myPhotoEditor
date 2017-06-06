@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using myPhotoEditor.Base;
 
@@ -123,13 +116,10 @@ namespace myPhotoEditor
         {
             try
             {
-                using (Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb))
-                {                    
-                    Selection.Draw(bitmap);
-                    pb_Selection.BackgroundImage = bitmap;
-                    bitmap.Dispose();
-                    pb_Selection.Refresh();                                    
-                }
+                Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
+                Selection.Draw(bitmap);
+                pb_Selection.BackgroundImage = bitmap;
+                pb_Selection.Refresh();
             }
             catch (Exception ex)
             {
@@ -199,15 +189,12 @@ namespace myPhotoEditor
         {
             try
             {
-                using (Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale)))
+                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale));
+                if (cropBitmap != null)
                 {
-                    if (cropBitmap != null)
-                    {
-                        pb_Crop.Image = cropBitmap;
-                        pb_Crop.Refresh();
-                        cropBitmap.Dispose();
-                        GC.Collect();
-                    }
+                    pb_Crop.Image = cropBitmap;
+                    pb_Crop.Refresh();
+                    GC.Collect();
                 }
             }
             catch (Exception ex)
