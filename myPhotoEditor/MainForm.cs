@@ -32,7 +32,7 @@ namespace myPhotoEditor
             set
             {
                 _ImageScale = value;
-                tSSL_ImageScale.Text = Math.Round(value, 2).ToString();
+                tSSL_ImageScale.Text = Math.Round(value, 2).ToString();                
             }
         }
         private Point MiddleButtonDown;
@@ -52,7 +52,7 @@ namespace myPhotoEditor
             pb_Selection.BorderStyle = BorderStyle.None;
             //pb_Selection.BringToFront();         
             
-            splitContainer1.Panel1.MouseWheel += pb_Selection_MouseWheel;
+            splitContainer1.Panel1.MouseWheel += new MouseEventHandler(splitContainer1_Panel1_MouseWheel);
 
             OriginalImageFile = "";
             ImageLoaded = false;
@@ -96,6 +96,7 @@ namespace myPhotoEditor
                         splitContainer1.Panel1.Focus();
                         ImageLoaded = true;
                         Selection.isEditable = false;
+                        ImageScale = 1;
                     }
                     catch (Exception)
                     {
@@ -120,22 +121,37 @@ namespace myPhotoEditor
 
         private void SelectionReDraw()
         {
-            Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
-            Selection.Draw(bitmap);
-            pb_Selection.BackgroundImage = bitmap;
-            pb_Selection.Refresh();
+            try
+            {
+                Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
+                Selection.Draw(bitmap);
+                pb_Selection.BackgroundImage = bitmap;
+                bitmap.Dispose();
+                pb_Selection.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
+            }
         }
         private Bitmap CopyRegionIntoImage(Bitmap srcBitmap, Rectangle srcRegion)
         {
             try
             {
-                Rectangle destRegion = new Rectangle(0, 0, srcRegion.Width, srcRegion.Height);                
-                Bitmap destBitmap = new Bitmap(srcRegion.Width, srcRegion.Height, PixelFormat.Format32bppArgb);            
-                using (Graphics grD = Graphics.FromImage(destBitmap))
+                if (srcRegion.Width > 0 && srcRegion.Height > 0)
                 {
-                    grD.DrawImage(srcBitmap, destRegion, srcRegion, GraphicsUnit.Pixel);
+                    Rectangle destRegion = new Rectangle(0, 0, srcRegion.Width, srcRegion.Height);
+                    Bitmap destBitmap = new Bitmap(srcRegion.Width, srcRegion.Height, PixelFormat.Format32bppArgb);
+                    using (Graphics grD = Graphics.FromImage(destBitmap))
+                    {
+                        grD.DrawImage(srcBitmap, destRegion, srcRegion, GraphicsUnit.Pixel);
+                    }
+                    return destBitmap;
                 }
-                return destBitmap;
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception)
             {
@@ -179,18 +195,22 @@ namespace myPhotoEditor
 
         private void CropImage()
         {
-            Rectangle srcRegion = new Rectangle(
-                    new Point(
-                        Selection.MiddlePointPosition.X - Selection.Size.Width / 2,
-                        Selection.MiddlePointPosition.Y - Selection.Size.Height / 2
-                    ),
-                    Selection.Size
-                );
-            Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion());
-            if (cropBitmap != null)
+            try
             {
-                pb_Crop.Image = cropBitmap;
-                pb_Crop.Refresh();
+                using (Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale)))
+                {
+                    if (cropBitmap != null)
+                    {
+                        pb_Crop.Image = cropBitmap;
+                        pb_Crop.Refresh();
+                        cropBitmap.Dispose();
+                        GC.Collect();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
         }
 
@@ -252,26 +272,7 @@ namespace myPhotoEditor
                 pb_Original.Location = new Point(newX, newY);
             }
         }
-        private void pb_Selection_MouseWheel(object sender, MouseEventArgs e)
-        {
-            int newWidth = pb_Original.Width,
-                newHeight = pb_Original.Height,
-                newX = pb_Original.Location.X,
-                newY = pb_Original.Location.Y;
-
-            double step = 0.1;
-            double k = (e.Delta > 0) ? 1 + step : 1 - step;
-            ImageScale *= k;
-
-            newWidth =  (int)(pb_Original.Image.Size.Width  * ImageScale);
-            newHeight = (int)(pb_Original.Image.Size.Height * ImageScale);
-
-            newX = pb_Original.Location.X - (int)((e.X - pb_Original.Location.X) * (k - 1));
-            newY = pb_Original.Location.Y - (int)((e.Y - pb_Original.Location.Y) * (k - 1));
-
-            pb_Original.Location = new Point(newX, newY);
-            pb_Original.Size = new Size(newWidth, newHeight);
-        }
+        
 
         private void pb_Selection_DoubleClick(object sender, EventArgs e)
         {
@@ -299,6 +300,34 @@ namespace myPhotoEditor
         {
             if (Selection.isEditable)
                 pb_Selection_MouseClick(sender, e);
+        }
+        private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int newWidth = pb_Original.Width,
+                newHeight = pb_Original.Height,
+                newX = pb_Original.Location.X,
+                newY = pb_Original.Location.Y;
+
+            double step = 0.1;
+            double k = (e.Delta > 0) ? 1 + step : 1 - step;
+
+            ImageScale *= k;
+
+            newWidth = (int)(pb_Original.Image.Size.Width * ImageScale);
+            newHeight = (int)(pb_Original.Image.Size.Height * ImageScale);
+            if (newWidth < 32676 && newHeight < 32676)
+            {
+
+                newX = pb_Original.Location.X - (int)((e.X - pb_Original.Location.X) * (k - 1));
+                newY = pb_Original.Location.Y - (int)((e.Y - pb_Original.Location.Y) * (k - 1));
+
+                pb_Original.Size = new Size(newWidth, newHeight);
+                pb_Original.Location = new Point(newX, newY);
+            }
+            else
+            {
+                ImageScale /= k;
+            }
         }
     }
 }

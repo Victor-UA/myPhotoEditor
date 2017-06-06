@@ -17,6 +17,6 @@ namespace myPhotoEditor.Base
         event EventHandler<EventArgs> Changed;
 
         void Draw(Image image);
-        Rectangle getRegion();
+        Rectangle getRegion(double scale);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -52,7 +53,6 @@ namespace myPhotoEditor.Base
 
         public void Draw(Image image)
         {
-
             Graphics g = null;
             Graphics gImage = null;
             try
@@ -62,7 +62,6 @@ namespace myPhotoEditor.Base
                 g = Graphics.FromImage(bitmap);
                 Pen pen = new Pen(Brushes.Lime, 1);
                 {
-                    //g.DrawLine(new Pen(Brushes.Lime, 1), dX, dY, Size.Width + dX, Size.Height + dY);
                     g.DrawLine(pen, 0, 0, Size.Width, Size.Height);
                     g.DrawLine(pen, 0, Size.Height, Size.Width, 0);
                     g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
@@ -71,9 +70,9 @@ namespace myPhotoEditor.Base
                 gImage.DrawImage(bitmap, MiddlePointPosition.X - Size.Width / 2, MiddlePointPosition.Y - Size.Height / 2);
                 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
             finally
             {
@@ -85,26 +84,23 @@ namespace myPhotoEditor.Base
             
         }
 
-        public Rectangle getRegion()
-        {
-            return getRegion(Size.Empty, 1);
-        }
-        public Rectangle getRegion(Size offset, double scale)
+        public Rectangle getRegion(double scale = 1)
         {
             try
             {
                 Point TopLeft = new Point()
                 {
-                    X = (int)(((MiddlePointPosition.X - Size.Width / 2) + offset.Width) * scale),
-                    Y = (int)(((MiddlePointPosition.Y - Size.Height / 2) + +offset.Height) * scale)
+                    X = (int)(((double)MiddlePointPosition.X - Size.Width / 2) / scale) + 1,
+                    Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2) / scale) + 1
                 };
+
                 if (scale == 1)
                 {
                     return new Rectangle(TopLeft, Size);
                 }
                 else
                 {
-                    Size size = new Size((int)(Size.Width * scale), (int)(Size.Height * scale));
+                    Size size = new Size((int)((Size.Width) / scale), (int)((Size.Height) / scale));
                     return new Rectangle(TopLeft, size);
                 }
             }
