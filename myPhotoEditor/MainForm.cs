@@ -254,10 +254,11 @@ namespace myPhotoEditor
 
                 int newX = pb_Original.Location.X + deltaX;
                 int newY = pb_Original.Location.Y + deltaY;
+
                 Point TopLeft = new Point(newX, newY);
                 if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
                 {
-                    pb_Original.Location = TopLeft;
+                    pb_Original.Location = TopLeft;                    
                 }
             }
             else
@@ -339,6 +340,7 @@ namespace myPhotoEditor
             MouseInside = true;
         }
 
+
         private void splitContainer1_Panel1_MouseDown(object sender, MouseEventArgs e)
         {
             pb_Selection_MouseDown(sender, Panel1_2_pb_Selection(e));
@@ -349,6 +351,33 @@ namespace myPhotoEditor
             if (mouse.Button == MouseButtons.Middle)
             {
                 MiddleButtonDown = mouse.Location;
+            }
+        }
+
+        private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            pb_Selection_MouseUp(sender, Panel1_2_pb_Selection(e));
+        }
+        private void pb_Selection_MouseUp(object sender, MouseEventArgs e)
+        {
+            MouseEventArgs mouse = e as MouseEventArgs;
+
+            if (mouse.Button == MouseButtons.Middle)
+            {
+                int newX = pb_Original.Location.X;
+                int newY = pb_Original.Location.Y;
+                
+                pb_Selection.Hide();
+                Point oldPBSelectionLocation = pb_Selection.Location;
+                pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+                int PBSelectionDX = pb_Selection.Location.X - oldPBSelectionLocation.X;
+                int PBSelectionDY = pb_Selection.Location.Y - oldPBSelectionLocation.Y;
+                Selection.MiddlePointPosition = new Point(
+                    Selection.MiddlePointPosition.X - PBSelectionDX,
+                    Selection.MiddlePointPosition.Y - PBSelectionDY
+                );
+                SelectionReDraw();
+                pb_Selection.Show();
             }
         }
 
