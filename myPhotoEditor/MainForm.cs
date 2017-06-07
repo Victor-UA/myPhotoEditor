@@ -120,6 +120,8 @@ namespace myPhotoEditor
             CropImage();
         }
 
+
+
         private void OpenFile()
         {
             OpenFile(string.Empty);
@@ -377,7 +379,7 @@ namespace myPhotoEditor
         }
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            Point mousePosition = new Point(e.X < -1 ? 65536 - e.X : e.X, e.Y < -1 ? 65536 - e.Y : e.Y);
+            Point mousePosition = new Point(e.X < -2048 ? 65536 - e.X : e.X, e.Y < -2048 ? 65536 - e.Y : e.Y);
 
             int newWidth = pb_Original.Width,
                 newHeight = pb_Original.Height,
