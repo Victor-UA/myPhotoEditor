@@ -88,7 +88,7 @@ namespace myPhotoEditor
             {
                 Title = "Оберіть зображення",
                 AddExtension = true,
-                Filter = "PNG| *.png | JPEG| *.jpeg; *.jpg | BMP| *.bmp | All Images| *.jpeg; *.jpg; *.png; *.bmp"
+                Filter = "PNG| *.png; | JPEG| *.jpeg; *.jpg; | BMP| *.bmp; | All Images| *.jpeg; *.jpg; *.png; *.bmp;"
             };
             string[] filename = dialog.FileName.Split('.');
             string fileExtention = filename[filename.Length - 1];
