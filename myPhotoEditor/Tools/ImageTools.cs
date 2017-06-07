@@ -10,6 +10,7 @@ namespace myPhotoEditor.Tools
 {
     class ImageTools
     {
+        //https://stackoverflow.com/questions/2265910/convert-an-image-to-grayscale
         public static Bitmap MakeGrayscale3(Bitmap original)
         {
             //create a blank bitmap the same size as original

@@ -138,8 +138,8 @@ namespace myPhotoEditor
         private void SelectionChanged(object sender, EventArgs e)
         {
             Size size = ((Selection)sender).Size;
-            tSSL_SelectionWidth.Text = size.Width.ToString();
-            tSSL_SelectionHeight.Text = size.Height.ToString();
+            tSSL_SelectionWidth.Text = Math.Round((size.Width) / ImageScale).ToString();
+            tSSL_SelectionHeight.Text = Math.Round((size.Height) / ImageScale).ToString();
         }
 
         private void SelectionReDraw()
@@ -185,8 +185,8 @@ namespace myPhotoEditor
         {
             MouseEventArgs mouse = e as MouseEventArgs;
             Point mousePosition = new Point(e.X < -1 ? 65536 + e.X : e.X, e.Y < -1 ? 65536 + e.Y : e.Y);
-            tSSL_X.Text = mousePosition.X.ToString();
-            tSSL_Y.Text = mousePosition.Y.ToString();
+            tSSL_X.Text = Math.Round((mousePosition.X + pb_Selection.Location.X) / ImageScale).ToString();
+            tSSL_Y.Text = Math.Round((mousePosition.Y + pb_Selection.Location.Y) / ImageScale).ToString();
             Original_MousePosition = new Point(mousePosition.X, mousePosition.Y);
 
             if (mouse.Button == MouseButtons.Middle)
