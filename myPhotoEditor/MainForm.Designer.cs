@@ -79,10 +79,13 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.AllowDrop = true;
             this.splitContainer1.Panel1.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
             this.splitContainer1.Panel1.Controls.Add(this.pb_Original);
             this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
             this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.splitContainer1_Panel1_SizeChanged);
+            this.splitContainer1.Panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragDrop);
+            this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
             this.splitContainer1.Panel1.DoubleClick += new System.EventHandler(this.splitContainer1_Panel1_DoubleClick);
             this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseClick);
             this.splitContainer1.Panel1MinSize = 200;
@@ -112,6 +115,7 @@
             // 
             // pb_Original
             // 
+            this.pb_Original.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pb_Original.ImageLocation = "";
             this.pb_Original.Location = new System.Drawing.Point(0, 0);
             this.pb_Original.Name = "pb_Original";
@@ -199,14 +203,14 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "SaveAs";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 

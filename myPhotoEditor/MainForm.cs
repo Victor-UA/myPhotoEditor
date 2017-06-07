@@ -80,18 +80,73 @@ namespace myPhotoEditor
         //---------Menu---------
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            OpenFile();
+        }        
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Title = "Оберіть зображення",
+                AddExtension = true,
+                Filter = "PNG| *.png | JPEG| *.jpeg; *.jpg | BMP| *.bmp | All Images| *.jpeg; *.jpg; *.png; *.bmp"
+            };
+            string[] filename = dialog.FileName.Split('.');
+            string fileExtention = filename[filename.Length - 1];
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ImageFormat imageFormat;
+                switch (fileExtention.ToLower())
+                {                    
+                    case "png":
+                        imageFormat = ImageFormat.Png;
+                        break;
+                    default:
+                        imageFormat = ImageFormat.Jpeg;
+                        break;
+                }
+                try
+                {
+                    pb_Crop.Image.Save(dialog.FileName, ImageFormat.Jpeg);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }          
+            }
+        }
+        private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Grayscale = !Grayscale;
+            CropImage();
+        }
+
+        private void OpenFile()
+        {
+            OpenFile(string.Empty);
+        }
+        private void OpenFile(string fileName)
+        {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog()
+                if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    Title = "Оберіть зображення",
-                    AddExtension = true,
-                    CheckFileExists = true,
-                    Filter = "Images| *.jpeg; *.jpg; *.png; *.bmp",
-                    Multiselect = false                    
-                };
-                openFileDialog.ShowDialog();
-                OriginalImageFile = openFileDialog.FileName;
+
+
+                    OpenFileDialog openFileDialog = new OpenFileDialog()
+                    {
+                        Title = "Оберіть зображення",
+                        AddExtension = true,
+                        CheckFileExists = true,
+                        Filter = "Images| *.jpeg; *.jpg; *.png; *.bmp",
+                        Multiselect = false
+                    };
+                    openFileDialog.ShowDialog();
+                    OriginalImageFile = openFileDialog.FileName;
+                }
+                else
+                {
+                    OriginalImageFile = fileName;
+                }
                 if (!string.IsNullOrWhiteSpace(OriginalImageFile))
                 {
                     try
@@ -115,40 +170,9 @@ namespace myPhotoEditor
             }
             catch (Exception)
             {
-                OriginalImageFile = "";                
-            }
-        }        
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                Title = "Оберіть зображення",
-                AddExtension = true,
-                Filter = "Images| *.jpeg; *.jpg; *.png; *.bmp"
-            };
-            string[] filename = dialog.FileName.Split('.');
-            string fileExtention = filename[filename.Length - 1];
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                ImageFormat imageFormat;
-                switch (fileExtention.ToLower())
-                {                    
-                    case "png":
-                        imageFormat = ImageFormat.Png;
-                        break;
-                    default:
-                        imageFormat = ImageFormat.Jpeg;
-                        break;
-                }                
-                pb_Crop.Image.Save(dialog.FileName, ImageFormat.Jpeg);
+                OriginalImageFile = "";
             }
         }
-        private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Grayscale = !Grayscale;
-            CropImage();
-        }
-
 
         private void SelectionChanged(object sender, EventArgs e)
         {
@@ -397,6 +421,26 @@ namespace myPhotoEditor
         {
             pb_Selection.Size = splitContainer1.Panel1.ClientSize;
             SelectionReDraw();
-        }        
+        }
+
+        private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
+        {
+            Debug.WriteLine("DragDrop");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Effect == DragDropEffects.Move)
+            {
+                string[] objects = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (objects.Length > 0)
+                {
+                    OpenFile(objects[0]);
+                }
+            }
+        }
+
+        private void splitContainer1_Panel1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
+                ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
+                e.Effect = DragDropEffects.Move;
+        }
     }
 }
