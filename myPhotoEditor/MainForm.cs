@@ -254,8 +254,11 @@ namespace myPhotoEditor
 
                 int newX = pb_Original.Location.X + deltaX;
                 int newY = pb_Original.Location.Y + deltaY;
-
-                pb_Original.Location = new Point(newX, newY);                
+                Point TopLeft = new Point(newX, newY);
+                if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
+                {
+                    pb_Original.Location = TopLeft;
+                }
             }
             else
             {
@@ -292,9 +295,14 @@ namespace myPhotoEditor
                 Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
         }
-        private bool Check_pb_Original_Visibility()
+        private bool Check_pb_Original_Visibility(Rectangle original)
         {
-            return false;
+            bool result = true;
+            result &= (original.X < (splitContainer1.Panel1.ClientSize.Width - 10));
+            result &= (original.Y < (splitContainer1.Panel1.ClientSize.Height - 10));
+            result &= ((original.X + original.Width) > 10);
+            result &= ((original.Y + original.Height) > 10);
+            return result;
         }
 
         private void pb_Selection_MouseLeave(object sender, EventArgs e)
@@ -397,17 +405,28 @@ namespace myPhotoEditor
                 newX = pb_Original.Location.X - (int)((mousePosition.X - pb_Original.Location.X) * (k - 1));
                 newY = pb_Original.Location.Y - (int)((mousePosition.Y - pb_Original.Location.Y) * (k - 1));
 
-                pb_Original.Size = new Size(newWidth, newHeight);
-                pb_Original.Location = new Point(newX, newY);
+                Size size = new Size(newWidth, newHeight);
+                Point TopLeft = new Point(newX, newY);
 
-                pb_Selection.Hide();
-                pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
-                pb_Selection.Show();
+                if (Check_pb_Original_Visibility(new Rectangle(TopLeft, size)))
+                {
+
+                    pb_Original.Size = size;
+                    pb_Original.Location = TopLeft;
+
+                    pb_Selection.Hide();
+                    pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+                    pb_Selection.Show();
 
 
-                Selection.Size = Size.Empty;
-                Selection.isEditable = false;
-                SelectionReDraw();
+                    Selection.Size = Size.Empty;
+                    Selection.isEditable = false;
+                    SelectionReDraw();
+                }
+                else
+                {
+                    ImageScale /= k;
+                }
 
             }
             else
@@ -421,6 +440,8 @@ namespace myPhotoEditor
             pb_Selection.Size = splitContainer1.Panel1.ClientSize;
             SelectionReDraw();
         }
+
+
 
         private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
         {
