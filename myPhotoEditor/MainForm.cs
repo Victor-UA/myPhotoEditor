@@ -30,6 +30,20 @@ namespace myPhotoEditor
             }
         }
         private Point MiddleButtonDown;
+        private bool _Grayscale;
+        private bool Grayscale
+        {
+            get
+            {
+                return _Grayscale;
+            }
+            set
+            {
+                _Grayscale = value;
+                grayscaleToolStripMenuItem1.Checked = 
+                    grayscaleToolStripMenuItem.Checked = _Grayscale;
+            }
+        }
 
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
@@ -89,6 +103,7 @@ namespace myPhotoEditor
                         ImageLoaded = true;
                         Selection.isEditable = false;
                         ImageScale = 1;
+                        Text = "myPhotoEditor: " + OriginalImageFile;
                     }
                     catch (Exception)
                     {
@@ -130,7 +145,7 @@ namespace myPhotoEditor
         }
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            grayscaleToolStripMenuItem.Checked = !grayscaleToolStripMenuItem.Checked;
+            Grayscale = !Grayscale;
             CropImage();
         }
 
