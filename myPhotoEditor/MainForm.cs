@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using myPhotoEditor.Base;
+using myPhotoEditor.Tools;
 
 namespace myPhotoEditor
 {
@@ -60,6 +61,9 @@ namespace myPhotoEditor
             MouseInside = false;
         }        
 
+
+
+        //---------Menu---------
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -69,7 +73,7 @@ namespace myPhotoEditor
                     Title = "Оберіть зображення",
                     AddExtension = true,
                     CheckFileExists = true,
-                    Filter = "Images| *.jpg; *.png; *.bmp",
+                    Filter = "Images| *.jpeg; *.jpg; *.png; *.bmp",
                     Multiselect = false                    
                 };
                 openFileDialog.ShowDialog();
@@ -98,7 +102,38 @@ namespace myPhotoEditor
             {
                 OriginalImageFile = "";                
             }
+        }        
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Title = "Оберіть зображення",
+                AddExtension = true,
+                Filter = "Images| *.jpeg; *.jpg; *.png; *.bmp"
+            };
+            string[] filename = dialog.FileName.Split('.');
+            string fileExtention = filename[filename.Length - 1];
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ImageFormat imageFormat;
+                switch (fileExtention.ToLower())
+                {                    
+                    case "png":
+                        imageFormat = ImageFormat.Png;
+                        break;
+                    default:
+                        imageFormat = ImageFormat.Jpeg;
+                        break;
+                }                
+                pb_Crop.Image.Save(dialog.FileName, ImageFormat.Jpeg);
+            }
         }
+        private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            grayscaleToolStripMenuItem.Checked = !grayscaleToolStripMenuItem.Checked;
+            CropImage();
+        }
+
 
         private void SelectionChanged(object sender, EventArgs e)
         {
@@ -188,7 +223,10 @@ namespace myPhotoEditor
                 Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale, pb_Selection.Location));
                 if (cropBitmap != null)
                 {
-                    pb_Crop.Image = cropBitmap;
+                    if (grayscaleToolStripMenuItem.Checked)
+                        pb_Crop.Image = ImageTools.MakeGrayscale3(cropBitmap);
+                    else
+                        pb_Crop.Image = cropBitmap;
                     pb_Crop.Refresh();
                     GC.Collect();
                 }
@@ -344,6 +382,6 @@ namespace myPhotoEditor
         {
             pb_Selection.Size = splitContainer1.Panel1.ClientSize;
             SelectionReDraw();
-        }
+        }        
     }
 }
