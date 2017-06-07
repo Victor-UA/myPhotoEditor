@@ -116,7 +116,7 @@ namespace myPhotoEditor
         {
             try
             {
-                Bitmap bitmap = new Bitmap(pb_Selection.Width, pb_Selection.Height, PixelFormat.Format32bppArgb);
+                Bitmap bitmap = new Bitmap(splitContainer1.Panel1.Width, splitContainer1.Panel1.Height, PixelFormat.Format32bppArgb);
                 Selection.Draw(bitmap);
                 pb_Selection.BackgroundImage = bitmap;
                 pb_Selection.Refresh();
@@ -154,9 +154,10 @@ namespace myPhotoEditor
         private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
-            tSSL_X.Text = e.X.ToString();
-            tSSL_Y.Text = e.Y.ToString();
-            Original_MousePosition = new Point(e.X, e.Y);
+            Point mousePosition = new Point(e.X < 0 ? 65536 + e.X : e.X, e.Y < 0 ? 65536 + e.Y : e.Y);
+            tSSL_X.Text = mousePosition.X.ToString();
+            tSSL_Y.Text = mousePosition.Y.ToString();
+            Original_MousePosition = new Point(mousePosition.X, mousePosition.Y);
 
             if (mouse.Button == MouseButtons.Middle)
             {
@@ -176,8 +177,8 @@ namespace myPhotoEditor
                 if (Selection.isEditable && ImageLoaded)
                 {
                     Selection.Size = new Size(
-                        Math.Abs(e.X - Selection.MiddlePointPosition.X) * 2,
-                        Math.Abs(e.Y - Selection.MiddlePointPosition.Y) * 2
+                        Math.Abs(mousePosition.X - Selection.MiddlePointPosition.X) * 2,
+                        Math.Abs(mousePosition.Y - Selection.MiddlePointPosition.Y) * 2
                     );
                     SelectionReDraw();
                     CropImage();
@@ -294,6 +295,8 @@ namespace myPhotoEditor
         }
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
+            Point mousePosition = new Point(e.X < 0 ? 65536 - e.X : e.X, e.Y < 0 ? 65536 - e.Y : e.Y);
+
             int newWidth = pb_Original.Width,
                 newHeight = pb_Original.Height,
                 newX = pb_Original.Location.X,
@@ -306,11 +309,12 @@ namespace myPhotoEditor
 
             newWidth = (int)(pb_Original.Image.Size.Width * ImageScale);
             newHeight = (int)(pb_Original.Image.Size.Height * ImageScale);
-            if (newWidth < 32676 && newHeight < 32676)
+
+            if (newWidth < 32767 && newHeight < 32767)
             {
 
-                newX = pb_Original.Location.X - (int)((e.X - pb_Original.Location.X) * (k - 1));
-                newY = pb_Original.Location.Y - (int)((e.Y - pb_Original.Location.Y) * (k - 1));
+                newX = pb_Original.Location.X - (int)((mousePosition.X - pb_Original.Location.X) * (k - 1));
+                newY = pb_Original.Location.Y - (int)((mousePosition.Y - pb_Original.Location.Y) * (k - 1));
 
                 pb_Original.Size = new Size(newWidth, newHeight);
                 pb_Original.Location = new Point(newX, newY);
