@@ -88,6 +88,8 @@
             this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
             this.splitContainer1.Panel1.DoubleClick += new System.EventHandler(this.splitContainer1_Panel1_DoubleClick);
             this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseClick);
+            this.splitContainer1.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseDown);
+            this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseMove);
             this.splitContainer1.Panel1MinSize = 200;
             // 
             // splitContainer1.Panel2
@@ -139,7 +141,6 @@
             this.pb_Selection.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
             this.pb_Selection.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
             this.pb_Selection.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
-            this.pb_Selection.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseUp);
             // 
             // pb_Crop
             // 
