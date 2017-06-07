@@ -38,14 +38,14 @@ namespace myPhotoEditor
         {
             InitializeComponent();
 
-            pb_Original.Controls.Add(pb_Selection);
-            //pb_Selection.Size = pb_Original.Size;
+            pb_Original.Controls.Add(pb_Selection);            
+            pb_Selection.Size = splitContainer1.Panel1.ClientSize;
             pb_Selection.Location = new Point(0, 0);
             pb_Selection.BackColor = Color.Transparent;
             pb_Selection.BorderStyle = BorderStyle.None;
-            //pb_Selection.BringToFront();         
+            pb_Selection.BringToFront();         
             
-            splitContainer1.Panel1.MouseWheel += new MouseEventHandler(splitContainer1_Panel1_MouseWheel);
+            splitContainer1.Panel1.MouseWheel += splitContainer1_Panel1_MouseWheel;
 
             OriginalImageFile = "";
             ImageLoaded = false;
@@ -58,12 +58,7 @@ namespace myPhotoEditor
             ImageScale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
-        }
-
-        private void Pb_Selection_MouseWheel(object sender, MouseEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        }        
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -118,7 +113,7 @@ namespace myPhotoEditor
             {
                 Bitmap bitmap = new Bitmap(splitContainer1.Panel1.Width, splitContainer1.Panel1.Height, PixelFormat.Format32bppArgb);
                 Selection.Draw(bitmap);
-                pb_Selection.BackgroundImage = bitmap;
+                pb_Selection.BackgroundImage = bitmap;                
                 pb_Selection.Refresh();
             }
             catch (Exception ex)
@@ -154,7 +149,7 @@ namespace myPhotoEditor
         private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
-            Point mousePosition = new Point(e.X < 0 ? 65536 + e.X : e.X, e.Y < 0 ? 65536 + e.Y : e.Y);
+            Point mousePosition = new Point(e.X < -1 ? 65536 + e.X : e.X, e.Y < -1 ? 65536 + e.Y : e.Y);
             tSSL_X.Text = mousePosition.X.ToString();
             tSSL_Y.Text = mousePosition.Y.ToString();
             Original_MousePosition = new Point(mousePosition.X, mousePosition.Y);
@@ -169,7 +164,7 @@ namespace myPhotoEditor
                 int newX = pb_Original.Location.X + deltaX;
                 int newY = pb_Original.Location.Y + deltaY;
 
-                pb_Original.Location = new Point(newX, newY);
+                pb_Original.Location = new Point(newX, newY);                
             }
             else
             {
@@ -190,7 +185,7 @@ namespace myPhotoEditor
         {
             try
             {
-                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale));
+                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale, pb_Selection.Location));
                 if (cropBitmap != null)
                 {
                     pb_Crop.Image = cropBitmap;
@@ -262,9 +257,19 @@ namespace myPhotoEditor
                 int newY = pb_Original.Location.Y + deltaY;
 
                 pb_Original.Location = new Point(newX, newY);
+                pb_Selection.Hide();
+                Point oldPBSelectionLocation = pb_Selection.Location;
+                pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+                int PBSelectionDX = pb_Selection.Location.X - oldPBSelectionLocation.X;
+                int PBSelectionDY = pb_Selection.Location.Y - oldPBSelectionLocation.Y;
+                Selection.MiddlePointPosition = new Point(
+                    Selection.MiddlePointPosition.X - PBSelectionDX,
+                    Selection.MiddlePointPosition.Y - PBSelectionDY
+                );
+                SelectionReDraw();                
+                pb_Selection.Show();
             }
         }
-        
 
         private void pb_Selection_DoubleClick(object sender, EventArgs e)
         {
@@ -295,7 +300,7 @@ namespace myPhotoEditor
         }
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            Point mousePosition = new Point(e.X < 0 ? 65536 - e.X : e.X, e.Y < 0 ? 65536 - e.Y : e.Y);
+            Point mousePosition = new Point(e.X < -1 ? 65536 - e.X : e.X, e.Y < -1 ? 65536 - e.Y : e.Y);
 
             int newWidth = pb_Original.Width,
                 newHeight = pb_Original.Height,
@@ -318,11 +323,27 @@ namespace myPhotoEditor
 
                 pb_Original.Size = new Size(newWidth, newHeight);
                 pb_Original.Location = new Point(newX, newY);
+
+                pb_Selection.Hide();
+                pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+                pb_Selection.Show();
+
+
+                Selection.Size = Size.Empty;
+                Selection.isEditable = false;
+                SelectionReDraw();
+
             }
             else
             {
                 ImageScale /= k;
             }
+        }        
+
+        private void splitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
+        {
+            pb_Selection.Size = splitContainer1.Panel1.ClientSize;
+            SelectionReDraw();
         }
     }
 }

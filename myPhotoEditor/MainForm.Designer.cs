@@ -71,6 +71,7 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.pb_Original);
             this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
+            this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.splitContainer1_Panel1_SizeChanged);
             this.splitContainer1.Panel1.DoubleClick += new System.EventHandler(this.splitContainer1_Panel1_DoubleClick);
             this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseClick);
             this.splitContainer1.Panel1MinSize = 200;
@@ -97,7 +98,6 @@
             // pb_Selection
             // 
             this.pb_Selection.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pb_Selection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_Selection.Location = new System.Drawing.Point(0, 0);
             this.pb_Selection.Name = "pb_Selection";
             this.pb_Selection.Size = new System.Drawing.Size(416, 371);
