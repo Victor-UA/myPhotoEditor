@@ -15,7 +15,6 @@ namespace myPhotoEditor
         private bool ImageLoaded;
         private string OriginalImageFile;
         private Selection Selection;
-        private Size Offset;
         private double _ImageScale;
         public double ImageScale
         {
@@ -65,12 +64,13 @@ namespace myPhotoEditor
 
             OriginalImageFile = "";
             ImageLoaded = false;
+
             Selection = new Selection(new Point(0, 0))
             {                
                 isEditable = false
             };
             Selection.Changed += SelectionChanged;
-            Offset = Size.Empty;
+
             ImageScale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
@@ -94,42 +94,12 @@ namespace myPhotoEditor
         }        
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                Title = "Оберіть зображення",
-                AddExtension = true,
-                Filter = "PNG| *.png; | JPEG| *.jpeg; *.jpg; | BMP| *.bmp; | All Images| *.jpeg; *.jpg; *.png; *.bmp;"
-            };
-            string[] filename = dialog.FileName.Split('.');
-            string fileExtention = filename[filename.Length - 1];
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                ImageFormat imageFormat;
-                switch (fileExtention.ToLower())
-                {                    
-                    case "png":
-                        imageFormat = ImageFormat.Png;
-                        break;
-                    default:
-                        imageFormat = ImageFormat.Jpeg;
-                        break;
-                }
-                try
-                {
-                    pb_Crop.Image.Save(dialog.FileName, ImageFormat.Jpeg);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }          
-            }
+            SaveFileAs();
         }
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Grayscale = !Grayscale;
-            CropImage();
+            GrayscaleSwitch();
         }
-
 
 
         private void OpenFile()
@@ -186,13 +156,98 @@ namespace myPhotoEditor
             }
         }
 
+        private void SaveFileAs()
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Title = "Оберіть зображення",
+                AddExtension = true,
+                Filter = "PNG| *.png; | JPEG| *.jpeg; *.jpg; | BMP| *.bmp; | All Images| *.jpeg; *.jpg; *.png; *.bmp;"
+            };
+            string[] filename = dialog.FileName.Split('.');
+            string fileExtention = filename[filename.Length - 1];
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ImageFormat imageFormat;
+                switch (fileExtention.ToLower())
+                {
+                    case "png":
+                        imageFormat = ImageFormat.Png;
+                        break;
+                    default:
+                        imageFormat = ImageFormat.Jpeg;
+                        break;
+                }
+                try
+                {
+                    pb_Crop.Image.Save(dialog.FileName, ImageFormat.Jpeg);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void GrayscaleSwitch()
+        {
+            Grayscale = !Grayscale;
+            CropImage();
+        }
+        private void ImageScaleFit(Size size)
+        {
+
+        }
+        private void ImageScaleTo(Point focusReal, double scale)
+        {
+
+            //splitContainer1.Panel1.HorizontalScroll.Value = 0;
+            //splitContainer1.Panel1.VerticalScroll.Value = 0;
+
+            int newWidth = pb_Original.Width,
+                newHeight = pb_Original.Height,
+                newX = pb_Original.Location.X,
+                newY = pb_Original.Location.Y;
+
+            newWidth = (int)(pb_Original.Image.Size.Width * scale);
+            newHeight = (int)(pb_Original.Image.Size.Height * scale);
+
+            if (newWidth < 32767 && newHeight < 32767)
+            {
+                Point offset = new Point(
+                    pb_Original.Location.X - 4,
+                    pb_Original.Location.Y - 4
+                );
+
+                newX = pb_Original.Location.X - (int)(focusReal.X * (scale - ImageScale));
+                newY = pb_Original.Location.Y - (int)(focusReal.Y * (scale - ImageScale));
+
+                Size size = new Size(newWidth, newHeight);
+                Point TopLeft = new Point(newX, newY);
+
+                if (Check_pb_Original_Visibility(new Rectangle(TopLeft, size)))
+                {
+                    ImageScale = scale;
+                    pb_Original.Size = size;
+                    pb_Original.Location = TopLeft;
+
+                    pb_Selection.Hide();
+                    pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+                    pb_Selection.Show();
+
+                    Selection.Size = Size.Empty;
+                    Selection.isEditable = false;
+                    SelectionReDraw();                    
+                }
+            }
+        }
+
         private void SelectionChanged(object sender, EventArgs e)
         {
             Size size = ((Selection)sender).Size;
             tSSL_SelectionWidth.Text = Math.Round((size.Width) / ImageScale).ToString();
             tSSL_SelectionHeight.Text = Math.Round((size.Height) / ImageScale).ToString();
         }
-
         private void SelectionReDraw()
         {
             try
@@ -201,6 +256,27 @@ namespace myPhotoEditor
                 Selection.Draw(bitmap);
                 pb_Selection.BackgroundImage = bitmap;                
                 pb_Selection.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
+            }
+        }
+
+        private void CropImage()
+        {
+            try
+            {
+                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale, pb_Selection.Location));
+                if (cropBitmap != null)
+                {
+                    if (grayscaleToolStripMenuItem.Checked)
+                        pb_Crop.Image = ImageTools.MakeGrayscale3(cropBitmap);
+                    else
+                        pb_Crop.Image = cropBitmap;
+                    pb_Crop.Refresh();
+                    GC.Collect();
+                }
             }
             catch (Exception ex)
             {
@@ -231,9 +307,8 @@ namespace myPhotoEditor
                 return null;
             }
         }
-
         private MouseEventArgs Panel1_2_pb_Selection(MouseEventArgs e)
-        {            
+        {
             return new MouseEventArgs(
                 e.Button,
                 e.Clicks,
@@ -242,11 +317,22 @@ namespace myPhotoEditor
                 e.Delta
             );
         }
-
-        private void splitContainer1_Panel1_MouseMove(object sender, MouseEventArgs e)
-        {            
-            pb_Selection_MouseMove(sender, Panel1_2_pb_Selection(e));
+                
+        private Point ExpandMousePosition(MouseEventArgs e)
+        {
+            return new Point(e.X < -2048 ? 65536 - e.X : e.X, e.Y < -2048 ? 65536 - e.Y : e.Y);
         }
+
+        private bool Check_pb_Original_Visibility(Rectangle original)
+        {
+            bool result = true;
+            result &= (original.X < (splitContainer1.Panel1.ClientSize.Width - 10));
+            result &= (original.Y < (splitContainer1.Panel1.ClientSize.Height - 10));
+            result &= ((original.X + original.Width) > 10);
+            result &= ((original.Y + original.Height) > 10);
+            return result;
+        }
+
         private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
@@ -284,41 +370,34 @@ namespace myPhotoEditor
                     CropImage();
                 }
             }
+        }        
+        private void splitContainer1_Panel1_MouseMove(object sender, MouseEventArgs e)
+        {            
+            pb_Selection_MouseMove(sender, Panel1_2_pb_Selection(e));
         }
 
-        private void CropImage()
-        {
-            try
-            {
-                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale, pb_Selection.Location));
-                if (cropBitmap != null)
-                {
-                    if (grayscaleToolStripMenuItem.Checked)
-                        pb_Crop.Image = ImageTools.MakeGrayscale3(cropBitmap);
-                    else
-                        pb_Crop.Image = cropBitmap;
-                    pb_Crop.Refresh();
-                    GC.Collect();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
-            }
-        }
-        private bool Check_pb_Original_Visibility(Rectangle original)
-        {
-            bool result = true;
-            result &= (original.X < (splitContainer1.Panel1.ClientSize.Width - 10));
-            result &= (original.Y < (splitContainer1.Panel1.ClientSize.Height - 10));
-            result &= ((original.X + original.Width) > 10);
-            result &= ((original.Y + original.Height) > 10);
-            return result;
-        }
 
+        private void pb_Selection_MouseEnter(object sender, EventArgs e)
+        {
+            MouseInside = true;
+            pb_Selection.Focus();
+        }
         private void pb_Selection_MouseLeave(object sender, EventArgs e)
         {
             MouseInside = false;
+        }
+
+        private void pb_Selection_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseEventArgs mouse = e as MouseEventArgs;
+            if (mouse.Button == MouseButtons.Middle)
+            {
+                MiddleButtonDown = mouse.Location;
+            }
+        }
+        private void splitContainer1_Panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            pb_Selection_MouseDown(sender, Panel1_2_pb_Selection(e));
         }
 
         private void pb_Selection_MouseClick(object sender, MouseEventArgs e)
@@ -344,30 +423,12 @@ namespace myPhotoEditor
             }
             
         }
-
-        private void pb_Selection_MouseEnter(object sender, EventArgs e)
+        private void splitContainer1_Panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            MouseInside = true;
+            if (Selection.isEditable)
+                pb_Selection_MouseClick(sender, e);
         }
 
-
-        private void splitContainer1_Panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            pb_Selection_MouseDown(sender, Panel1_2_pb_Selection(e));
-        }
-        private void pb_Selection_MouseDown(object sender, MouseEventArgs e)
-        {
-            MouseEventArgs mouse = e as MouseEventArgs;
-            if (mouse.Button == MouseButtons.Middle)
-            {
-                MiddleButtonDown = mouse.Location;
-            }
-        }
-
-        private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
-        {
-            pb_Selection_MouseUp(sender, Panel1_2_pb_Selection(e));
-        }
         private void pb_Selection_MouseUp(object sender, MouseEventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
@@ -390,88 +451,49 @@ namespace myPhotoEditor
                 pb_Selection.Show();
             }
         }
+        private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            pb_Selection_MouseUp(sender, Panel1_2_pb_Selection(e));
+        }
 
         private void pb_Selection_DoubleClick(object sender, EventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
             if (ImageLoaded)
             {
+                Point focus = ExpandMousePosition(e as MouseEventArgs);
+                Point focusReal = new Point(
+                    (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
+                    (int)((focus.Y - (pb_Original.Location.Y < 0 ? pb_Original.Location.Y : 0)) / ImageScale)
+                );
                 if (mouse.Button == MouseButtons.Middle)
                 {
-                    pb_Original.Size = pb_Original.Image.Size;
-                    splitContainer1.Panel1.HorizontalScroll.Value = 0;
-                    splitContainer1.Panel1.VerticalScroll.Value = 0;
-                    pb_Selection.Location = Point.Empty;
-                    pb_Original.Location = Point.Empty;
-                    Selection.Size = Size.Empty;
-                    Selection.isEditable = false;
-                    SelectionReDraw();
-                    ImageScale = 1;
+                    double scaleWidth = (double)splitContainer1.Panel1.ClientSize.Width / pb_Original.Image.Size.Width;
+                    double scaleHeight = (double)splitContainer1.Panel1.ClientSize.Height / pb_Original.Image.Size.Height;
+                    ImageScaleTo(focusReal, scaleWidth < scaleHeight ? scaleWidth : scaleHeight);
+                }
+                if (mouse.Button == MouseButtons.Left)
+                {
+                    ImageScaleTo(focusReal, 1);
                 }
             }
         }
-
         private void splitContainer1_Panel1_DoubleClick(object sender, EventArgs e)
         {
             pb_Selection_DoubleClick(sender, Panel1_2_pb_Selection(e as MouseEventArgs));
         }
-
-        private void splitContainer1_Panel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (Selection.isEditable)
-                pb_Selection_MouseClick(sender, e);
-        }
+        
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            Point mousePosition = new Point(e.X < -2048 ? 65536 - e.X : e.X, e.Y < -2048 ? 65536 - e.Y : e.Y);
-
-            int newWidth = pb_Original.Width,
-                newHeight = pb_Original.Height,
-                newX = pb_Original.Location.X,
-                newY = pb_Original.Location.Y;
-
+            Point focus = ExpandMousePosition(e);
             double step = 0.1;
             double k = (e.Delta > 0) ? 1 + step : 1 - step;
-
-            ImageScale *= k;
-
-            newWidth = (int)(pb_Original.Image.Size.Width * ImageScale);
-            newHeight = (int)(pb_Original.Image.Size.Height * ImageScale);
-
-            if (newWidth < 32767 && newHeight < 32767)
-            {
-
-                newX = pb_Original.Location.X - (int)((mousePosition.X - pb_Original.Location.X) * (k - 1));
-                newY = pb_Original.Location.Y - (int)((mousePosition.Y - pb_Original.Location.Y) * (k - 1));
-
-                Size size = new Size(newWidth, newHeight);
-                Point TopLeft = new Point(newX, newY);
-
-                if (Check_pb_Original_Visibility(new Rectangle(TopLeft, size)))
-                {
-
-                    pb_Original.Size = size;
-                    pb_Original.Location = TopLeft;
-
-                    pb_Selection.Hide();
-                    pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
-                    pb_Selection.Show();
-
-
-                    Selection.Size = Size.Empty;
-                    Selection.isEditable = false;
-                    SelectionReDraw();
-                }
-                else
-                {
-                    ImageScale /= k;
-                }
-
-            }
-            else
-            {
-                ImageScale /= k;
-            }
+            
+            Point focusReal = new Point(
+                (int)((focus.X - pb_Original.Location.X + 4) / ImageScale),
+                (int)((focus.Y - pb_Original.Location.Y + 4) / ImageScale)
+            );            
+            ImageScaleTo(focusReal, ImageScale * k);
         }        
 
         private void splitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
@@ -480,8 +502,12 @@ namespace myPhotoEditor
             SelectionReDraw();
         }
 
-
-
+        private void splitContainer1_Panel1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
+                ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
+                e.Effect = DragDropEffects.Move;
+        }        
         private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
         {
             Debug.WriteLine("DragDrop");
@@ -494,12 +520,5 @@ namespace myPhotoEditor
                 }
             }
         }
-
-        private void splitContainer1_Panel1_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
-                ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
-                e.Effect = DragDropEffects.Move;
-        }        
     }
 }
