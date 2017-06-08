@@ -41,14 +41,31 @@ namespace myPhotoEditor
             {
                 _Grayscale = value;
                 grayscaleToolStripMenuItem1.Checked = 
-                    grayscaleToolStripMenuItem.Checked = _Grayscale;
+                    grayscaleToolStripMenuItem.Checked = value;
+                GrayscaleSwitched();
+            }
+        }
+        private bool _MiddleCrossLines;
+        private bool MiddleCrossLines
+        {
+            get
+            {
+                return _MiddleCrossLines;
+            }
+            set
+            {
+                _MiddleCrossLines = value;
+                middleCrosslinesToolStripMenuItem.Checked = 
+                    middleCrosslinesToolStripMenuItem1.Checked = value;
+                MiddleCrossLinesSwitched();
             }
         }
 
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
 
-
+        
+        //-------Constructor-------
         public MainForm(string[] args)
         {
             InitializeComponent();            
@@ -58,8 +75,15 @@ namespace myPhotoEditor
             pb_Selection.Location = new Point(0, 0);
             pb_Selection.BackColor = Color.Transparent;
             pb_Selection.BorderStyle = BorderStyle.None;
-            pb_Selection.BringToFront();         
-            
+            pb_Selection.BringToFront();
+
+            pb_Crop.Controls.Add(pb_CropSensor);
+            pb_CropSensor.Size = pb_Crop.Size;
+            pb_CropSensor.Location = new Point(0, 0);
+            pb_CropSensor.BackColor = Color.Transparent;
+            pb_CropSensor.BorderStyle = BorderStyle.None;
+            pb_CropSensor.BringToFront();
+
             splitContainer1.Panel1.MouseWheel += splitContainer1_Panel1_MouseWheel;
 
             OriginalImageFile = "";
@@ -74,6 +98,7 @@ namespace myPhotoEditor
             ImageScale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
+            MiddleCrossLines = true;
 
             if (args.Length > 0)
             {                
@@ -98,7 +123,11 @@ namespace myPhotoEditor
         }
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GrayscaleSwitch();
+            Grayscale = !Grayscale;
+        }
+        private void middleCrosslinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MiddleCrossLines = !MiddleCrossLines;
         }
 
 
@@ -191,10 +220,25 @@ namespace myPhotoEditor
             }
         }
 
-        private void GrayscaleSwitch()
-        {
-            Grayscale = !Grayscale;
+        private void GrayscaleSwitched()
+        {            
             CropImage();
+        }
+        private void MiddleCrossLinesSwitched()
+        {
+            if (MiddleCrossLines)
+            {
+                Bitmap bitmap = new Bitmap(pb_CropSensor.Width, pb_CropSensor.Height);
+                Graphics g = Graphics.FromImage(bitmap);
+                Pen pen = new Pen(Brushes.LightGreen);
+                g.DrawLine(pen, pb_CropSensor.Width / 2, 0, pb_CropSensor.Width / 2, pb_CropSensor.Height);
+                g.DrawLine(pen, 0, pb_CropSensor.Height / 2, pb_CropSensor.Width, pb_CropSensor.Height / 2);
+                pb_CropSensor.BackgroundImage = bitmap;
+            }
+            else
+            {
+                pb_CropSensor.BackgroundImage = null;
+            }
         }
         private void ImageScaleToFit()
         {
@@ -540,6 +584,6 @@ namespace myPhotoEditor
                     OpenFile(objects[0]);
                 }
             }
-        }
+        }        
     }
 }
