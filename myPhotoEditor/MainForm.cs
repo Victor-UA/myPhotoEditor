@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Windows.Forms;
 using myPhotoEditor.Base;
 using myPhotoEditor.Tools;
@@ -49,9 +50,9 @@ namespace myPhotoEditor
         private bool MouseInside { get; set; }
 
 
-        public MainForm()
+        public MainForm(string[] args)
         {
-            InitializeComponent();
+            InitializeComponent();            
 
             pb_Original.Controls.Add(pb_Selection);            
             pb_Selection.Size = splitContainer1.Panel1.ClientSize;
@@ -73,6 +74,15 @@ namespace myPhotoEditor
             ImageScale = 1;
             Original_MousePosition = new Point();
             MouseInside = false;
+
+            if (args.Length > 0)
+            {                
+                string fileName = args[0];
+                if (File.Exists(fileName))
+                {
+                    OpenFile(fileName);
+                }
+            }
         }        
 
 
