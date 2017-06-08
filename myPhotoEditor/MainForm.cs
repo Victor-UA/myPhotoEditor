@@ -145,6 +145,14 @@ namespace myPhotoEditor
         {
             MiddleCrossLines = !MiddleCrossLines;
         }
+        private void boxAndDiagonlsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectionStyle = SelectionStyle.BoxDiagonal;
+        }
+        private void boxAndOrthoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+        }
 
 
         private void OpenFile()
@@ -622,16 +630,11 @@ namespace myPhotoEditor
                     OpenFile(objects[0]);
                 }
             }
-        }
+        }        
 
-        private void boxAndDiagonlsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pb_CropSensor_Resize(object sender, EventArgs e)
         {
-            SelectionStyle = SelectionStyle.BoxDiagonal;
-        }
-
-        private void boxAndOrthoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+            MiddleCrossLinesSwitched();
         }
     }
 }

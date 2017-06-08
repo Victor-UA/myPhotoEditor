@@ -194,16 +194,17 @@
             this.pb_CropSensor.Size = new System.Drawing.Size(365, 371);
             this.pb_CropSensor.TabIndex = 4;
             this.pb_CropSensor.TabStop = false;
+            this.pb_CropSensor.Resize += new System.EventHandler(this.pb_CropSensor_Resize);
             // 
             // contextMenuStrip_CropSide
             // 
             this.contextMenuStrip_CropSide.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.grayscaleToolStripMenuItem1,
-            this.middleCrosslinesToolStripMenuItem1,
+            this.saveAsToolStripMenuItem1,
             this.toolStripMenuItem1,
-            this.saveAsToolStripMenuItem1});
+            this.grayscaleToolStripMenuItem1,
+            this.middleCrosslinesToolStripMenuItem1});
             this.contextMenuStrip_CropSide.Name = "contextMenuStrip_CropSide";
-            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(168, 76);
+            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(168, 98);
             // 
             // grayscaleToolStripMenuItem1
             // 
