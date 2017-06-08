@@ -105,6 +105,7 @@ namespace myPhotoEditor
         private void OpenFile()
         {
             OpenFile(string.Empty);
+
         }
         private void OpenFile(string fileName)
         {
@@ -141,6 +142,7 @@ namespace myPhotoEditor
                         Selection.isEditable = false;
                         ImageScale = 1;
                         Text = "myPhotoEditor: " + OriginalImageFile;
+                        ImageScaleFit();
                     }
                     catch (Exception)
                     {
@@ -194,15 +196,26 @@ namespace myPhotoEditor
             Grayscale = !Grayscale;
             CropImage();
         }
-        private void ImageScaleFit(Size size)
+        private void ImageScaleFit()
         {
-
+            Point focusReal = new Point(
+                pb_Original.Image.Width / 2,
+                pb_Original.Image.Height / 2
+            );
+            double scaleWidth = (double)splitContainer1.Panel1.ClientSize.Width / pb_Original.Image.Size.Width;
+            double scaleHeight = (double)splitContainer1.Panel1.ClientSize.Height / pb_Original.Image.Size.Height;
+            ImageMoveToCenter(focusReal);
+            ImageScaleTo(focusReal, scaleWidth < scaleHeight ? scaleWidth : scaleHeight);
         }
         private void ImageScaleTo(Point focusReal, double scale)
         {
 
             //splitContainer1.Panel1.HorizontalScroll.Value = 0;
             //splitContainer1.Panel1.VerticalScroll.Value = 0;
+
+            Selection.Size = Size.Empty;
+            Selection.isEditable = false;
+            SelectionReDraw();
 
             int newWidth = pb_Original.Width,
                 newHeight = pb_Original.Height,
@@ -231,15 +244,28 @@ namespace myPhotoEditor
                     pb_Original.Size = size;
                     pb_Original.Location = TopLeft;
 
-                    pb_Selection.Hide();
-                    pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
-                    pb_Selection.Show();
-
-                    Selection.Size = Size.Empty;
-                    Selection.isEditable = false;
-                    SelectionReDraw();                    
+                    ChangeSensorLocation();                                                           
                 }
             }
+            GC.Collect();
+        }
+        private void ImageMove(Point offset)
+        {
+            int newX = pb_Original.Location.X + offset.X;
+            int newY = pb_Original.Location.Y + offset.Y;
+
+            Point TopLeft = new Point(newX, newY);
+            if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
+            {
+                pb_Original.Location = TopLeft;                
+            }
+        }
+        private void ImageMoveToCenter(Point focusReal)
+        {
+            int newX = (int)(splitContainer1.Panel1.Width / 2 - (focusReal.X * ImageScale));
+            int newY = (int)(splitContainer1.Panel1.Height / 2 - (focusReal.Y * ImageScale));
+            pb_Original.Location = new Point(newX, newY);
+            ChangeSensorLocation();
         }
 
         private void SelectionChanged(object sender, EventArgs e)
@@ -261,6 +287,23 @@ namespace myPhotoEditor
             {
                 Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
+        }
+        private void ChangeSensorLocation()
+        {
+            int newX = pb_Original.Location.X;
+            int newY = pb_Original.Location.Y;
+
+            pb_Selection.Hide();
+            Point oldPBSelectionLocation = pb_Selection.Location;
+            pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
+            int PBSelectionDX = pb_Selection.Location.X - oldPBSelectionLocation.X;
+            int PBSelectionDY = pb_Selection.Location.Y - oldPBSelectionLocation.Y;
+            Selection.MiddlePointPosition = new Point(
+                Selection.MiddlePointPosition.X - PBSelectionDX,
+                Selection.MiddlePointPosition.Y - PBSelectionDY
+            );
+            SelectionReDraw();
+            pb_Selection.Show();
         }
 
         private void CropImage()
@@ -343,23 +386,14 @@ namespace myPhotoEditor
 
             if (mouse.Button == MouseButtons.Middle)
             {
-                Point mousePosNow = mouse.Location;
-
-                int deltaX = mousePosNow.X - MiddleButtonDown.X;
-                int deltaY = mousePosNow.Y - MiddleButtonDown.Y;
-
-                int newX = pb_Original.Location.X + deltaX;
-                int newY = pb_Original.Location.Y + deltaY;
-
-                Point TopLeft = new Point(newX, newY);
-                if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
-                {
-                    pb_Original.Location = TopLeft;                    
-                }
+                Point offset = new Point(
+                    e.Location.X - MiddleButtonDown.X,
+                    e.Location.Y - MiddleButtonDown.Y
+                );
+                ImageMove(offset);
             }
             else
             {
-                
                 if (Selection.isEditable && ImageLoaded)
                 {
                     Selection.Size = new Size(
@@ -435,20 +469,7 @@ namespace myPhotoEditor
 
             if (mouse.Button == MouseButtons.Middle)
             {
-                int newX = pb_Original.Location.X;
-                int newY = pb_Original.Location.Y;
-                
-                pb_Selection.Hide();
-                Point oldPBSelectionLocation = pb_Selection.Location;
-                pb_Selection.Location = new Point(newX < 0 ? -newX : 0, newY < 0 ? -newY : 0);
-                int PBSelectionDX = pb_Selection.Location.X - oldPBSelectionLocation.X;
-                int PBSelectionDY = pb_Selection.Location.Y - oldPBSelectionLocation.Y;
-                Selection.MiddlePointPosition = new Point(
-                    Selection.MiddlePointPosition.X - PBSelectionDX,
-                    Selection.MiddlePointPosition.Y - PBSelectionDY
-                );
-                SelectionReDraw();
-                pb_Selection.Show();
+                ChangeSensorLocation();
             }
         }
         private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
@@ -462,19 +483,18 @@ namespace myPhotoEditor
             if (ImageLoaded)
             {
                 Point focus = ExpandMousePosition(e as MouseEventArgs);
-                Point focusReal = new Point(
-                    (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
-                    (int)((focus.Y - (pb_Original.Location.Y < 0 ? pb_Original.Location.Y : 0)) / ImageScale)
-                );
                 if (mouse.Button == MouseButtons.Middle)
                 {
-                    double scaleWidth = (double)splitContainer1.Panel1.ClientSize.Width / pb_Original.Image.Size.Width;
-                    double scaleHeight = (double)splitContainer1.Panel1.ClientSize.Height / pb_Original.Image.Size.Height;
-                    ImageScaleTo(focusReal, scaleWidth < scaleHeight ? scaleWidth : scaleHeight);
+                    ImageScaleFit();
                 }
                 if (mouse.Button == MouseButtons.Left)
                 {
-                    ImageScaleTo(focusReal, 1);
+                    Point focusReal = new Point(
+                        (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
+                        (int)((focus.Y - (pb_Original.Location.Y < 0 ? pb_Original.Location.Y : 0)) / ImageScale)
+                    );
+                    ImageMoveToCenter(focusReal);
+                    ImageScaleTo(focusReal, ImageScale * 2);                    
                 }
             }
         }
