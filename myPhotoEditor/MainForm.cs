@@ -142,7 +142,7 @@ namespace myPhotoEditor
                         Selection.isEditable = false;
                         ImageScale = 1;
                         Text = "myPhotoEditor: " + OriginalImageFile;
-                        ImageScaleFit();
+                        ImageScaleToFit();
                     }
                     catch (Exception)
                     {
@@ -196,7 +196,7 @@ namespace myPhotoEditor
             Grayscale = !Grayscale;
             CropImage();
         }
-        private void ImageScaleFit()
+        private void ImageScaleToFit()
         {
             Point focusReal = new Point(
                 pb_Original.Image.Width / 2,
@@ -205,7 +205,8 @@ namespace myPhotoEditor
             double scaleWidth = (double)splitContainer1.Panel1.ClientSize.Width / pb_Original.Image.Size.Width;
             double scaleHeight = (double)splitContainer1.Panel1.ClientSize.Height / pb_Original.Image.Size.Height;
             ImageMoveToCenter(focusReal);
-            ImageScaleTo(focusReal, scaleWidth < scaleHeight ? scaleWidth : scaleHeight);
+            double scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
+            ImageScaleTo(focusReal, scale > 2 ? 2 : scale);
         }
         private void ImageScaleTo(Point focusReal, double scale)
         {
@@ -485,7 +486,7 @@ namespace myPhotoEditor
                 Point focus = ExpandMousePosition(e as MouseEventArgs);
                 if (mouse.Button == MouseButtons.Middle)
                 {
-                    ImageScaleFit();
+                    ImageScaleToFit();
                 }
                 if (mouse.Button == MouseButtons.Left)
                 {
