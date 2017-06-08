@@ -33,11 +33,16 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.contextMenuStrip_OriginalSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boxAndMiddleOrthoAxisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Original = new System.Windows.Forms.PictureBox();
             this.pb_Selection = new System.Windows.Forms.PictureBox();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.grayscaleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.middleCrosslinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Crop = new System.Windows.Forms.PictureBox();
@@ -48,6 +53,9 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectionStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boxAndDiagonlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boxAndOrthoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_X = new System.Windows.Forms.ToolStripStatusLabel();
@@ -59,7 +67,6 @@
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.middleCrosslinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -110,16 +117,46 @@
             // contextMenuStrip_OriginalSide
             // 
             this.contextMenuStrip_OriginalSide.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem1});
+            this.openToolStripMenuItem1,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(104, 26);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(150, 54);
             // 
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(146, 6);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.boxAndDiagonalsToolStripMenuItem,
+            this.boxAndMiddleOrthoAxisToolStripMenuItem});
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 22);
+            this.toolStripMenuItem4.Text = "Selection style";
+            // 
+            // boxAndDiagonalsToolStripMenuItem
+            // 
+            this.boxAndDiagonalsToolStripMenuItem.Name = "boxAndDiagonalsToolStripMenuItem";
+            this.boxAndDiagonalsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.boxAndDiagonalsToolStripMenuItem.Text = "Box and diagonals";
+            this.boxAndDiagonalsToolStripMenuItem.Click += new System.EventHandler(this.boxAndDiagonlsToolStripMenuItem_Click);
+            // 
+            // boxAndMiddleOrthoAxisToolStripMenuItem
+            // 
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.Name = "boxAndMiddleOrthoAxisToolStripMenuItem";
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.Text = "Box and middle ortho axis";
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.Click += new System.EventHandler(this.boxAndOrthoToolStripMenuItem_Click);
             // 
             // pb_Original
             // 
@@ -174,6 +211,13 @@
             this.grayscaleToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
             this.grayscaleToolStripMenuItem1.Text = "Grayscale";
             this.grayscaleToolStripMenuItem1.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
+            // 
+            // middleCrosslinesToolStripMenuItem1
+            // 
+            this.middleCrosslinesToolStripMenuItem1.Name = "middleCrosslinesToolStripMenuItem1";
+            this.middleCrosslinesToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.middleCrosslinesToolStripMenuItem1.Text = "Middle Crosslines";
+            this.middleCrosslinesToolStripMenuItem1.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -235,7 +279,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.grayscaleToolStripMenuItem,
-            this.middleCrosslinesToolStripMenuItem});
+            this.middleCrosslinesToolStripMenuItem,
+            this.selectionStyleToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -253,6 +298,29 @@
             this.middleCrosslinesToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.middleCrosslinesToolStripMenuItem.Text = "Middle Crosslines";
             this.middleCrosslinesToolStripMenuItem.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
+            // 
+            // selectionStyleToolStripMenuItem
+            // 
+            this.selectionStyleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.boxAndDiagonlsToolStripMenuItem,
+            this.boxAndOrthoToolStripMenuItem});
+            this.selectionStyleToolStripMenuItem.Name = "selectionStyleToolStripMenuItem";
+            this.selectionStyleToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.selectionStyleToolStripMenuItem.Text = "Selection style";
+            // 
+            // boxAndDiagonlsToolStripMenuItem
+            // 
+            this.boxAndDiagonlsToolStripMenuItem.Name = "boxAndDiagonlsToolStripMenuItem";
+            this.boxAndDiagonlsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.boxAndDiagonlsToolStripMenuItem.Text = "Box and diagonals";
+            this.boxAndDiagonlsToolStripMenuItem.Click += new System.EventHandler(this.boxAndDiagonlsToolStripMenuItem_Click);
+            // 
+            // boxAndOrthoToolStripMenuItem
+            // 
+            this.boxAndOrthoToolStripMenuItem.Name = "boxAndOrthoToolStripMenuItem";
+            this.boxAndOrthoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.boxAndOrthoToolStripMenuItem.Text = "Box and middle ortho axis";
+            this.boxAndOrthoToolStripMenuItem.Click += new System.EventHandler(this.boxAndOrthoToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -358,13 +426,6 @@
             this.tSSL_SelectionHeight.Size = new System.Drawing.Size(50, 19);
             this.tSSL_SelectionHeight.Text = "0";
             // 
-            // middleCrosslinesToolStripMenuItem1
-            // 
-            this.middleCrosslinesToolStripMenuItem1.Name = "middleCrosslinesToolStripMenuItem1";
-            this.middleCrosslinesToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
-            this.middleCrosslinesToolStripMenuItem1.Text = "Middle Crosslines";
-            this.middleCrosslinesToolStripMenuItem1.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -429,6 +490,13 @@
         private System.Windows.Forms.PictureBox pb_CropSensor;
         private System.Windows.Forms.ToolStripMenuItem middleCrosslinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem middleCrosslinesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem selectionStyleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem boxAndDiagonlsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem boxAndOrthoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem boxAndDiagonalsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem boxAndMiddleOrthoAxisToolStripMenuItem;
     }
 }
 

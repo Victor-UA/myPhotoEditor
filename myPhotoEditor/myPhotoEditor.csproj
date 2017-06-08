@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\SelectionStyle.cs" />
     <Compile Include="Base\ISelection.cs" />
     <Compile Include="Base\Selection.cs" />
     <Compile Include="MainForm.cs">

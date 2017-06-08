@@ -60,11 +60,26 @@ namespace myPhotoEditor
                 MiddleCrossLinesSwitched();
             }
         }
+        private SelectionStyle _selectionStyle;
+        private SelectionStyle SelectionStyle
+        {
+            get
+            {
+                return _selectionStyle;
+            }
+
+            set
+            {
+                _selectionStyle = value;
+                SelectionStyleSwitched();
+            }
+        }
 
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
 
-        
+
+
         //-------Constructor-------
         public MainForm(string[] args)
         {
@@ -99,6 +114,7 @@ namespace myPhotoEditor
             Original_MousePosition = new Point();
             MouseInside = false;
             MiddleCrossLines = true;
+            SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
 
             if (args.Length > 0)
             {                
@@ -230,7 +246,7 @@ namespace myPhotoEditor
             {
                 Bitmap bitmap = new Bitmap(pb_CropSensor.Width, pb_CropSensor.Height);
                 Graphics g = Graphics.FromImage(bitmap);
-                Pen pen = new Pen(Brushes.LightGreen);
+                Pen pen = new Pen(Brushes.LightGreen, 1);
                 g.DrawLine(pen, pb_CropSensor.Width / 2, 0, pb_CropSensor.Width / 2, pb_CropSensor.Height);
                 g.DrawLine(pen, 0, pb_CropSensor.Height / 2, pb_CropSensor.Width, pb_CropSensor.Height / 2);
                 pb_CropSensor.BackgroundImage = bitmap;
@@ -240,6 +256,28 @@ namespace myPhotoEditor
                 pb_CropSensor.BackgroundImage = null;
             }
         }
+        private void SelectionStyleSwitched()
+        {
+            switch (SelectionStyle)
+            {
+                case SelectionStyle.BoxDiagonal:
+                    boxAndDiagonlsToolStripMenuItem.Checked =
+                        boxAndDiagonalsToolStripMenuItem.Checked = true;
+                    boxAndOrthoToolStripMenuItem.Checked =
+                        boxAndMiddleOrthoAxisToolStripMenuItem.Checked = false;
+                    break;
+                case SelectionStyle.BoxMiddleOrthoAxis:
+                    boxAndDiagonlsToolStripMenuItem.Checked =
+                        boxAndDiagonalsToolStripMenuItem.Checked = false;
+                    boxAndOrthoToolStripMenuItem.Checked =
+                        boxAndMiddleOrthoAxisToolStripMenuItem.Checked = true;
+                    break;
+                default:
+                    break;
+            }
+            SelectionReDraw();
+        }
+
         private void ImageScaleToFit()
         {
             Point focusReal = new Point(
@@ -324,7 +362,7 @@ namespace myPhotoEditor
             try
             {
                 Bitmap bitmap = new Bitmap(splitContainer1.Panel1.Width, splitContainer1.Panel1.Height, PixelFormat.Format32bppArgb);
-                Selection.Draw(bitmap);
+                Selection.Draw(bitmap, SelectionStyle);
                 pb_Selection.BackgroundImage = bitmap;                
                 pb_Selection.Refresh();
             }
@@ -584,6 +622,16 @@ namespace myPhotoEditor
                     OpenFile(objects[0]);
                 }
             }
-        }        
+        }
+
+        private void boxAndDiagonlsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectionStyle = SelectionStyle.BoxDiagonal;
+        }
+
+        private void boxAndOrthoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+        }
     }
 }

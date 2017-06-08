@@ -7,11 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace myPhotoEditor.Base
-{
+{    
     class Selection : ISelection
-    {
+    {      
         private Point _middlePointPosition;
-        
         public Point MiddlePointPosition {
             get
             {
@@ -51,7 +50,7 @@ namespace myPhotoEditor.Base
         }
         public Selection(Point position) : this(position, 0, 0) { }
 
-        public void Draw(Image image)
+        public void Draw(Image image, SelectionStyle style)
         {
             Graphics g = null;
             Graphics gImage = null;
@@ -62,9 +61,22 @@ namespace myPhotoEditor.Base
                 g = Graphics.FromImage(bitmap);
                 Pen pen = new Pen(Brushes.Lime, 1);
                 {
-                    g.DrawLine(pen, 0, 0, Size.Width, Size.Height);
-                    g.DrawLine(pen, 0, Size.Height, Size.Width, 0);
-                    g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
+                    switch (style)
+                    {
+                        case SelectionStyle.BoxMiddleOrthoAxis:
+                            g.DrawLine(pen, 0, Size.Height / 2, Size.Width, Size.Height / 2);
+                            g.DrawLine(pen, Size.Width / 2, 0, Size.Width / 2, Size.Height);
+                            g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
+                            break;                     
+                        case SelectionStyle.BoxDiagonal:
+                            g.DrawLine(pen, 0, 0, Size.Width, Size.Height);
+                            g.DrawLine(pen, 0, Size.Height, Size.Width, 0);
+                            g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
+                            break;
+                        default:
+                            break;
+                    }
+                    
                 }
                 gImage = Graphics.FromImage(image); 
                 gImage.DrawImage(bitmap, MiddlePointPosition.X - Size.Width / 2, MiddlePointPosition.Y - Size.Height / 2);

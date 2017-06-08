@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace myPhotoEditor.Base
 {
     interface ISelection
-    {
+    {        
         Point MiddlePointPosition { get; set; }
         Size Size { get; set; }        
         
@@ -16,7 +16,7 @@ namespace myPhotoEditor.Base
 
         event EventHandler<EventArgs> Changed;
 
-        void Draw(Image image);
+        void Draw(Image image, SelectionStyle style);
         Rectangle getRegion(double scale, Point offset);
         Rectangle getRegion(double scale);
     }
