@@ -101,7 +101,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="12256572-photo-editor-icon.ico" />
     <Content Include="myPhotoEditor.ico" />
   </ItemGroup>
   <ItemGroup>
