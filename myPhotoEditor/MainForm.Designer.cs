@@ -38,7 +38,7 @@
             this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndMiddleOrthoAxisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Original = new System.Windows.Forms.PictureBox();
-            this.pb_Selection = new System.Windows.Forms.PictureBox();
+            this.pb_OriginalSensor = new System.Windows.Forms.PictureBox();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,7 +77,7 @@
             this.splitContainer1.SuspendLayout();
             this.contextMenuStrip_OriginalSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Selection)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).BeginInit();
             this.contextMenuStrip_CropSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).BeginInit();
@@ -97,7 +97,7 @@
             this.splitContainer1.Panel1.AllowDrop = true;
             this.splitContainer1.Panel1.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
             this.splitContainer1.Panel1.Controls.Add(this.pb_Original);
-            this.splitContainer1.Panel1.Controls.Add(this.pb_Selection);
+            this.splitContainer1.Panel1.Controls.Add(this.pb_OriginalSensor);
             this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.splitContainer1_Panel1_SizeChanged);
             this.splitContainer1.Panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragDrop);
             this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
@@ -173,22 +173,22 @@
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
             // 
-            // pb_Selection
+            // pb_OriginalSensor
             // 
-            this.pb_Selection.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pb_Selection.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
-            this.pb_Selection.Location = new System.Drawing.Point(0, 0);
-            this.pb_Selection.Name = "pb_Selection";
-            this.pb_Selection.Size = new System.Drawing.Size(416, 371);
-            this.pb_Selection.TabIndex = 1;
-            this.pb_Selection.TabStop = false;
-            this.pb_Selection.DoubleClick += new System.EventHandler(this.pb_Selection_DoubleClick);
-            this.pb_Selection.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
-            this.pb_Selection.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseDown);
-            this.pb_Selection.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
-            this.pb_Selection.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
-            this.pb_Selection.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
-            this.pb_Selection.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseUp);
+            this.pb_OriginalSensor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pb_OriginalSensor.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
+            this.pb_OriginalSensor.Location = new System.Drawing.Point(0, 0);
+            this.pb_OriginalSensor.Name = "pb_OriginalSensor";
+            this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
+            this.pb_OriginalSensor.TabIndex = 1;
+            this.pb_OriginalSensor.TabStop = false;
+            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_Selection_DoubleClick);
+            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
+            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseDown);
+            this.pb_OriginalSensor.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
+            this.pb_OriginalSensor.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
+            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
+            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseUp);
             // 
             // pb_CropSensor
             // 
@@ -503,7 +503,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip_OriginalSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Selection)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).EndInit();
             this.contextMenuStrip_CropSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).EndInit();
@@ -534,7 +534,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionWidth;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionHeight;
-        private System.Windows.Forms.PictureBox pb_Selection;
+        private System.Windows.Forms.PictureBox pb_OriginalSensor;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_ImageScale;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;

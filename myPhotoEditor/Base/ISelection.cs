@@ -14,7 +14,7 @@ namespace myPhotoEditor.Base
         
         bool isEditable { get; set; }
 
-        event EventHandler<EventArgs> Changed;
+        //event EventHandler<EventArgs> Changed;
 
         void Draw(Image image, SelectionStyle style);
 

@@ -5,24 +5,35 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace myPhotoEditor.Base
 {    
     class Selection : ISelection
-    {      
-        private Point _middlePointPosition;
+    {
+        private Point _Location;
+        public Point Location
+        {
+            get
+            {
+                return MidPoint2TopLeft();
+            }            
+        }
+        private Point _MiddlePointPosition;
         public Point MiddlePointPosition {
             get
             {
-                return _middlePointPosition;
+                return _MiddlePointPosition;
             }
             set
             {
-                _middlePointPosition = value;
-                Changed(this, new EventArgs());
+                _MiddlePointPosition = value;                
+                _Location = MidPoint2TopLeft();
+                LocationChanged(this, new EventArgs());
             }
         }
-        private Size _Size;
+
+        public Size _Size;
         public Size Size
         {
             get
@@ -32,55 +43,90 @@ namespace myPhotoEditor.Base
 
             set
             {
+                _Location = MidPoint2TopLeft();
                 _Size = value;
-                Changed(this, new EventArgs());
+                SizeChanged(this, new EventArgs());
             }
         }
-        
+        public int Width
+        {
+            get
+            {
+                return Size.Width;
+            }
+            set
+            {
+                Size = new Size(value, Size.Height);
+            }
+        }
+        public int Height
+        {
+            get
+            {
+                return Size.Height;
+            }
+            set
+            {
+                Size = new Size(Size.Height, value);
+            }
+        }
+
+        public event EventHandler SizeChanged = delegate { };
+        public event EventHandler LocationChanged = delegate { };
+
+
         public bool isEditable { get; set; }        
-
-        public event EventHandler<EventArgs> Changed = delegate { };
-
 
         public Selection(Point position, int width, int height)
         {
             MiddlePointPosition = position;
             Size = new Size(width, height);
-            isEditable = true;
+            isEditable = true;            
         }
         public Selection(Point position) : this(position, 0, 0) { }
 
+        private Point MidPoint2TopLeft()
+        {
+            return new Point()
+            {
+                X = (int)(((double)MiddlePointPosition.X - Size.Width / 2)),
+                Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2))
+            };
+        }
+        private Point TopLeft2MidPoint()
+        {
+            return new Point()
+            {
+                X = (int)(((double)Location.X + Size.Width / 2)),
+                Y = (int)(((double)Location.Y + Size.Height / 2))
+            };
+        }
+        
         public void Draw(Image image, SelectionStyle style)
         {
             Graphics g = null;
             Graphics gImage = null;
             try
-            {               
-                Bitmap bitmap = new Bitmap(Size.Width + 1, Size.Height + 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                bitmap.MakeTransparent();
-                g = Graphics.FromImage(bitmap);
+            {
+                g = Graphics.FromImage(image);
                 Pen pen = new Pen(Brushes.Lime, 1);
                 {
                     switch (style)
                     {
                         case SelectionStyle.BoxMiddleOrthoAxis:
-                            g.DrawLine(pen, 0, Size.Height / 2, Size.Width, Size.Height / 2);
-                            g.DrawLine(pen, Size.Width / 2, 0, Size.Width / 2, Size.Height);
-                            g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
-                            break;                     
+                            g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
+                            g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
+                            g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);                            
+                            break;
                         case SelectionStyle.BoxDiagonal:
-                            g.DrawLine(pen, 0, 0, Size.Width, Size.Height);
-                            g.DrawLine(pen, 0, Size.Height, Size.Width, 0);
-                            g.DrawRectangle(pen, 0, 0, Size.Width, Size.Height);
+                            g.DrawLine(pen, Location.X, Location.Y, Location.X + Width, Location.Y + Height);
+                            g.DrawLine(pen, Location.X, Location.Y + Height, Location.X + Width, Location.Y);
+                            g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
                             break;
                         default:
                             break;
                     }
-                    
                 }
-                gImage = Graphics.FromImage(image); 
-                gImage.DrawImage(bitmap, MiddlePointPosition.X - Size.Width / 2, MiddlePointPosition.Y - Size.Height / 2);
-                
             }
             catch (Exception ex)
             {
@@ -93,7 +139,6 @@ namespace myPhotoEditor.Base
                 if (g != null)
                     g.Dispose();
             }
-            
         }
 
         public Rectangle getRegion(Point offset)
@@ -146,6 +191,6 @@ namespace myPhotoEditor.Base
         public Rectangle getRegionReal(double scale)
         {
             return getRegionReal(scale, Point.Empty);
-        }
+        }        
     }
 }
