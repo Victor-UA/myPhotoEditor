@@ -96,7 +96,28 @@ namespace myPhotoEditor.Base
             
         }
 
-        public Rectangle getRegion(double scale, Point offset)
+        public Rectangle getRegion(Point offset)
+        {
+            try
+            {
+                Point TopLeft = new Point()
+                {
+                    X = (int)(((double)MiddlePointPosition.X - Size.Width / 2 + offset.X)) + 1,
+                    Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2 + offset.Y)) + 1
+                };
+                return new Rectangle(TopLeft, Size);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public Rectangle getRegion()
+        {
+            return getRegion(Point.Empty);
+        }
+        public Rectangle getRegionReal(double scale, Point offset)
         {
             try
             {
@@ -122,9 +143,9 @@ namespace myPhotoEditor.Base
                 throw;
             }
         }
-        public Rectangle getRegion(double scale)
+        public Rectangle getRegionReal(double scale)
         {
-            return getRegion(scale, Point.Empty);
+            return getRegionReal(scale, Point.Empty);
         }
     }
 }

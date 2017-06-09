@@ -76,6 +76,7 @@ namespace myPhotoEditor
         }
 
         private Point Original_MousePosition { get; set; }
+        private Point Sensor_LastPosition { get; set; }
         private bool MouseInside { get; set; }
 
         private bool tSSL_SelectionWidth_MouseEntered;
@@ -391,6 +392,19 @@ namespace myPhotoEditor
                 Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
         }
+        private void SelectionMove(Point offset)
+        {
+            SelectionMove(offset.X, offset.Y);
+        }
+        private void SelectionMove(int dX, int dY)
+        {
+            Selection.MiddlePointPosition = new Point(
+                Selection.MiddlePointPosition.X + dX,
+                Selection.MiddlePointPosition.Y + dY
+            );
+            SelectionReDraw();
+            CropImage();
+        }
         private void ChangeSensorLocation()
         {
             int newX = pb_Original.Location.X;
@@ -413,7 +427,7 @@ namespace myPhotoEditor
         {
             try
             {
-                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegion(ImageScale, pb_Selection.Location));
+                Bitmap cropBitmap = CopyRegionIntoImage(new Bitmap(pb_Original.Image), Selection.getRegionReal(ImageScale, pb_Selection.Location));
                 if (cropBitmap != null)
                 {
                     if (grayscaleToolStripMenuItem.Checked)
@@ -487,15 +501,23 @@ namespace myPhotoEditor
             Point mousePosition = new Point(e.X < -2048 ? 65536 + e.X : e.X, e.Y < -2048 ? 65536 + e.Y : e.Y);
             tSSL_X.Text = Math.Round((mousePosition.X + pb_Selection.Location.X) / ImageScale).ToString();
             tSSL_Y.Text = Math.Round((mousePosition.Y + pb_Selection.Location.Y) / ImageScale).ToString();
-            Original_MousePosition = new Point(mousePosition.X, mousePosition.Y);
-
+            
+            
             if (mouse.Button == MouseButtons.Middle)
             {
-                Point offset = new Point(
-                    e.Location.X - MiddleButtonDown.X,
-                    e.Location.Y - MiddleButtonDown.Y
-                );
-                ImageMove(offset);
+                
+                if (Selection.getRegion().Contains(e.Location))
+                {
+                    SelectionMove(e.X - Sensor_LastPosition.X, e.Y - Sensor_LastPosition.Y);
+                }
+                else
+                {
+                    Point offset = new Point(
+                        e.X - MiddleButtonDown.X,
+                        e.Y - MiddleButtonDown.Y
+                    );
+                    ImageMove(offset);
+                }
             }
             else
             {
@@ -509,6 +531,8 @@ namespace myPhotoEditor
                     CropImage();
                 }
             }
+            Original_MousePosition = new Point(mousePosition.X, mousePosition.Y);
+            Sensor_LastPosition = e.Location;
         }        
         private void splitContainer1_Panel1_MouseMove(object sender, MouseEventArgs e)
         {            
@@ -532,6 +556,7 @@ namespace myPhotoEditor
             if (mouse.Button == MouseButtons.Middle)
             {
                 MiddleButtonDown = mouse.Location;
+                Sensor_LastPosition = mouse.Location;
             }
         }
         private void splitContainer1_Panel1_MouseDown(object sender, MouseEventArgs e)
@@ -658,12 +683,11 @@ namespace myPhotoEditor
             {
                 if (e.Delta > 0)
                 {
-                    Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X + 1, Selection.MiddlePointPosition.Y);
+                    SelectionMove(1, 0);
                 }
                 else
                 {
-                    if (Selection.MiddlePointPosition.X > 1)
-                        Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X - 1, Selection.MiddlePointPosition.Y);
+                    SelectionMove(-1, 0);
                 }
                 SelectionReDraw();
                 CropImage();
@@ -673,12 +697,11 @@ namespace myPhotoEditor
             {
                 if (e.Delta > 0)
                 {
-                    Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X, Selection.MiddlePointPosition.Y + 1);
+                    SelectionMove(0, 1);
                 }
                 else
                 {
-                    if (Selection.MiddlePointPosition.Y > 1)
-                        Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X, Selection.MiddlePointPosition.Y - 1);
+                    SelectionMove(0, -1);
                 }
                 SelectionReDraw();
                 CropImage();
@@ -748,7 +771,6 @@ namespace myPhotoEditor
         {
             tSSL_SelectionMidPosX_MouseEntered = true;
         }
-
         private void tSSL_SelectionMidPosX_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosX_MouseEntered = false;
@@ -758,7 +780,6 @@ namespace myPhotoEditor
         {
             tSSL_SelectionMidPosY_MouseEntered = true;
         }
-
         private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosY_MouseEntered = false;
