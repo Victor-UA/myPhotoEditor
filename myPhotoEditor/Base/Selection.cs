@@ -30,6 +30,19 @@ namespace myPhotoEditor.Base
                 LocationChanged(this, new EventArgs());
             }
         }
+        private Point _MiddlePointRealPosition;
+        public Point MiddlePointRealPosition
+        {
+            get
+            {
+                return _MiddlePointRealPosition;
+            }
+
+            set
+            {
+                _MiddlePointRealPosition = value;                
+            }
+        }        
 
         private Size _Size;
         public Size Size
@@ -39,7 +52,7 @@ namespace myPhotoEditor.Base
                 return _Size;
             }
 
-            set
+            private set
             {
                 _Size = value;
                 SizeChanged(this, new EventArgs());
@@ -50,21 +63,66 @@ namespace myPhotoEditor.Base
             get
             {
                 return Size.Width;
-            }
-            set
-            {
-                Size = new Size(value, Size.Height);
-            }
+            }            
         }
         public int Height
         {
             get
             {
                 return Size.Height;
+            }            
+        }
+        private Size _RealSize;
+        public Size RealSize
+        {
+            get
+            {
+                return _RealSize;
             }
+
             set
             {
-                Size = new Size(Size.Width, value);
+                _RealSize = value;
+            }
+        }
+        public int RealWidth
+        {
+            get
+            {
+                return RealSize.Width;
+            }
+
+            set
+            {
+                RealSize = new Size(value, _RealSize.Height);
+                SizeRecalc();
+            }
+        }
+        public int RealHeight
+        {
+            get
+            {
+                return RealSize.Height;
+            }
+
+            set
+            {
+                RealSize = new Size(RealSize.Width, value);
+                SizeRecalc();
+            }
+        }
+        private double _Scale;
+        public double Scale
+        {
+            get
+            {
+                return _Scale;
+            }
+
+            set
+            {
+                _Scale = value;
+                SizeRecalc();
             }
         }
 
@@ -122,17 +180,16 @@ namespace myPhotoEditor.Base
         public event MouseEventHandler MouseLeave = delegate { };
 
 
-        public bool isEditable { get; set; }
+        public bool isEditable { get; set; }        
 
-        
-
-        public Selection(Point position, int width, int height)
+        public Selection(Point position, int width, int height, double scale)
         {
             MiddlePointPosition = position;
             Size = new Size(width, height);
+            Scale = scale;
             isEditable = true;            
         }
-        public Selection(Point position) : this(position, 0, 0) { }
+        public Selection(Point position) : this(position, 0, 0, 1) { }
 
         private Point MidPoint2TopLeft()
         {
@@ -149,6 +206,22 @@ namespace myPhotoEditor.Base
                 X = (int)(((double)Location.X + Size.Width / 2)),
                 Y = (int)(((double)Location.Y + Size.Height / 2))
             };
+        }
+
+        public void RealSizeRecalc(Size size)
+        {
+            RealSize = new Size(
+                (int)(Size.Width / Scale),
+                (int)(Size.Height / Scale)
+            );
+            Size = size;
+        }
+        private void SizeRecalc()
+        {
+            Size = new Size(
+                (int)(RealSize.Width * Scale), 
+                (int)(RealSize.Height * Scale)
+            );
         }
         
         public void Draw(Image image)
@@ -240,17 +313,31 @@ namespace myPhotoEditor.Base
         {
             return getRegionReal(scale, Point.Empty);
         }
-
-
-        public void Offset(Point offset)
+        public Rectangle getRegionReal()
         {
-            Offset(offset.X, offset.Y);
+            return new Rectangle(
+                new Point(
+                    (int)(MiddlePointRealPosition.X - RealSize.Width / 2),
+                    (int)(MiddlePointRealPosition.Y - RealSize.Height / 2)
+                ),
+                RealSize
+            );
         }
-        public void Offset(int dX, int dY)
+
+
+        public void Offset(Point offset, double scale)
+        {
+            Offset(offset.X, offset.Y, scale);
+        }
+        public void Offset(int dX, int dY, double scale)
         {
             MiddlePointPosition = new Point(
                 MiddlePointPosition.X + dX,
                 MiddlePointPosition.Y + dY
+            );
+            MiddlePointRealPosition = new Point(
+                MiddlePointRealPosition.X + (int)(dX / scale),
+                MiddlePointRealPosition.Y + (int)(dY / scale)
             );
         }
     }
