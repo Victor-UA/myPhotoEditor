@@ -41,10 +41,10 @@
             this.pb_Selection = new System.Windows.Forms.PictureBox();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.grayscaleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Crop = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,6 +63,10 @@
             this.tSSL_Y = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_ImageScale = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel6 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSSL_SelectionMidPosX = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel7 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSSL_SelectionMidPosY = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -100,6 +104,7 @@
             this.splitContainer1.Panel1.DoubleClick += new System.EventHandler(this.splitContainer1_Panel1_DoubleClick);
             this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseClick);
             this.splitContainer1.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseDown);
+            this.splitContainer1.Panel1.MouseEnter += new System.EventHandler(this.splitContainer1_Panel1_MouseEnter);
             this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseMove);
             this.splitContainer1.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseUp);
             this.splitContainer1.Panel1MinSize = 200;
@@ -204,7 +209,19 @@
             this.grayscaleToolStripMenuItem1,
             this.middleCrosslinesToolStripMenuItem1});
             this.contextMenuStrip_CropSide.Name = "contextMenuStrip_CropSide";
-            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(168, 98);
+            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(168, 76);
+            // 
+            // saveAsToolStripMenuItem1
+            // 
+            this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
+            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.saveAsToolStripMenuItem1.Text = "SaveAs";
+            this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
             // 
             // grayscaleToolStripMenuItem1
             // 
@@ -219,18 +236,6 @@
             this.middleCrosslinesToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
             this.middleCrosslinesToolStripMenuItem1.Text = "Middle Crosslines";
             this.middleCrosslinesToolStripMenuItem1.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
-            // 
-            // saveAsToolStripMenuItem1
-            // 
-            this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
-            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
-            this.saveAsToolStripMenuItem1.Text = "SaveAs";
-            this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // pb_Crop
             // 
@@ -332,6 +337,10 @@
             this.tSSL_Y,
             this.toolStripStatusLabel5,
             this.tSSL_ImageScale,
+            this.toolStripStatusLabel6,
+            this.tSSL_SelectionMidPosX,
+            this.toolStripStatusLabel7,
+            this.tSSL_SelectionMidPosY,
             this.toolStripStatusLabel2,
             this.tSSL_SelectionWidth,
             this.toolStripStatusLabel4,
@@ -341,6 +350,7 @@
             this.statusStrip1.Size = new System.Drawing.Size(789, 24);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.MouseEnter += new System.EventHandler(this.statusStrip1_MouseEnter);
             // 
             // toolStripStatusLabel1
             // 
@@ -393,6 +403,47 @@
             this.tSSL_ImageScale.Size = new System.Drawing.Size(50, 19);
             this.tSSL_ImageScale.Text = "1";
             // 
+            // toolStripStatusLabel6
+            // 
+            this.toolStripStatusLabel6.Name = "toolStripStatusLabel6";
+            this.toolStripStatusLabel6.Size = new System.Drawing.Size(59, 19);
+            this.toolStripStatusLabel6.Text = "sMidPosX";
+            // 
+            // tSSL_SelectionMidPosX
+            // 
+            this.tSSL_SelectionMidPosX.AutoSize = false;
+            this.tSSL_SelectionMidPosX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.tSSL_SelectionMidPosX.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.tSSL_SelectionMidPosX.DoubleClickEnabled = true;
+            this.tSSL_SelectionMidPosX.Name = "tSSL_SelectionMidPosX";
+            this.tSSL_SelectionMidPosX.Size = new System.Drawing.Size(50, 19);
+            this.tSSL_SelectionMidPosX.Text = "0";
+            this.tSSL_SelectionMidPosX.ToolTipText = "Selection middle point x";
+            this.tSSL_SelectionMidPosX.MouseEnter += new System.EventHandler(this.tSSL_SelectionMidPosX_MouseEnter);
+            this.tSSL_SelectionMidPosX.MouseLeave += new System.EventHandler(this.tSSL_SelectionMidPosX_MouseLeave);
+            // 
+            // toolStripStatusLabel7
+            // 
+            this.toolStripStatusLabel7.Name = "toolStripStatusLabel7";
+            this.toolStripStatusLabel7.Size = new System.Drawing.Size(59, 19);
+            this.toolStripStatusLabel7.Text = "sMidPosY";
+            // 
+            // tSSL_SelectionMidPosY
+            // 
+            this.tSSL_SelectionMidPosY.AutoSize = false;
+            this.tSSL_SelectionMidPosY.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.tSSL_SelectionMidPosY.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.tSSL_SelectionMidPosY.Name = "tSSL_SelectionMidPosY";
+            this.tSSL_SelectionMidPosY.Size = new System.Drawing.Size(50, 19);
+            this.tSSL_SelectionMidPosY.Text = "0";
+            this.tSSL_SelectionMidPosY.ToolTipText = "Selection middle y";
+            this.tSSL_SelectionMidPosY.MouseEnter += new System.EventHandler(this.tSSL_SelectionMidPosY_MouseEnter);
+            this.tSSL_SelectionMidPosY.MouseLeave += new System.EventHandler(this.tSSL_SelectionMidPosY_MouseLeave);
+            // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
@@ -409,6 +460,9 @@
             this.tSSL_SelectionWidth.Name = "tSSL_SelectionWidth";
             this.tSSL_SelectionWidth.Size = new System.Drawing.Size(50, 19);
             this.tSSL_SelectionWidth.Text = "0";
+            this.tSSL_SelectionWidth.ToolTipText = "Selection width";
+            this.tSSL_SelectionWidth.MouseEnter += new System.EventHandler(this.tSSL_SelectionWidth_MouseEnter);
+            this.tSSL_SelectionWidth.MouseLeave += new System.EventHandler(this.tSSL_SelectionWidth_MouseLeave);
             // 
             // toolStripStatusLabel4
             // 
@@ -426,6 +480,9 @@
             this.tSSL_SelectionHeight.Name = "tSSL_SelectionHeight";
             this.tSSL_SelectionHeight.Size = new System.Drawing.Size(50, 19);
             this.tSSL_SelectionHeight.Text = "0";
+            this.tSSL_SelectionHeight.ToolTipText = "Selection height";
+            this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
+            this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
             // MainForm
             // 
@@ -498,6 +555,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem boxAndDiagonalsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem boxAndMiddleOrthoAxisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
+        private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionMidPosX;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel7;
+        private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionMidPosY;
     }
 }
 

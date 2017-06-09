@@ -78,6 +78,11 @@ namespace myPhotoEditor
         private Point Original_MousePosition { get; set; }
         private bool MouseInside { get; set; }
 
+        private bool tSSL_SelectionWidth_MouseEntered;
+        private bool tSSL_SelectionHeight_MouseEntered;
+        private bool tSSL_SelectionMidPosX_MouseEntered;
+        private bool tSSL_SelectionMidPosY_MouseEntered;
+
 
 
         //-------Constructor-------
@@ -100,6 +105,9 @@ namespace myPhotoEditor
             pb_CropSensor.BringToFront();
 
             splitContainer1.Panel1.MouseWheel += splitContainer1_Panel1_MouseWheel;
+            statusStrip1.MouseWheel += statusStrip1_MouseWheel;
+
+            tSSL_SelectionWidth_MouseEntered = false;
 
             OriginalImageFile = "";
             ImageLoaded = false;
@@ -155,6 +163,7 @@ namespace myPhotoEditor
         }
 
 
+        //-------Methods-------
         private void OpenFile()
         {
             OpenFile(string.Empty);
@@ -362,6 +371,9 @@ namespace myPhotoEditor
         private void SelectionChanged(object sender, EventArgs e)
         {
             Size size = ((Selection)sender).Size;
+            Point midPoint = ((Selection)sender).MiddlePointPosition;
+            tSSL_SelectionMidPosX.Text = Math.Round((midPoint.X) / ImageScale).ToString();
+            tSSL_SelectionMidPosY.Text = Math.Round((midPoint.Y) / ImageScale).ToString();
             tSSL_SelectionWidth.Text = Math.Round((size.Width) / ImageScale).ToString();
             tSSL_SelectionHeight.Text = Math.Round((size.Height) / ImageScale).ToString();
         }
@@ -467,6 +479,8 @@ namespace myPhotoEditor
             return result;
         }
 
+
+        //-------EventHadlers-------
         private void pb_Selection_MouseMove(object sender, MouseEventArgs e)
         {
             MouseEventArgs mouse = e as MouseEventArgs;
@@ -593,19 +607,84 @@ namespace myPhotoEditor
         {
             pb_Selection_DoubleClick(sender, Panel1_2_pb_Selection(e as MouseEventArgs));
         }
-        
+
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
             Point focus = ExpandMousePosition(e);
             double step = 0.1;
             double k = (e.Delta > 0) ? 1 + step : 1 - step;
-            
+
             Point focusReal = new Point(
                 (int)((focus.X - pb_Original.Location.X + 4) / ImageScale),
                 (int)((focus.Y - pb_Original.Location.Y + 4) / ImageScale)
-            );            
+            );
             ImageScaleTo(focusReal, ImageScale * k);
-        }        
+        }
+        
+
+        private void statusStrip1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (tSSL_SelectionWidth_MouseEntered)
+            {
+                if (e.Delta > 0)
+                {
+                    Selection.Size = new Size(Selection.Size.Width + 1, Selection.Size.Height);
+                }
+                else
+                {
+                    if (Selection.Size.Width > 1)
+                        Selection.Size = new Size(Selection.Size.Width - 1, Selection.Size.Height);
+                }
+                SelectionReDraw();
+                CropImage();
+                return;
+            }
+            if (tSSL_SelectionHeight_MouseEntered)
+            {
+                if (e.Delta > 0)
+                {
+                    Selection.Size = new Size(Selection.Size.Width, Selection.Size.Height + 1);
+                }
+                else
+                {
+                    if (Selection.Size.Height > 1)
+                        Selection.Size = new Size(Selection.Size.Width, Selection.Size.Height - 1);
+                }
+                SelectionReDraw();
+                CropImage();
+                return;
+            }
+            if (tSSL_SelectionMidPosX_MouseEntered)
+            {
+                if (e.Delta > 0)
+                {
+                    Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X + 1, Selection.MiddlePointPosition.Y);
+                }
+                else
+                {
+                    if (Selection.MiddlePointPosition.X > 1)
+                        Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X - 1, Selection.MiddlePointPosition.Y);
+                }
+                SelectionReDraw();
+                CropImage();
+                return;
+            }
+            if (tSSL_SelectionMidPosY_MouseEntered)
+            {
+                if (e.Delta > 0)
+                {
+                    Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X, Selection.MiddlePointPosition.Y + 1);
+                }
+                else
+                {
+                    if (Selection.MiddlePointPosition.Y > 1)
+                        Selection.MiddlePointPosition = new Point(Selection.MiddlePointPosition.X, Selection.MiddlePointPosition.Y - 1);
+                }
+                SelectionReDraw();
+                CropImage();
+                return;
+            }
+        }
 
         private void splitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
         {
@@ -635,6 +714,54 @@ namespace myPhotoEditor
         private void pb_CropSensor_Resize(object sender, EventArgs e)
         {
             MiddleCrossLinesSwitched();
+        }
+
+        private void tSSL_SelectionWidth_MouseEnter(object sender, EventArgs e)
+        {
+            tSSL_SelectionWidth_MouseEntered = true;
+        }
+        private void tSSL_SelectionWidth_MouseLeave(object sender, EventArgs e)
+        {
+            tSSL_SelectionWidth_MouseEntered = false;
+        }
+
+        private void tSSL_SelectionHeight_MouseEnter(object sender, EventArgs e)
+        {
+            tSSL_SelectionHeight_MouseEntered = true;
+        }
+        private void tSSL_SelectionHeight_MouseLeave(object sender, EventArgs e)
+        {
+            tSSL_SelectionHeight_MouseEntered = false;
+        }
+
+        private void splitContainer1_Panel1_MouseEnter(object sender, EventArgs e)
+        {
+            splitContainer1.Panel1.Focus();
+        }
+
+        private void statusStrip1_MouseEnter(object sender, EventArgs e)
+        {
+            statusStrip1.Focus();            
+        }
+
+        private void tSSL_SelectionMidPosX_MouseEnter(object sender, EventArgs e)
+        {
+            tSSL_SelectionMidPosX_MouseEntered = true;
+        }
+
+        private void tSSL_SelectionMidPosX_MouseLeave(object sender, EventArgs e)
+        {
+            tSSL_SelectionMidPosX_MouseEntered = false;
+        }
+
+        private void tSSL_SelectionMidPosY_MouseEnter(object sender, EventArgs e)
+        {
+            tSSL_SelectionMidPosY_MouseEntered = true;
+        }
+
+        private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
+        {
+            tSSL_SelectionMidPosY_MouseEntered = false;
         }
     }
 }
