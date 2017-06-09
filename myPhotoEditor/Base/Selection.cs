@@ -9,9 +9,8 @@ using System.Windows.Forms;
 
 namespace myPhotoEditor.Base
 {    
-    class Selection : ISelection
+    class Selection
     {
-        private Point _Location;
         public Point Location
         {
             get
@@ -28,12 +27,11 @@ namespace myPhotoEditor.Base
             set
             {
                 _MiddlePointPosition = value;                
-                _Location = MidPoint2TopLeft();
                 LocationChanged(this, new EventArgs());
             }
         }
 
-        public Size _Size;
+        private Size _Size;
         public Size Size
         {
             get
@@ -43,7 +41,6 @@ namespace myPhotoEditor.Base
 
             set
             {
-                _Location = MidPoint2TopLeft();
                 _Size = value;
                 SizeChanged(this, new EventArgs());
             }
@@ -67,15 +64,67 @@ namespace myPhotoEditor.Base
             }
             set
             {
-                Size = new Size(Size.Height, value);
+                Size = new Size(Size.Width, value);
+            }
+        }
+
+        public bool MouseEntered { get; private set; }
+
+        private MouseEventArgs _MouseEventArgs;
+        public MouseEventArgs MouseEventArgs
+        {
+            private get
+            {
+                return _MouseEventArgs;
+            }
+
+            set
+            {
+                _MouseEventArgs = value;
+                if (getRegion().Contains(value.Location))
+                {
+                    if (!MouseEntered)
+                    {
+                        MouseEntered = true;
+                        MouseEnter(this, value);
+                    }
+                }
+                else
+                {
+                    if (MouseEntered)
+                    {
+                        MouseEntered = false;
+                        MouseLeave(this, value);
+                    }
+                }
+            }
+        }
+
+        private SelectionStyle _SelectionStyle;
+        public SelectionStyle SelectionStyle
+        {
+            get
+            {
+                return _SelectionStyle;
+            }
+
+            set
+            {
+                _SelectionStyle = value;
+                SelectionStyleChanged(this, new EventArgs());
             }
         }
 
         public event EventHandler SizeChanged = delegate { };
         public event EventHandler LocationChanged = delegate { };
+        public event EventHandler SelectionStyleChanged = delegate { };
+        public event MouseEventHandler MouseEnter = delegate { };
+        public event MouseEventHandler MouseLeave = delegate { };
 
 
-        public bool isEditable { get; set; }        
+        public bool isEditable { get; set; }
+
+        
 
         public Selection(Point position, int width, int height)
         {
@@ -102,7 +151,7 @@ namespace myPhotoEditor.Base
             };
         }
         
-        public void Draw(Image image, SelectionStyle style)
+        public void Draw(Image image)
         {
             Graphics g = null;
             Graphics gImage = null;
@@ -111,19 +160,18 @@ namespace myPhotoEditor.Base
                 g = Graphics.FromImage(image);
                 Pen pen = new Pen(Brushes.Lime, 1);
                 {
-                    switch (style)
+                    switch (SelectionStyle)
                     {
-                        case SelectionStyle.BoxMiddleOrthoAxis:
-                            g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
-                            g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
-                            g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);                            
-                            break;
+                        
                         case SelectionStyle.BoxDiagonal:
                             g.DrawLine(pen, Location.X, Location.Y, Location.X + Width, Location.Y + Height);
                             g.DrawLine(pen, Location.X, Location.Y + Height, Location.X + Width, Location.Y);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
                             break;
-                        default:
+                        default: //SelectionStyle.BoxMiddleOrthoAxis
+                            g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
+                            g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
+                            g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
                             break;
                     }
                 }
@@ -191,6 +239,19 @@ namespace myPhotoEditor.Base
         public Rectangle getRegionReal(double scale)
         {
             return getRegionReal(scale, Point.Empty);
-        }        
+        }
+
+
+        public void Offset(Point offset)
+        {
+            Offset(offset.X, offset.Y);
+        }
+        public void Offset(int dX, int dY)
+        {
+            MiddlePointPosition = new Point(
+                MiddlePointPosition.X + dX,
+                MiddlePointPosition.Y + dY
+            );
+        }
     }
 }
