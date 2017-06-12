@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using myPhotoEditor.Base;
+using myPhotoEditor.Objects;
 using myPhotoEditor.Tools;
 
-namespace myPhotoEditor
+namespace myPhotoEditor.Main
 {
     public partial class MainForm : Form
     {
@@ -522,7 +522,7 @@ namespace myPhotoEditor
                         PannedObject = Selection;
                     }
                     if (PannedObject == Selection)
-                    {
+                    {                        
                         Selection.MiddlePointPosition = new Point(
                             Selection_OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),
                             Selection_OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)

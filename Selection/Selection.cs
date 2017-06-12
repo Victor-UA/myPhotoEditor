@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace myPhotoEditor.Base
+namespace Selection
 {    
-    class Selection
+    public class Selection
     {
         public Point Location
         {
@@ -26,7 +26,8 @@ namespace myPhotoEditor.Base
             }
             set
             {
-                _MiddlePointPosition = value;                
+                _MiddlePointPosition = value;
+                BorderChanged();
                 LocationChanged(this, new EventArgs());
             }
         }
@@ -42,7 +43,7 @@ namespace myPhotoEditor.Base
             {
                 _MiddlePointRealPosition = value;                
             }
-        }        
+        }
 
         private Size _Size;
         public Size Size
@@ -55,6 +56,7 @@ namespace myPhotoEditor.Base
             private set
             {
                 _Size = value;
+                BorderChanged();
                 SizeChanged(this, new EventArgs());
             }
         }
@@ -131,6 +133,7 @@ namespace myPhotoEditor.Base
                 SizeRecalc();
             }
         }
+        public Border Border { get; set; } = new Border();
 
         public bool MouseEntered { get; private set; }
 
@@ -159,6 +162,10 @@ namespace myPhotoEditor.Base
                     {
                         MouseEntered = false;
                         MouseLeave(this, value);
+                        Border.Top.MouseEntered = false;
+                        Border.Right.MouseEntered = false;
+                        Border.Bottom.MouseEntered = false;
+                        Border.Left.MouseEntered = false;
                     }
                 }
             }
@@ -196,6 +203,11 @@ namespace myPhotoEditor.Base
             isEditable = true;            
         }
         public Selection(Point position) : this(position, 0, 0, 1) { }
+
+        private void BorderChanged()
+        {
+            //Border.Top.Region = 
+        }
 
         private Point MidPoint2TopLeft()
         {
@@ -328,23 +340,6 @@ namespace myPhotoEditor.Base
                 ),
                 RealSize
             );
-        }
-
-
-        public void Offset(Point offset, double scale)
-        {
-            Offset(offset.X, offset.Y, scale);
-        }
-        public void Offset(int dX, int dY, double scale)
-        {
-            MiddlePointPosition = new Point(
-                MiddlePointPosition.X + dX,
-                MiddlePointPosition.Y + dY
-            );
-            MiddlePointRealPosition = new Point(
-                MiddlePointRealPosition.X + (int)(dX / scale),
-                MiddlePointRealPosition.Y + (int)(dY / scale)
-            );
-        }
+        }        
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace myPhotoEditor
+﻿namespace myPhotoEditor.Main
 {
     partial class MainForm
     {

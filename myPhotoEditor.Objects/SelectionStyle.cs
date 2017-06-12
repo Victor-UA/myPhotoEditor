@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace myPhotoEditor.Base
+namespace myPhotoEditor.Objects
 {
     public enum SelectionStyle
     {
