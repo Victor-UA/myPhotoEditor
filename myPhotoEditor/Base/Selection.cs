@@ -323,8 +323,8 @@ namespace myPhotoEditor.Base
         {
             return new Rectangle(
                 new Point(
-                    (int)(MiddlePointRealPosition.X - RealSize.Width / 2),
-                    (int)(MiddlePointRealPosition.Y - RealSize.Height / 2)
+                    1 + MiddlePointRealPosition.X - RealSize.Width / 2,
+                    1 + MiddlePointRealPosition.Y - RealSize.Height / 2
                 ),
                 RealSize
             );
