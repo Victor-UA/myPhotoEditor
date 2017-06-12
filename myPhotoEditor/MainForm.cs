@@ -60,10 +60,19 @@ namespace myPhotoEditor
             }
         }
 
-        private Point MiddleButtonDown { get; set; }
+        private Point MouseMiddleButtonDownPosition { get; set; }
+        private Point MouseLeftButtonDownPosition { get; set; }
+
+        private Point Selection_OldPosition { get; set; }
         private Point Sensor_MousePosition { get; set; }
         private Point Sensor_LastPosition { get; set; }
         private bool MouseInside { get; set; }
+
+        private object PannedObject { get; set; }
+
+        private bool MouseLeftButton { get; set; }
+        private bool MouseMiddleButton { get; set; }
+        private bool MouseRightButton { get; set; }        
 
         private bool tSSL_SelectionWidth_MouseEntered;
         private bool tSSL_SelectionHeight_MouseEntered;
@@ -98,6 +107,11 @@ namespace myPhotoEditor
 
             OriginalImageFile = "";
             ImageLoaded = false;
+            PannedObject = null;
+
+            MouseLeftButton = false;
+            MouseMiddleButton = false;
+            MouseRightButton = false;            
 
             Selection = new Selection(new Point(0, 0))            
             {                
@@ -486,34 +500,56 @@ namespace myPhotoEditor
             Selection.MouseEventArgs = mouse;
             Point mousePosition = new Point(e.X < -2048 ? 65536 + e.X : e.X, e.Y < -2048 ? 65536 + e.Y : e.Y);
             tSSL_X.Text = Math.Round((mousePosition.X + pb_OriginalSensor.Location.X) / ImageScale).ToString();
-            tSSL_Y.Text = Math.Round((mousePosition.Y + pb_OriginalSensor.Location.Y) / ImageScale).ToString();
-            
-            
-            if (mouse.Button == MouseButtons.Middle)
+            tSSL_Y.Text = Math.Round((mousePosition.Y + pb_OriginalSensor.Location.Y) / ImageScale).ToString();            
+                
+            if (MouseMiddleButton)
             {
-                if (Selection.MouseEntered)
+                if (PannedObject == null)
                 {
-                    Selection.Offset(e.X - Sensor_LastPosition.X, e.Y - Sensor_LastPosition.Y, ImageScale);
-                    CropImage();
+                    PannedObject = pb_Original;
                 }
-                else
+                if (PannedObject == pb_Original)
                 {
-                    ImageMove(e.X - MiddleButtonDown.X, e.Y - MiddleButtonDown.Y);
+                    ImageMove(e.X - MouseMiddleButtonDownPosition.X, e.Y - MouseMiddleButtonDownPosition.Y);
                 }
             }
             else
             {
-                if (Selection.isEditable && ImageLoaded)
+                if (MouseLeftButton)
                 {
-                    Selection.RealSizeRecalc(new Size(
-                        Math.Abs(mousePosition.X - Selection.MiddlePointPosition.X) * 2,
-                        Math.Abs(mousePosition.Y - Selection.MiddlePointPosition.Y) * 2
-                    ));          
-                    CropImage();
+                    if (PannedObject == null && Selection.MouseEntered)
+                    {
+                        PannedObject = Selection;
+                    }
+                    if (PannedObject == Selection)
+                    {
+                        Selection.MiddlePointPosition = new Point(
+                            Selection_OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),
+                            Selection_OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)
+                        );
+
+                        Selection.MiddlePointRealPosition = new Point(
+                            (int)((Selection.MiddlePointPosition.X + pb_OriginalSensor.Location.X) / ImageScale),
+                            (int)((Selection.MiddlePointPosition.Y + pb_OriginalSensor.Location.Y) / ImageScale)
+                        );
+                        CropImage();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine(mouse.Button);
+                    if (Selection.isEditable && ImageLoaded)
+                    {
+                        Selection.RealSizeRecalc(new Size(
+                            Math.Abs(mousePosition.X - Selection.MiddlePointPosition.X) * 2,
+                            Math.Abs(mousePosition.Y - Selection.MiddlePointPosition.Y) * 2
+                        ));
+                        CropImage();
+                    }
                 }
             }
             Sensor_MousePosition = new Point(mousePosition.X, mousePosition.Y);
-            Sensor_LastPosition = e.Location;
+            Sensor_LastPosition = Sensor_MousePosition;//e.Location;
         }        
         private void splitContainer1_Panel1_MouseMove(object sender, MouseEventArgs e)
         {            
@@ -533,11 +569,29 @@ namespace myPhotoEditor
 
         private void pb_Selection_MouseDown(object sender, MouseEventArgs e)
         {
-            MouseEventArgs mouse = e as MouseEventArgs;
-            if (mouse.Button == MouseButtons.Middle)
+            switch (e.Button)
             {
-                MiddleButtonDown = mouse.Location;
-                Sensor_LastPosition = mouse.Location;
+                case MouseButtons.Left:
+                    MouseLeftButton = true;
+                    break;
+                case MouseButtons.Right:
+                    MouseRightButton = true;
+                    break;
+                case MouseButtons.Middle:
+                    MouseMiddleButton = true;
+                    break;
+            }
+
+            if (MouseMiddleButton)
+            {
+                MouseMiddleButtonDownPosition = e.Location;
+                Sensor_LastPosition = e.Location;
+            }
+            if (MouseLeftButton)
+            {
+                MouseLeftButtonDownPosition = e.Location;
+                Sensor_LastPosition = e.Location;
+                Selection_OldPosition = Selection.MiddlePointPosition;
             }
         }
         private void splitContainer1_Panel1_MouseDown(object sender, MouseEventArgs e)
@@ -551,22 +605,25 @@ namespace myPhotoEditor
             MouseEventArgs mouse = e as MouseEventArgs;
             if (ImageLoaded)
             {
-                if (mouse.Button == MouseButtons.Left)
+                if (MouseLeftButton)
                 {
-                    if (!Selection.isEditable)
+                    if (!(PannedObject == Selection))
                     {
-                        Selection.RealSizeRecalc(Size.Empty);
-                        Selection.MiddlePointPosition = Sensor_MousePosition;
-                        Selection.MiddlePointRealPosition = new Point(
-                            (int)((Sensor_MousePosition.X + pb_OriginalSensor.Location.X + 1) / ImageScale),
-                            (int)((Sensor_MousePosition.Y + pb_OriginalSensor.Location.Y + 1) / ImageScale)
-                        );
-                    }
-                    else
-                    {
-                        CropImage();
-                    }
+                        if (!Selection.isEditable)
+                        {
+                            Selection.RealSizeRecalc(Size.Empty);
+                            Selection.MiddlePointPosition = Sensor_MousePosition;
+                            Selection.MiddlePointRealPosition = new Point(
+                                (int)((Sensor_MousePosition.X + pb_OriginalSensor.Location.X + 1) / ImageScale),
+                                (int)((Sensor_MousePosition.Y + pb_OriginalSensor.Location.Y + 1) / ImageScale)
+                            );
+                        }
+                        else
+                        {
+                            CropImage();
+                        }
                     Selection.isEditable = !Selection.isEditable;
+                    }                    
                 }
                 splitContainer1.Panel1.Focus();
             }
@@ -580,11 +637,35 @@ namespace myPhotoEditor
 
         private void pb_Selection_MouseUp(object sender, MouseEventArgs e)
         {
-            MouseEventArgs mouse = e as MouseEventArgs;
+            MouseEventArgs mouse = e as MouseEventArgs;            
 
-            if (mouse.Button == MouseButtons.Middle)
+            if (MouseMiddleButton)
             {
+                if (PannedObject == pb_Original)
+                {
+                    PannedObject = null;
+                }
                 ChangeSensorLocation();
+            }
+            if (MouseLeftButton)
+            {
+                if (PannedObject == Selection)
+                {
+                    PannedObject = null;
+                }
+            }
+
+            switch (mouse.Button)
+            {
+                case MouseButtons.Left:
+                    MouseLeftButton = false;
+                    break;
+                case MouseButtons.Right:
+                    MouseRightButton = false;
+                    break;
+                case MouseButtons.Middle:
+                    MouseMiddleButton = false;
+                    break;
             }
         }
         private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
@@ -598,11 +679,11 @@ namespace myPhotoEditor
             if (ImageLoaded)
             {
                 Point focus = ExpandMousePosition(e as MouseEventArgs);
-                if (mouse.Button == MouseButtons.Middle)
+                if (MouseMiddleButton)
                 {
                     ImageScaleToFit();
                 }
-                if (mouse.Button == MouseButtons.Left)
+                if (MouseLeftButton)
                 {
                     Point focusReal = new Point(
                         (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
@@ -638,12 +719,12 @@ namespace myPhotoEditor
             {
                 if (e.Delta > 0)
                 {
-                    Selection.RealWidth += (int)(2 / ImageScale);
+                    Selection.RealWidth += ((int)(2 / ImageScale) == 0 ? 2 : (int)(2 / ImageScale));
                 }
                 else
                 {
                     if (Selection.Size.Width > 2)
-                        Selection.RealWidth -= (int)(2 / ImageScale);
+                        Selection.RealWidth -= ((int)(2 / ImageScale) == 0 ? 2 : (int)(2 / ImageScale));
                 }
                 CropImage();
                 return;
@@ -652,12 +733,12 @@ namespace myPhotoEditor
             {
                 if (e.Delta > 0)
                 {
-                    Selection.RealHeight += (int)(2 / ImageScale);
+                    Selection.RealHeight += ((int)(2 / ImageScale) == 0 ? 2 : (int)(2 / ImageScale));
                 }
                 else
                 {
                     if (Selection.Size.Height > 2)
-                        Selection.RealHeight -= (int)(2 / ImageScale);
+                        Selection.RealHeight -= ((int)(2 / ImageScale) == 0 ? 2 : (int)(2 / ImageScale));
                 }
                 CropImage();
                 return;

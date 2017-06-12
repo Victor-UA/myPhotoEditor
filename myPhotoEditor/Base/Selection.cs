@@ -94,8 +94,11 @@ namespace myPhotoEditor.Base
 
             set
             {
-                RealSize = new Size(value, _RealSize.Height);
-                SizeRecalc();
+                if (value >= 0)
+                {
+                    RealSize = new Size(value, _RealSize.Height);
+                    SizeRecalc();
+                }
             }
         }
         public int RealHeight
@@ -107,8 +110,11 @@ namespace myPhotoEditor.Base
 
             set
             {
-                RealSize = new Size(RealSize.Width, value);
-                SizeRecalc();
+                if (value >= 0)
+                {
+                    RealSize = new Size(RealSize.Width, value);
+                    SizeRecalc();
+                }
             }
         }
         private double _Scale;
