@@ -29,7 +29,6 @@ namespace myPhotoEditor
                 tSSL_ImageScale.Text = Math.Round(value, 2).ToString();                
             }
         }
-        private Point MiddleButtonDown;
         private bool _Grayscale;
         private bool Grayscale
         {
@@ -59,8 +58,9 @@ namespace myPhotoEditor
                     middleCrosslinesToolStripMenuItem1.Checked = value;
                 MiddleCrossLinesSwitched();
             }
-        }        
+        }
 
+        private Point MiddleButtonDown { get; set; }
         private Point Sensor_MousePosition { get; set; }
         private Point Sensor_LastPosition { get; set; }
         private bool MouseInside { get; set; }
@@ -334,8 +334,12 @@ namespace myPhotoEditor
         }
         private void ImageMove(Point offset)
         {
-            int newX = pb_Original.Location.X + offset.X;
-            int newY = pb_Original.Location.Y + offset.Y;
+            ImageMove(offset.X, offset.Y);
+        }
+        private void ImageMove(int dX, int dY)
+        {
+            int newX = pb_Original.Location.X + dX;
+            int newY = pb_Original.Location.Y + dY;
 
             Point TopLeft = new Point(newX, newY);
             if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
@@ -494,11 +498,7 @@ namespace myPhotoEditor
                 }
                 else
                 {
-                    Point offset = new Point(
-                        e.X - MiddleButtonDown.X,
-                        e.Y - MiddleButtonDown.Y
-                    );
-                    ImageMove(offset);
+                    ImageMove(e.X - MiddleButtonDown.X, e.Y - MiddleButtonDown.Y);
                 }
             }
             else
@@ -584,7 +584,7 @@ namespace myPhotoEditor
 
             if (mouse.Button == MouseButtons.Middle)
             {
-                //ChangeSensorLocation();
+                ChangeSensorLocation();
             }
         }
         private void splitContainer1_Panel1_MouseUp(object sender, MouseEventArgs e)
