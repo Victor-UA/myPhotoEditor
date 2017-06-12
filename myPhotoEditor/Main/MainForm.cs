@@ -117,9 +117,18 @@ namespace myPhotoEditor.Main
             {                
                 isEditable = false
             };
-            Selection.SizeChanged += SelectionSizeChanged;
-            Selection.LocationChanged += SelectionLocationChanged;
-            Selection.SelectionStyleChanged += SelectionStyleChanged;
+            Selection.SizeChanged += Selection_SizeChanged;
+            Selection.LocationChanged += Selection_LocationChanged;
+            Selection.SelectionStyleChanged += Selection_StyleChanged;
+            Selection.Border.MouseEnterBorder += Selection_MouseEntereBorder;
+            Selection.Border.MouseLeaveBorder += Selection_MouseLeaveBorder;
+            foreach (BorderSide item in Selection.Border.Sides.Values)
+            {
+                item.MouseEnterBorderSide += Selection_MouseEnterBorderSide;
+                item.MouseLeaveBorderSide += Selection_MouseLeaveBorderSide;
+            }
+            Selection.Border.MouseEnterBorder += Selection_MouseEntereBorder;
+            Selection.Border.MouseLeaveBorder += Selection_MouseLeaveBorder;
 
             Selection.SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
 
@@ -279,7 +288,7 @@ namespace myPhotoEditor.Main
                 pb_CropSensor.BackgroundImage = null;
             }
         }
-        private void SelectionStyleChanged(object sender, EventArgs e)
+        private void Selection_StyleChanged(object sender, EventArgs e)
         {
             switch (Selection.SelectionStyle)
             {
@@ -369,18 +378,34 @@ namespace myPhotoEditor.Main
             ChangeSensorLocation();
         }
 
-        private void SelectionSizeChanged(object sender, EventArgs e)
+        private void Selection_SizeChanged(object sender, EventArgs e)
         {
             Size size = ((Selection)sender).Size;            
             tSSL_SelectionWidth.Text = Math.Round((size.Width) / ImageScale).ToString();
             tSSL_SelectionHeight.Text = Math.Round((size.Height) / ImageScale).ToString();
             SelectionReDraw();
         }
-        private void SelectionLocationChanged(object sender, EventArgs e)
+        private void Selection_LocationChanged(object sender, EventArgs e)
         {
             Point midPoint = ((Selection)sender).MiddlePointPosition;
             tSSL_SelectionMidPosX.Text = Math.Round((midPoint.X + pb_OriginalSensor.Location.X) / ImageScale).ToString();
             tSSL_SelectionMidPosY.Text = Math.Round((midPoint.Y + pb_OriginalSensor.Location.Y) / ImageScale).ToString();
+            SelectionReDraw();
+        }
+        private void Selection_MouseEntereBorder(object sender, EventArgs e)
+        {            
+            SelectionReDraw();
+        }
+        private void Selection_MouseLeaveBorder(object sender, EventArgs e)
+        {
+            SelectionReDraw();
+        }
+        private void Selection_MouseEnterBorderSide(object sender, EventArgs e)
+        {
+            SelectionReDraw();
+        }
+        private void Selection_MouseLeaveBorderSide(object sender, EventArgs e)
+        {
             SelectionReDraw();
         }
 
@@ -537,7 +562,6 @@ namespace myPhotoEditor.Main
                 }
                 else
                 {
-                    Debug.WriteLine(mouse.Button);
                     if (Selection.isEditable && ImageLoaded)
                     {
                         Selection.RealSizeRecalc(new Size(

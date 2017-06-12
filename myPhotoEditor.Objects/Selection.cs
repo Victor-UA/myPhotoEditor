@@ -133,9 +133,28 @@ namespace myPhotoEditor.Objects
                 SizeRecalc();
             }
         }
-        public Border Border { get; set; } = new Border();
+        public Border Border { get; private set; } = new Border();
 
-        public bool MouseEntered { get; private set; }
+        private bool _MouseEntered;
+        public bool MouseEntered
+        {
+            get
+            {
+                return _MouseEntered;
+            }
+            private set
+            {
+                _MouseEntered = value;
+                if (value)
+                {
+                    MouseEnter(this, MouseEventArgs);
+                }
+                else
+                {
+                    MouseLeave(this, MouseEventArgs);
+                }
+            }
+        }        
 
         private MouseEventArgs _MouseEventArgs;
         public MouseEventArgs MouseEventArgs
@@ -148,24 +167,22 @@ namespace myPhotoEditor.Objects
             set
             {
                 _MouseEventArgs = value;
+
+                Border.MouseEventArgs = value;
+
                 if (getRegion().Contains(value.Location))
                 {
+                    
                     if (!MouseEntered)
-                    {
-                        MouseEntered = true;
-                        MouseEnter(this, value);
+                    {                                                
+                        MouseEntered = true;                        
                     }
                 }
                 else
-                {
+                {                    
                     if (MouseEntered)
-                    {
+                    {                                               
                         MouseEntered = false;
-                        MouseLeave(this, value);
-                        Border.Top.MouseEntered = false;
-                        Border.Right.MouseEntered = false;
-                        Border.Bottom.MouseEntered = false;
-                        Border.Left.MouseEntered = false;
                     }
                 }
             }
@@ -191,7 +208,10 @@ namespace myPhotoEditor.Objects
         public event EventHandler SelectionStyleChanged = delegate { };
         public event MouseEventHandler MouseEnter = delegate { };
         public event MouseEventHandler MouseLeave = delegate { };
-
+        public event EventHandler MouseEnterBorder = delegate { };
+        public event EventHandler MouseLeaveBorder = delegate { };
+        public event EventHandler MouseEnterBorderSide = delegate { };
+        public event EventHandler MouseLeaveBorderSide = delegate { };
 
         public bool isEditable { get; set; }        
 
@@ -206,7 +226,21 @@ namespace myPhotoEditor.Objects
 
         private void BorderChanged()
         {
-            //Border.Top.Region = 
+            Point TopLeft = MidPoint2TopLeft();
+            int Thick = 40;
+            Border.Sides[BorderSides.Top].Region = new Rectangle(TopLeft, new Size(Width, Thick));
+            Border.Sides[BorderSides.Right].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y, Thick, Height);
+            Border.Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft.X, TopLeft.Y + Height - Thick, Width, Thick);
+            Border.Sides[BorderSides.Left].Region = new Rectangle(TopLeft, new Size(Thick, Height));            
+        }
+
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MouseEnterBorder(sender, e);
+        }
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MouseLeaveBorder(sender, e);
         }
 
         private Point MidPoint2TopLeft()
@@ -249,11 +283,10 @@ namespace myPhotoEditor.Objects
             try
             {
                 g = Graphics.FromImage(image);
-                Pen pen = new Pen(Brushes.Lime, 1);
+                Pen pen = new Pen(Brushes.Lime, 1);                
                 {
                     switch (SelectionStyle)
                     {
-                        
                         case SelectionStyle.BoxDiagonal:
                             g.DrawLine(pen, Location.X, Location.Y, Location.X + Width, Location.Y + Height);
                             g.DrawLine(pen, Location.X, Location.Y + Height, Location.X + Width, Location.Y);
@@ -263,6 +296,15 @@ namespace myPhotoEditor.Objects
                             g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
                             g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
+
+                            foreach (BorderSide item in Border.Sides.Values)
+                            {
+                                if (item.MouseEntered)
+                                {
+                                    g.FillRectangle(Brushes.Lime, item.Region);
+                                }
+                                g.DrawRectangle(pen, item.Region);
+                            }                            
                             break;
                     }
                 }
