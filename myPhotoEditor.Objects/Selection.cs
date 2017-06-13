@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace myPhotoEditor.Objects
-{    
+{
     public class Selection
     {
         public Point Location
@@ -27,7 +24,7 @@ namespace myPhotoEditor.Objects
             set
             {
                 _MiddlePointPosition = value;
-                BorderChanged();
+                Border.Change(MidPoint2TopLeft(), Width, Height);
                 LocationChanged(this, new EventArgs());
             }
         }
@@ -44,6 +41,10 @@ namespace myPhotoEditor.Objects
                 _MiddlePointRealPosition = value;                
             }
         }
+        private Point OldPosition { get; set; }
+        public Point Offset { get; set; }
+        public Control Parent { get; set; }
+        private Cursor ParentCursor { get; set; }
 
         private Size _Size;
         public Size Size
@@ -56,7 +57,7 @@ namespace myPhotoEditor.Objects
             private set
             {
                 _Size = value;
-                BorderChanged();
+                Border.Change(MidPoint2TopLeft(), Width, Height);
                 SizeChanged(this, new EventArgs());
             }
         }
@@ -133,7 +134,21 @@ namespace myPhotoEditor.Objects
                 SizeRecalc();
             }
         }
-        public Border Border { get; private set; } = new Border();
+        public Border Border { get; private set; }
+
+        private bool _isMoving;
+        public bool isMoving
+        {
+            get
+            {
+                return _isMoving;
+            }
+            protected set
+            {
+                _isMoving = value;                
+            }
+        }
+        public bool isSizing { get; set; }
 
         private bool _MouseEntered;
         public bool MouseEntered
@@ -144,14 +159,24 @@ namespace myPhotoEditor.Objects
             }
             private set
             {
-                _MouseEntered = value;
-                if (value)
+                if (_MouseEntered != value)
                 {
-                    MouseEnter(this, MouseEventArgs);
+                    _MouseEntered = value;
+                    if (value)
+                    {
+                        ParentCursor = Parent.Cursor;
+                        MouseEnter(this, MouseEventArgs);
+                    }
+                    else
+                    {
+                        
+                        Parent.Cursor = ParentCursor;
+                        MouseLeave(this, MouseEventArgs);
+                    }
                 }
-                else
+                if (value && !Border.MouseEntered && !isSizing && !isMoving)
                 {
-                    MouseLeave(this, MouseEventArgs);
+                    Parent.Cursor = Cursors.Hand;
                 }
             }
         }        
@@ -168,25 +193,12 @@ namespace myPhotoEditor.Objects
             {
                 _MouseEventArgs = value;
 
+                MouseEntered = getRegion().Contains(value.Location);                
                 Border.MouseEventArgs = value;
-
-                if (getRegion().Contains(value.Location))
-                {
-                    
-                    if (!MouseEntered)
-                    {                                                
-                        MouseEntered = true;                        
-                    }
-                }
-                else
-                {                    
-                    if (MouseEntered)
-                    {                                               
-                        MouseEntered = false;
-                    }
-                }
             }
         }
+        private Dictionary<MouseButtons, bool> MouseButtonsState { get; set; }
+        private Point MouseLeftButtonDownPosition { get; set; }
 
         private SelectionStyle _SelectionStyle;
         public SelectionStyle SelectionStyle
@@ -203,6 +215,83 @@ namespace myPhotoEditor.Objects
             }
         }
 
+        public void MouseDown(object sender, MouseEventArgs e)
+        {
+            if (MouseButtonsState[MouseButtons.Left])
+            {
+                MouseLeftButtonDownPosition = e.Location;
+                OldPosition = MiddlePointPosition;
+            }
+        }
+        public void MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (isMoving)
+                {
+                    isMoving = false;
+                }
+            }
+        }
+        public void MouseClick(object sender, MouseEventArgs e)
+        {
+            if (MouseButtonsState[MouseButtons.Left])
+            {
+                if (isSizing)
+                {
+                    isSizing = false;
+                }
+                else
+                {
+                    if (!isMoving)
+                    {
+                        RealSizeRecalc(Size.Empty);
+                        MiddlePointPosition = e.Location;
+                        MiddlePointRealPosition = new Point(
+                            (int)((e.X + Offset.X + 1) / Scale),
+                            (int)((e.Y + Offset.Y + 1) / Scale)
+                        );
+                        isSizing = true;
+                    }
+                }
+            }
+        }
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MouseButtonsState[MouseButtons.Left])
+            {
+                if (
+                    getRegion().Contains(MouseLeftButtonDownPosition) && 
+                    !Border.Contains(MouseLeftButtonDownPosition) &&
+                    !isMoving)
+                {                    
+                    isMoving = true;
+                }
+                if (isMoving)
+                {
+                    MiddlePointPosition = new Point(
+                        OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),
+                        OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)
+                    );
+
+                    MiddlePointRealPosition = new Point(
+                        (int)((MiddlePointPosition.X + Offset.X) / Scale),
+                        (int)((MiddlePointPosition.Y + Offset.Y) / Scale)
+                    );
+                }
+            }
+            else
+            {
+                if (isSizing)
+                {
+                    RealSizeRecalc(new Size(
+                        Math.Abs(e.X - MiddlePointPosition.X) * 2,
+                        Math.Abs(e.Y - MiddlePointPosition.Y) * 2
+                    ));
+                }
+            }
+        }
+
         public event EventHandler SizeChanged = delegate { };
         public event EventHandler LocationChanged = delegate { };
         public event EventHandler SelectionStyleChanged = delegate { };
@@ -213,32 +302,61 @@ namespace myPhotoEditor.Objects
         public event EventHandler MouseEnterBorderSide = delegate { };
         public event EventHandler MouseLeaveBorderSide = delegate { };
 
-        public bool isEditable { get; set; }        
-
-        public Selection(Point position, int width, int height, double scale)
+        public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, bool> mouseButtonsState, Control parent)
         {
+            MouseButtonsState = mouseButtonsState;
+            Border = new Border();
+            Border.MouseEnterBorderSide += Border_Side_MouseEnter;
+            Border.MouseLeave += Border_MouseLeave;
             MiddlePointPosition = position;
             Size = new Size(width, height);
             Scale = scale;
-            isEditable = true;            
+            isMoving = false;
+            isSizing = false;
+            Offset = Point.Empty;
+            Parent = parent;
+            ParentCursor = Parent.Cursor; 
         }
-        public Selection(Point position) : this(position, 0, 0, 1) { }
+        public Selection(Point position, Dictionary<MouseButtons, bool> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }        
 
-        private void BorderChanged()
+        private void Border_Side_MouseEnter(object sender, EventArgs e)
         {
-            Point TopLeft = MidPoint2TopLeft();
-            int Thick = 40;
-            Border.Sides[BorderSides.Top].Region = new Rectangle(TopLeft, new Size(Width, Thick));
-            Border.Sides[BorderSides.Right].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y, Thick, Height);
-            Border.Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft.X, TopLeft.Y + Height - Thick, Width, Thick);
-            Border.Sides[BorderSides.Left].Region = new Rectangle(TopLeft, new Size(Thick, Height));            
-        }
+            if (!isSizing && !isMoving)
+            {
+                switch ((sender as BorderSide).Side)
+                {
+                    case BorderSides.TopLeft:
+                        Parent.Cursor = Cursors.SizeNWSE;
+                        break;
+                    case BorderSides.Top:
+                        Parent.Cursor = Cursors.SizeNS;
+                        break;
+                    case BorderSides.TopRight:
+                        Parent.Cursor = Cursors.SizeNESW;
+                        break;
+                    case BorderSides.Right:
+                        Parent.Cursor = Cursors.SizeWE;
+                        break;
+                    case BorderSides.BottomRight:
+                        Parent.Cursor = Cursors.SizeNWSE;
+                        break;
+                    case BorderSides.Bottom:
+                        Parent.Cursor = Cursors.SizeNS;
+                        break;
+                    case BorderSides.BottomLeft:
+                        Parent.Cursor = Cursors.SizeNESW;
+                        break;
+                    case BorderSides.Left:
+                        Parent.Cursor = Cursors.SizeWE;
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-        private void Border_MouseEnter(object sender, MouseEventArgs e)
-        {
             MouseEnterBorder(sender, e);
         }
-        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        private void Border_MouseLeave(object sender, EventArgs e)
         {
             MouseLeaveBorder(sender, e);
         }
@@ -271,7 +389,7 @@ namespace myPhotoEditor.Objects
         private void SizeRecalc()
         {
             Size = new Size(
-                (int)(RealSize.Width * Scale), 
+                (int)(RealSize.Width * Scale),
                 (int)(RealSize.Height * Scale)
             );
         }
@@ -296,15 +414,16 @@ namespace myPhotoEditor.Objects
                             g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
                             g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
-
+                            /*
                             foreach (BorderSide item in Border.Sides.Values)
                             {
                                 if (item.MouseEntered)
                                 {
                                     g.FillRectangle(Brushes.Lime, item.Region);
                                 }
-                                g.DrawRectangle(pen, item.Region);
-                            }                            
+                                //g.DrawRectangle(pen, item.Region);
+                            } 
+                            */                           
                             break;
                     }
                 }
@@ -328,8 +447,8 @@ namespace myPhotoEditor.Objects
             {
                 Point TopLeft = new Point()
                 {
-                    X = (int)(((double)MiddlePointPosition.X - Size.Width / 2 + offset.X)) + 1,
-                    Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2 + offset.Y)) + 1
+                    X = (int)(((double)MiddlePointPosition.X - Size.Width / 2 + offset.X)),
+                    Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2 + offset.Y))
                 };
                 return new Rectangle(TopLeft, Size);
             }
@@ -377,8 +496,8 @@ namespace myPhotoEditor.Objects
         {
             return new Rectangle(
                 new Point(
-                    1 + MiddlePointRealPosition.X - RealSize.Width / 2,
-                    1 + MiddlePointRealPosition.Y - RealSize.Height / 2
+                    MiddlePointRealPosition.X - RealSize.Width / 2,
+                    MiddlePointRealPosition.Y - RealSize.Height / 2
                 ),
                 RealSize
             );

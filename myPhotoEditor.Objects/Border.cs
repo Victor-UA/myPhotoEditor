@@ -1,30 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace myPhotoEditor.Objects
 {
     public class Border
     {
-        public Dictionary<BorderSides, BorderSide> Sides { get; private set; }        
+        public Dictionary<BorderSides, BorderSide> Sides { get; private set; }
+        private int Thick;        
 
         public Border()
         {
-            Sides = new Dictionary<BorderSides, BorderSide>();
-            
-            SideInit(BorderSides.Top, new BorderSide(BorderSides.Top));
-            SideInit(BorderSides.Right, new BorderSide(BorderSides.Right));
-            SideInit(BorderSides.Bottom, new BorderSide(BorderSides.Bottom));
-            SideInit(BorderSides.Left, new BorderSide(BorderSides.Left));
+            Thick = 6;
+            Sides = new Dictionary<BorderSides, BorderSide>() {
+                { BorderSides.TopLeft, new BorderSide(BorderSides.TopLeft) },
+                { BorderSides.Top, new BorderSide(BorderSides.Top) },
+                { BorderSides.TopRight, new BorderSide(BorderSides.TopRight) },
+                { BorderSides.Right, new BorderSide(BorderSides.Right) },
+                { BorderSides.BottomRight, new BorderSide(BorderSides.BottomRight) },
+                { BorderSides.Bottom, new BorderSide(BorderSides.Bottom) },
+                { BorderSides.BottomLeft, new BorderSide(BorderSides.BottomLeft) },
+                { BorderSides.Left, new BorderSide(BorderSides.Left) }
+            };
+            foreach (BorderSide item in Sides.Values)
+            {
+                item.MouseEnter += new EventHandler(delegate (object sender, EventArgs e) { MouseEnterBorderSide(sender, e); });
+                item.MouseLeave += new EventHandler(delegate (object sender, EventArgs e) { MouseLeaveBorderSide(sender, e); });
+            }
 
             _MouseEntered = false;
         }
-
-        private void SideInit(BorderSides eSide, BorderSide side)
-        {
-            Sides.Add(eSide, side);
-        }        
 
         private bool _MouseEntered;
         public bool MouseEntered
@@ -40,16 +47,28 @@ namespace myPhotoEditor.Objects
                     _MouseEntered = value;
                     if (value)
                     {
-                        MouseEnterBorder(this, new EventArgs());
+                        MouseEnter(this, new EventArgs());
                     }
                     else
                     {
-                        MouseLeaveBorder(this, new EventArgs());
+                        MouseLeave(this, new EventArgs());
                     }
                 }
                 else 
                     _MouseEntered = value;
             }
+        }
+
+        internal void Change(Point TopLeft, int Width, int Height)
+        {            
+            Sides[BorderSides.TopLeft].Region = new Rectangle(TopLeft, new Size(Thick, Thick));
+            Sides[BorderSides.Top].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y, Width - Thick * 2, Thick);
+            Sides[BorderSides.TopRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y, Thick, Thick);
+            Sides[BorderSides.Right].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Thick, Thick, Height - Thick * 2);
+            Sides[BorderSides.BottomRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Height - Thick, Thick, Thick);
+            Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y + Height - Thick, Width - Thick * 2, Thick);
+            Sides[BorderSides.BottomLeft].Region = new Rectangle(TopLeft.X, TopLeft.Y + Height - Thick, Thick, Thick);
+            Sides[BorderSides.Left].Region = new Rectangle(TopLeft.X, TopLeft.Y + Thick, Thick, Height - Thick * 2);
         }
 
         private MouseEventArgs _MouseEventArgs;
@@ -73,8 +92,19 @@ namespace myPhotoEditor.Objects
             }
         }
 
+        internal bool Contains(Point point)
+        {
+            bool result = false;
+            foreach (BorderSide item in Sides.Values)
+            {
+                result |= item.Region.Contains(point);
+            }
+            return result;
+        }
 
-        public event EventHandler MouseEnterBorder = delegate { };
-        public event EventHandler MouseLeaveBorder = delegate { };        
+        public event EventHandler MouseEnter = delegate { };
+        public event EventHandler MouseLeave = delegate { };
+        public event EventHandler MouseEnterBorderSide = delegate { };
+        public event EventHandler MouseLeaveBorderSide = delegate { };
     }
 }

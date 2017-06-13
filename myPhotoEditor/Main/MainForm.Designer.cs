@@ -182,6 +182,7 @@
             this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
             this.pb_OriginalSensor.TabIndex = 1;
             this.pb_OriginalSensor.TabStop = false;
+            this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
             this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_Selection_DoubleClick);
             this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
             this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseDown);

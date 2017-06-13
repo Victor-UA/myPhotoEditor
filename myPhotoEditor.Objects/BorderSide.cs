@@ -24,11 +24,11 @@ namespace myPhotoEditor.Objects
                     _MouseEntered = value;
                     if (value)
                     {
-                        MouseEnterBorderSide(this, new EventArgs());
+                        MouseEnter(this, new EventArgs());
                     }
                     else
                     {
-                        MouseLeaveBorderSide(this, new EventArgs());
+                        MouseLeave(this, new EventArgs());
                     }
                 }
                 else
@@ -58,7 +58,7 @@ namespace myPhotoEditor.Objects
             Region = Rectangle.Empty;
         }
 
-        public event EventHandler MouseEnterBorderSide = delegate { };
-        public event EventHandler MouseLeaveBorderSide = delegate { };
+        public event EventHandler MouseEnter = delegate { };
+        public event EventHandler MouseLeave = delegate { };
     }
 }

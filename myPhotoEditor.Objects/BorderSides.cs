@@ -8,9 +8,13 @@ namespace myPhotoEditor.Objects
 {
     public enum BorderSides
     {
+        TopLeft,
         Top,
+        TopRight,
         Right,
+        BottomRight,
         Bottom,
-        Left
+        BottomLeft,
+        Left        
     }
 }
