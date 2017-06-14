@@ -56,6 +56,7 @@
             this.selectionStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndDiagonlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndOrthoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_X = new System.Windows.Forms.ToolStripStatusLabel();
@@ -71,6 +72,8 @@
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearSelectionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -124,21 +127,22 @@
             this.contextMenuStrip_OriginalSide.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem1,
             this.toolStripMenuItem2,
+            this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(150, 54);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(153, 98);
             // 
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(146, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
             // 
             // toolStripMenuItem4
             // 
@@ -146,7 +150,7 @@
             this.boxAndDiagonalsToolStripMenuItem,
             this.boxAndMiddleOrthoAxisToolStripMenuItem});
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem4.Text = "Selection style";
             // 
             // boxAndDiagonalsToolStripMenuItem
@@ -183,13 +187,13 @@
             this.pb_OriginalSensor.TabIndex = 1;
             this.pb_OriginalSensor.TabStop = false;
             this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
-            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_Selection_DoubleClick);
-            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseClick);
-            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseDown);
-            this.pb_OriginalSensor.MouseEnter += new System.EventHandler(this.pb_Selection_MouseEnter);
-            this.pb_OriginalSensor.MouseLeave += new System.EventHandler(this.pb_Selection_MouseLeave);
-            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseMove);
-            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Selection_MouseUp);
+            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
+            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
+            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseDown);
+            this.pb_OriginalSensor.MouseEnter += new System.EventHandler(this.pb_OriginalSensor_MouseEnter);
+            this.pb_OriginalSensor.MouseLeave += new System.EventHandler(this.pb_OriginalSensor_MouseLeave);
+            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
+            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
             // 
             // pb_CropSensor
             // 
@@ -287,6 +291,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.grayscaleToolStripMenuItem,
             this.middleCrosslinesToolStripMenuItem,
+            this.toolStripMenuItem3,
+            this.clearSelectionToolStripMenuItem,
             this.selectionStyleToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
@@ -328,6 +334,13 @@
             this.boxAndOrthoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.boxAndOrthoToolStripMenuItem.Text = "Box and middle ortho axis";
             this.boxAndOrthoToolStripMenuItem.Click += new System.EventHandler(this.boxAndOrthoToolStripMenuItem_Click);
+            // 
+            // clearSelectionToolStripMenuItem
+            // 
+            this.clearSelectionToolStripMenuItem.Name = "clearSelectionToolStripMenuItem";
+            this.clearSelectionToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.clearSelectionToolStripMenuItem.Text = "Clear Selection";
+            this.clearSelectionToolStripMenuItem.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -485,6 +498,18 @@
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(164, 6);
+            // 
+            // clearSelectionToolStripMenuItem1
+            // 
+            this.clearSelectionToolStripMenuItem1.Name = "clearSelectionToolStripMenuItem1";
+            this.clearSelectionToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.clearSelectionToolStripMenuItem1.Text = "ClearSelection";
+            this.clearSelectionToolStripMenuItem1.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -560,6 +585,9 @@
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionMidPosX;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel7;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionMidPosY;
+        private System.Windows.Forms.ToolStripMenuItem clearSelectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearSelectionToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
     }
 }
 

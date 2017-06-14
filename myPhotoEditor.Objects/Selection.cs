@@ -291,7 +291,8 @@ namespace myPhotoEditor.Objects
             oldParentCursor = Parent.Cursor;
             CursorIsBlocked = false;
         }
-        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }
+        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }                
+
 
 
         public void MouseDown(object sender, MouseEventArgs e)
@@ -304,7 +305,6 @@ namespace myPhotoEditor.Objects
                 MouseDownInside = getRegion().Contains(MouseLeftButtonDownPosition);
                 MouseDownInsideBorder = Border.Contains(MouseLeftButtonDownPosition);
                 ResizingSide = Border.ActiveSide;
-                Debug.WriteLine(string.Format("{0}, {1}, {2}", e.Location, MouseDownInside, MouseDownInsideBorder));
             }
         }
         public void MouseUp(object sender, MouseEventArgs e)
@@ -340,7 +340,7 @@ namespace myPhotoEditor.Objects
                 }
                 else
                 {
-                    if (!isMoving && !isResizing)
+                    if (!MouseDownInside && !isMoving && !isResizing)
                     {
                         isSizing = true;
                         CursorIsBlocked = true;
@@ -360,33 +360,26 @@ namespace myPhotoEditor.Objects
         {
             if (MouseButtonsState[MouseButtons.Left].State)
             {
+                MouseButtonsState[MouseButtons.Left].Move = true;
+                CursorIsBlocked = true;
                 if (MouseDownInside)
-                {                    
-                    if (!MouseButtonsState[MouseButtons.Left].Move)
+                {
+                    if (!MouseDownInsideBorder)
                     {
-                        if (!MouseDownInsideBorder)
+                        if (!isMoving)
                         {
-                            if (!isMoving)
-                            {
-                                isMoving = true;
-                            }
-                        }
-                        else
-                        {
-                            if (!isResizing)
-                            {                                
-                                if (ResizingSide != BorderSides.None)
-                                    isResizing = true;
-                            }
+                            isMoving = true;
                         }
                     }
-                    MouseButtonsState[MouseButtons.Left].Move = true;
-                    CursorIsBlocked = true;
-                }
-                else
-                {
-                    if (MouseDownInside && MouseDownInsideBorder)
-                        Debug.WriteLine("Error");
+                    else
+                    {
+                        if (!isResizing)
+                        {
+                            if (ResizingSide != BorderSides.None)
+                                isResizing = true;
+                        }
+                    }
+
                 }
                 if (isMoving)
                 {
@@ -527,8 +520,8 @@ namespace myPhotoEditor.Objects
         public void RealSizeRecalc(Size size)
         {
             _RealSize = new Size(
-                (int)(Size.Width / Scale),
-                (int)(Size.Height / Scale)
+                (int)(size.Width / Scale),
+                (int)(size.Height / Scale)
             );
             Size = size;
         }
