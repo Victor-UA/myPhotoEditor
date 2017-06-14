@@ -172,6 +172,7 @@ namespace myPhotoEditor.Main
         private void clearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Selection.RealSizeRecalc(Size.Empty);
+            //Selection = null;
         }        
 
 

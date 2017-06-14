@@ -83,7 +83,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\MouseButtonStates.cs" />
     <Compile Include="Main\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,7 +134,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\myPhotoEditor.Objects\myPhotoEditor.Objects.csproj">
       <Project>{d8a9bf35-02c3-4395-870b-c078b695ae10}</Project>

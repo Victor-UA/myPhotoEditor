@@ -84,7 +84,8 @@ namespace myPhotoEditor.Objects
             }
         }
 
-        bool MouseDownInside;
+        private bool MouseDownInside { get; set; }
+        private Point MouseLeftButtonDownPosition { get; set; }
 
         private Size _Size;
         public Size Size
@@ -253,8 +254,7 @@ namespace myPhotoEditor.Objects
                 Border.MouseEventArgs = value;
             }
         }
-        private Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }
-        private Point MouseLeftButtonDownPosition { get; set; }
+        private Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }        
 
         private SelectionStyle _SelectionStyle;
         public SelectionStyle SelectionStyle
