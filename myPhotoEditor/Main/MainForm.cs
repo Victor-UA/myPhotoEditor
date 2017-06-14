@@ -431,12 +431,8 @@ namespace myPhotoEditor.Main
                 newX < 0 ? -newX : 0, 
                 newY < 0 ? -newY : 0
             );
-            
-            Selection.MiddlePointPosition = new Point(
-                (int)((Selection.MiddlePointRealPosition.X * ImageScale) - pb_OriginalSensor.Location.X),
-                (int)(((Selection.MiddlePointRealPosition.Y * ImageScale) - pb_OriginalSensor.Location.Y))
-            );
-            
+
+            SelectionReDraw();
             pb_OriginalSensor.Show();
         }
 
@@ -679,22 +675,14 @@ namespace myPhotoEditor.Main
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X + ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1),
                         Selection.MiddlePointRealPosition.Y
-                    );
-                    Selection.MiddlePointPosition = new Point(
-                        (int)(Selection.MiddlePointRealPosition.X * ImageScale) - pb_OriginalSensor.Location.X,
-                        Selection.MiddlePointPosition.Y
-                    );
+                    );                    
                 }
                 else
                 {
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X - ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1),
                         Selection.MiddlePointRealPosition.Y
-                    );
-                    Selection.MiddlePointPosition = new Point(
-                        (int)(Selection.MiddlePointRealPosition.X * ImageScale) - pb_OriginalSensor.Location.X,
-                        Selection.MiddlePointPosition.Y
-                    );
+                    );                    
                 }
                 CropImage();
                 return;
@@ -707,21 +695,13 @@ namespace myPhotoEditor.Main
                         Selection.MiddlePointRealPosition.X,
                         Selection.MiddlePointRealPosition.Y + ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1)
                     );
-                    Selection.MiddlePointPosition = new Point(
-                        Selection.MiddlePointPosition.X,
-                        (int)(Selection.MiddlePointRealPosition.Y * ImageScale) - pb_OriginalSensor.Location.Y
-                    );
                 }
                 else
                 {
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X,
                         Selection.MiddlePointRealPosition.Y - ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1)
-                    );
-                    Selection.MiddlePointPosition = new Point(
-                        Selection.MiddlePointPosition.X,
-                        (int)(Selection.MiddlePointRealPosition.Y * ImageScale) - pb_OriginalSensor.Location.Y
-                    );
+                    );                    
                 }
                 CropImage();
                 return;

@@ -15,17 +15,14 @@ namespace myPhotoEditor.Objects
                 return MidPoint2TopLeft();
             }            
         }
-        private Point _MiddlePointPosition;
         public Point MiddlePointPosition {
             get
             {
-                return _MiddlePointPosition;
+                return MiddlePointReal2MiddlePoint();
             }
             set
             {
-                _MiddlePointPosition = value;
-                Border.Change(MidPoint2TopLeft(), Width, Height);
-                LocationChanged(this, new EventArgs());
+                MiddlePointRealPosition = MiddlePoint2MiddleRealPoint(value);                
             }
         }
         private Point _MiddlePointRealPosition;
@@ -38,7 +35,9 @@ namespace myPhotoEditor.Objects
 
             set
             {
-                _MiddlePointRealPosition = value;                
+                _MiddlePointRealPosition = value;
+                Border.Change(MidPoint2TopLeft(), Width, Height);
+                LocationChanged(this, new EventArgs());
             }
         }
         private Point OldPosition { get; set; }
@@ -270,9 +269,9 @@ namespace myPhotoEditor.Objects
             Border = new Border();
             Border.MouseEnterBorderSide += Border_Side_MouseEnter;
             Border.MouseLeave += Border_MouseLeave;
+            Scale = scale;
             MiddlePointPosition = position;
             RealSize = new Size(width, height);
-            Scale = scale;
             isMoving = false;
             isSizing = false;
             isResizing = false;
@@ -336,12 +335,7 @@ namespace myPhotoEditor.Objects
                         CursorIsBlocked = true;
 
                         RealSizeRecalc(Size.Empty);
-                        MiddlePointPosition = e.Location;
-                        MiddlePointRealPosition = new Point(
-                            (int)((e.X + Offset.X + 1) / Scale),
-                            (int)((e.Y + Offset.Y + 1) / Scale)
-                        );
-                        
+                        MiddlePointPosition = e.Location;                        
                     }
                 }
             }
@@ -376,12 +370,7 @@ namespace myPhotoEditor.Objects
                     MiddlePointPosition = new Point(
                         OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),
                         OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)
-                    );
-
-                    MiddlePointRealPosition = new Point(
-                        (int)((MiddlePointPosition.X + Offset.X) / Scale),
-                        (int)((MiddlePointPosition.Y + Offset.Y) / Scale)
-                    );
+                    );                    
                 }
                 if (isResizing)
                 {
@@ -528,8 +517,23 @@ namespace myPhotoEditor.Objects
                     (int)(RealSize.Width * Scale),
                     (int)(RealSize.Height * Scale)
                 );
-        }        
-        
+        }
+
+        private Point MiddlePointReal2MiddlePoint()
+        {
+            return new Point(
+                (int)(MiddlePointRealPosition.X * Scale) - Offset.X,
+                (int)(MiddlePointRealPosition.Y * Scale) - Offset.Y
+            );
+        }
+        private Point MiddlePoint2MiddleRealPoint(Point point)
+        {
+            return new Point(
+                (int)((point.X + Offset.X) / Scale),
+                (int)((point.Y + Offset.Y) / Scale)
+            );
+        }
+
         public void Draw(Image image)
         {
             Graphics g = null;
