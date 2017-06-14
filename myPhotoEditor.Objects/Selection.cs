@@ -42,20 +42,20 @@ namespace myPhotoEditor.Objects
         }
         private Point OldPosition { get; set; }
         public Point Offset { get; set; }
-        private Control _Parent;
-        public Control Parent
+        private Sensor _Sensor;
+        public Sensor Sensor
         {
             get
             {
-                return _Parent;
+                return _Sensor;
             }
 
             set
             {
-                _Parent = value;
+                _Sensor = value;
             }
         }
-        private Cursor oldParentCursor { get; set; }
+        //private Cursor oldParentCursor { get; set; }
         private Cursor BlockedCursor { get; set; }
         private bool _CursorIsBlocked;
         public bool CursorIsBlocked
@@ -76,7 +76,7 @@ namespace myPhotoEditor.Objects
                 {
                     if (!MouseEntered)
                     {
-                        Parent.Cursor = oldParentCursor;
+                        Sensor.Cursor = Sensor.MyCursor;
                     }
                 }
                 
@@ -196,34 +196,27 @@ namespace myPhotoEditor.Objects
                 if (_MouseEntered != value)
                 {
                     _MouseEntered = value;
-                    if (value)
+                    if (!value)
                     {
-                        if (!CursorIsBlocked)
-                        {
-                            oldParentCursor = Parent.Cursor;
-                        }
-                        else
-                        {
-                            Parent.Cursor = BlockedCursor;
-                        }
+                        Sensor.Cursor = BlockedCursor;
                         MouseEnter(this, MouseEventArgs);
                     }
                     else
                     {
                         if (!CursorIsBlocked)
                         {
-                            Parent.Cursor = oldParentCursor;
+                            Sensor.Cursor = Sensor.MyCursor;
                         }
                         else
                         {
-                            Parent.Cursor = BlockedCursor;
+                            Sensor.Cursor = BlockedCursor;
                         }
                         MouseLeave(this, MouseEventArgs);
                     }
                 }
                 if (value && !Border.MouseEntered && !CursorIsBlocked)
                 {
-                    Parent.Cursor = Cursors.Hand;
+                    Sensor.Cursor = Cursors.Hand;
                 }
             }
         }        
@@ -263,7 +256,7 @@ namespace myPhotoEditor.Objects
 
         public bool MouseDownInsideBorder { get; private set; }
 
-        public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent)
+        public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor)
         {
             MouseButtonsState = mouseButtonsState;
             Border = new Border();
@@ -276,11 +269,10 @@ namespace myPhotoEditor.Objects
             isSizing = false;
             isResizing = false;
             Offset = Point.Empty;
-            Parent = parent;
-            oldParentCursor = Parent.Cursor;
+            Sensor = sensor;
             CursorIsBlocked = false;
         }
-        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }                
+        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : this(position, 0, 0, 1, mouseButtonsState, sensor) { }                
 
 
 
@@ -448,28 +440,28 @@ namespace myPhotoEditor.Objects
                 switch ((sender as BorderSide).Side)
                 {
                     case BorderSides.TopLeft:
-                        Parent.Cursor = Cursors.SizeNWSE;
+                        Sensor.Cursor = Cursors.SizeNWSE;
                         break;
                     case BorderSides.Top:
-                        Parent.Cursor = Cursors.SizeNS;
+                        Sensor.Cursor = Cursors.SizeNS;
                         break;
                     case BorderSides.TopRight:
-                        Parent.Cursor = Cursors.SizeNESW;
+                        Sensor.Cursor = Cursors.SizeNESW;
                         break;
                     case BorderSides.Right:
-                        Parent.Cursor = Cursors.SizeWE;
+                        Sensor.Cursor = Cursors.SizeWE;
                         break;
                     case BorderSides.BottomRight:
-                        Parent.Cursor = Cursors.SizeNWSE;
+                        Sensor.Cursor = Cursors.SizeNWSE;
                         break;
                     case BorderSides.Bottom:
-                        Parent.Cursor = Cursors.SizeNS;
+                        Sensor.Cursor = Cursors.SizeNS;
                         break;
                     case BorderSides.BottomLeft:
-                        Parent.Cursor = Cursors.SizeNESW;
+                        Sensor.Cursor = Cursors.SizeNESW;
                         break;
                     case BorderSides.Left:
-                        Parent.Cursor = Cursors.SizeWE;
+                        Sensor.Cursor = Cursors.SizeWE;
                         break;
                     default:
                         break;

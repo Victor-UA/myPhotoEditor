@@ -1,4 +1,6 @@
-﻿namespace myPhotoEditor.Main
+﻿using myPhotoEditor.Objects;
+
+namespace myPhotoEditor.Main
 {
     partial class MainForm
     {
@@ -38,7 +40,7 @@
             this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndMiddleOrthoAxisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Original = new System.Windows.Forms.PictureBox();
-            this.pb_OriginalSensor = new System.Windows.Forms.PictureBox();
+            this.pb_OriginalSensor = new Sensor();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -560,7 +562,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionWidth;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_SelectionHeight;
-        private System.Windows.Forms.PictureBox pb_OriginalSensor;
+        private Sensor pb_OriginalSensor;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel tSSL_ImageScale;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;

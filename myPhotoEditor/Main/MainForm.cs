@@ -112,7 +112,7 @@ namespace myPhotoEditor.Main
                 { MouseButtons.XButton2, new MouseButtonStates()  }
             };
 
-            Selection = new Selection(new Point(0, 0), myMouseButtons, this);            
+            Selection = new Selection(new Point(0, 0), myMouseButtons, pb_OriginalSensor);            
             Selection.SizeChanged += Selection_SizeChanged;
             Selection.LocationChanged += Selection_LocationChanged;
             Selection.SelectionStyleChanged += Selection_StyleChanged;
