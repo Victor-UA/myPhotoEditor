@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -60,6 +61,8 @@ namespace myPhotoEditor.Main
             }
         }
 
+        private Dictionary<MouseButtons, MouseButtonStates> myMouseButtons;
+
         private Point MouseMiddleButtonDownPosition { get; set; }
         private Point MouseLeftButtonDownPosition { get; set; }
 
@@ -100,7 +103,16 @@ namespace myPhotoEditor.Main
             OriginalImageFile = "";
             ImageLoaded = false;
 
-            Selection = new Selection(new Point(0, 0), MouseButtonsState.State, this);            
+            myMouseButtons = new Dictionary<MouseButtons, MouseButtonStates>()
+            {
+                { MouseButtons.Left, new MouseButtonStates() },
+                { MouseButtons.Middle, new MouseButtonStates() },
+                { MouseButtons.Right, new MouseButtonStates() },
+                { MouseButtons.XButton1, new MouseButtonStates() },
+                { MouseButtons.XButton2, new MouseButtonStates()  }
+            };
+
+            Selection = new Selection(new Point(0, 0), myMouseButtons, this);            
             Selection.SizeChanged += Selection_SizeChanged;
             Selection.LocationChanged += Selection_LocationChanged;
             Selection.SelectionStyleChanged += Selection_StyleChanged;
@@ -419,7 +431,7 @@ namespace myPhotoEditor.Main
                 (int)((Selection.MiddlePointRealPosition.X * ImageScale) - pb_OriginalSensor.Location.X),
                 (int)(((Selection.MiddlePointRealPosition.Y * ImageScale) - pb_OriginalSensor.Location.Y))
             );
-
+            
             pb_OriginalSensor.Show();
         }
 
@@ -504,7 +516,7 @@ namespace myPhotoEditor.Main
             tSSL_X.Text = Math.Round((e.X + pb_OriginalSensor.Location.X) / ImageScale).ToString();
             tSSL_Y.Text = Math.Round((e.Y + pb_OriginalSensor.Location.Y) / ImageScale).ToString();
 
-            if (MouseButtonsState.State[MouseButtons.Middle])
+            if (myMouseButtons[MouseButtons.Middle].State)
             {
                 ImageMove(e.X - MouseMiddleButtonDownPosition.X, e.Y - MouseMiddleButtonDownPosition.Y);
             }
@@ -531,13 +543,13 @@ namespace myPhotoEditor.Main
 
         private void pb_Selection_MouseDown(object sender, MouseEventArgs e)
         {
-            MouseButtonsState.State[e.Button] = true;                
+            myMouseButtons[e.Button].State = true;                
 
-            if (MouseButtonsState.State[MouseButtons.Middle])
+            if (myMouseButtons[MouseButtons.Middle].State)
             {
                 MouseMiddleButtonDownPosition = e.Location;
             }
-            if (MouseButtonsState.State[MouseButtons.Left])
+            if (myMouseButtons[MouseButtons.Left].State)
             {
                 MouseLeftButtonDownPosition = e.Location;
             }
@@ -551,7 +563,7 @@ namespace myPhotoEditor.Main
 
         private void pb_Selection_MouseUp(object sender, MouseEventArgs e)
         {
-            MouseButtonsState.State[e.Button] = false;
+            myMouseButtons[e.Button].State = false;
             if (e.Button == MouseButtons.Middle)
             {                
                 ChangeSensorLocation();

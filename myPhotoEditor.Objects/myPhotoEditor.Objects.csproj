@@ -45,6 +45,7 @@
     <Compile Include="Border.cs" />
     <Compile Include="BorderSide.cs" />
     <Compile Include="BorderSides.cs" />
+    <Compile Include="MouseButtonStates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selection.cs" />
     <Compile Include="SelectionStyle.cs" />

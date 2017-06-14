@@ -76,18 +76,18 @@ namespace myPhotoEditor.Objects
             }            
         }
         private Size _RealSize;
-        public Size RealSize
+        private Size RealSize
         {
             get
             {
                 return _RealSize;
-            }
-
+            }     
             set
             {
                 _RealSize = value;
-            }
+            }       
         }
+        private bool ResizeBlocked { get; set; }
         public int RealWidth
         {
             get
@@ -99,7 +99,7 @@ namespace myPhotoEditor.Objects
             {
                 if (value >= 0)
                 {
-                    RealSize = new Size(value, _RealSize.Height);
+                    _RealSize = new Size(value, _RealSize.Height);
                     SizeRecalc();
                 }
             }
@@ -115,7 +115,7 @@ namespace myPhotoEditor.Objects
             {
                 if (value >= 0)
                 {
-                    RealSize = new Size(RealSize.Width, value);
+                    _RealSize = new Size(RealSize.Width, value);
                     SizeRecalc();
                 }
             }
@@ -149,6 +149,9 @@ namespace myPhotoEditor.Objects
             }
         }
         public bool isSizing { get; set; }
+        public bool isResizing { get; set; }
+        private BorderSides ResizingSide { get; set; }
+        private Size oldRealSize { get; set; }
 
         private bool _MouseEntered;
         public bool MouseEntered
@@ -197,7 +200,7 @@ namespace myPhotoEditor.Objects
                 Border.MouseEventArgs = value;
             }
         }
-        private Dictionary<MouseButtons, bool> MouseButtonsState { get; set; }
+        private Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }
         private Point MouseLeftButtonDownPosition { get; set; }
 
         private SelectionStyle _SelectionStyle;
@@ -213,29 +216,49 @@ namespace myPhotoEditor.Objects
                 _SelectionStyle = value;
                 SelectionStyleChanged(this, new EventArgs());
             }
+        }        
+
+        public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent)
+        {
+            MouseButtonsState = mouseButtonsState;
+            Border = new Border();
+            Border.MouseEnterBorderSide += Border_Side_MouseEnter;
+            Border.MouseLeave += Border_MouseLeave;
+            MiddlePointPosition = position;
+            Size = new Size(width, height);
+            ResizeBlocked = false;
+            Scale = scale;
+            isMoving = false;
+            isSizing = false;
+            isResizing = false;
+            Offset = Point.Empty;
+            Parent = parent;
+            ParentCursor = Parent.Cursor;
         }
+        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }
+
 
         public void MouseDown(object sender, MouseEventArgs e)
         {
-            if (MouseButtonsState[MouseButtons.Left])
+            if (MouseButtonsState[MouseButtons.Left].State)
             {
                 MouseLeftButtonDownPosition = e.Location;
                 OldPosition = MiddlePointPosition;
+                oldRealSize = RealSize;
             }
         }
         public void MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (isMoving)
-                {
-                    isMoving = false;
-                }
+                MouseButtonsState[MouseButtons.Left].Move = false;
+                isMoving = false;
+                isResizing = false;
             }
         }
         public void MouseClick(object sender, MouseEventArgs e)
         {
-            if (MouseButtonsState[MouseButtons.Left])
+            if (MouseButtonsState[MouseButtons.Left].State)
             {
                 if (isSizing)
                 {
@@ -243,7 +266,7 @@ namespace myPhotoEditor.Objects
                 }
                 else
                 {
-                    if (!isMoving)
+                    if (!isMoving && !isResizing)
                     {
                         RealSizeRecalc(Size.Empty);
                         MiddlePointPosition = e.Location;
@@ -258,14 +281,30 @@ namespace myPhotoEditor.Objects
         }
         public void MouseMove(object sender, MouseEventArgs e)
         {
-            if (MouseButtonsState[MouseButtons.Left])
+            if (MouseButtonsState[MouseButtons.Left].State)
             {
-                if (
-                    getRegion().Contains(MouseLeftButtonDownPosition) && 
-                    !Border.Contains(MouseLeftButtonDownPosition) &&
-                    !isMoving)
-                {                    
-                    isMoving = true;
+                if (getRegion().Contains(MouseLeftButtonDownPosition))
+                {
+                    if (!MouseButtonsState[MouseButtons.Left].Move)
+                    {
+                        if (!Border.Contains(MouseLeftButtonDownPosition))
+                        {
+                            if (!isMoving)
+                            {
+                                isMoving = true;
+                            }
+                        }
+                        else
+                        {
+                            if (!isResizing)
+                            {
+                                ResizingSide = Border.ActiveSide;
+                                if (ResizingSide != BorderSides.None)
+                                    isResizing = true;
+                            }
+                        }
+                    }
+                    MouseButtonsState[MouseButtons.Left].Move = true;
                 }
                 if (isMoving)
                 {
@@ -278,6 +317,48 @@ namespace myPhotoEditor.Objects
                         (int)((MiddlePointPosition.X + Offset.X) / Scale),
                         (int)((MiddlePointPosition.Y + Offset.Y) / Scale)
                     );
+                }
+                if (isResizing)
+                {
+                    ResizeBlocked = true;
+                    switch (ResizingSide)
+                    {
+                        case BorderSides.TopLeft:
+                            
+                            RealWidth = oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            RealHeight = oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.Top:
+                            RealHeight = oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.TopRight:
+                            RealWidth = oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            RealHeight = oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.Right:
+                            RealWidth = oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);                            
+                            break;
+                        case BorderSides.BottomRight:
+                            RealWidth = oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            RealHeight = oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.Bottom:
+                            RealHeight = oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.BottomLeft:
+                            RealWidth = oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            RealHeight = oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            break;
+                        case BorderSides.Left:
+                            RealWidth = oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            break;
+                        case BorderSides.None:
+                            break;
+                        default:
+                            break;
+                    }
+                    ResizeBlocked = false;
+                    SizeRecalc();                    
                 }
             }
             else
@@ -300,24 +381,7 @@ namespace myPhotoEditor.Objects
         public event EventHandler MouseEnterBorder = delegate { };
         public event EventHandler MouseLeaveBorder = delegate { };
         public event EventHandler MouseEnterBorderSide = delegate { };
-        public event EventHandler MouseLeaveBorderSide = delegate { };
-
-        public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, bool> mouseButtonsState, Control parent)
-        {
-            MouseButtonsState = mouseButtonsState;
-            Border = new Border();
-            Border.MouseEnterBorderSide += Border_Side_MouseEnter;
-            Border.MouseLeave += Border_MouseLeave;
-            MiddlePointPosition = position;
-            Size = new Size(width, height);
-            Scale = scale;
-            isMoving = false;
-            isSizing = false;
-            Offset = Point.Empty;
-            Parent = parent;
-            ParentCursor = Parent.Cursor; 
-        }
-        public Selection(Point position, Dictionary<MouseButtons, bool> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }        
+        public event EventHandler MouseLeaveBorderSide = delegate { };        
 
         private void Border_Side_MouseEnter(object sender, EventArgs e)
         {
@@ -380,7 +444,7 @@ namespace myPhotoEditor.Objects
 
         public void RealSizeRecalc(Size size)
         {
-            RealSize = new Size(
+            _RealSize = new Size(
                 (int)(Size.Width / Scale),
                 (int)(Size.Height / Scale)
             );
@@ -388,10 +452,13 @@ namespace myPhotoEditor.Objects
         }
         private void SizeRecalc()
         {
-            Size = new Size(
-                (int)(RealSize.Width * Scale),
-                (int)(RealSize.Height * Scale)
-            );
+            if (!ResizeBlocked)
+            {
+                Size = new Size(
+                    (int)(RealSize.Width * Scale),
+                    (int)(RealSize.Height * Scale)
+                );
+            }
         }
         
         public void Draw(Image image)

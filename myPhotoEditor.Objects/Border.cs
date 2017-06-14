@@ -9,6 +9,21 @@ namespace myPhotoEditor.Objects
     public class Border
     {
         public Dictionary<BorderSides, BorderSide> Sides { get; private set; }
+        internal BorderSides ActiveSide
+        {
+            get
+            {
+                foreach (var item in Sides.Values)
+                {
+                    if (item.MouseEntered)
+                    {
+                        return item.Side;
+                    }
+                }
+                return BorderSides.None;
+
+            }
+        }
         private int Thick;        
 
         public Border()
@@ -100,7 +115,7 @@ namespace myPhotoEditor.Objects
                 result |= item.Region.Contains(point);
             }
             return result;
-        }
+        }        
 
         public event EventHandler MouseEnter = delegate { };
         public event EventHandler MouseLeave = delegate { };

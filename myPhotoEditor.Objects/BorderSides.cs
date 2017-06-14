@@ -15,6 +15,7 @@ namespace myPhotoEditor.Objects
         BottomRight,
         Bottom,
         BottomLeft,
-        Left        
+        Left ,
+        None       
     }
 }
