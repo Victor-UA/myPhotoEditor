@@ -597,23 +597,23 @@ namespace myPhotoEditor.Main
         
         private void pb_OriginalSensor_DoubleClick(object sender, EventArgs e)
         {
-            //if (ImageLoaded)
-            //{
-            //    Point focus = ExpandMousePosition(e as MouseEventArgs);
-            //    if (MouseButtonsState.State[MouseButtons.Middle])
-            //    {
-            //        ImageScaleToFit();
-            //    }
-            //    if (MouseButtonsState.State[MouseButtons.Left])
-            //    {
-            //        Point focusReal = new Point(
-            //            (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
-            //            (int)((focus.Y - (pb_Original.Location.Y < 0 ? pb_Original.Location.Y : 0)) / ImageScale)
-            //        );
-            //        ImageMoveToCenter(focusReal);
-            //        ImageScaleTo(focusReal, ImageScale * 2);                    
-            //    }
-            //}
+            if (ImageLoaded)
+            {
+                Point focus = ExpandMousePosition(e as MouseEventArgs);
+                if (myMouseButtons[MouseButtons.Middle].State)
+                {
+                    ImageScaleToFit();
+                }
+                if (myMouseButtons[MouseButtons.Left].State)
+                {
+                    Point focusReal = new Point(
+                        (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
+                        (int)((focus.Y - (pb_Original.Location.Y < 0 ? pb_Original.Location.Y : 0)) / ImageScale)
+                    );
+                    ImageMoveToCenter(focusReal);
+                    ImageScaleTo(focusReal, ImageScale * 2);
+                }
+            }
         }
         private void splitContainer1_Panel1_DoubleClick(object sender, EventArgs e)
         {
