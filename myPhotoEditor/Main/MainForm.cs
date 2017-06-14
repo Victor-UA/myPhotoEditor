@@ -621,15 +621,18 @@ namespace myPhotoEditor.Main
 
         private void splitContainer1_Panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            Point focus = ExpandMousePosition(e);
-            double step = 0.1;
-            double k = (e.Delta > 0) ? 1 + step : 1 - step;
+            if (ImageLoaded)
+            {
+                Point focus = ExpandMousePosition(e);
+                double step = 0.1;
+                double k = (e.Delta > 0) ? 1 + step : 1 - step;
 
-            Point focusReal = new Point(
-                (int)((focus.X - pb_Original.Location.X + 4) / ImageScale),
-                (int)((focus.Y - pb_Original.Location.Y + 4) / ImageScale)
-            );
-            ImageScaleTo(focusReal, ImageScale * k);
+                Point focusReal = new Point(
+                    (int)((focus.X - pb_Original.Location.X + 4) / ImageScale),
+                    (int)((focus.Y - pb_Original.Location.Y + 4) / ImageScale)
+                );
+                ImageScaleTo(focusReal, ImageScale * k);
+            }
         }
 
         private void pb_OriginalSensor_LocationChanged(object sender, EventArgs e)
