@@ -75,15 +75,29 @@ namespace myPhotoEditor.Objects
         }
 
         internal void Change(Point TopLeft, int Width, int Height)
-        {            
-            Sides[BorderSides.TopLeft].Region = new Rectangle(TopLeft, new Size(Thick, Thick));
-            Sides[BorderSides.Top].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y, Width - Thick * 2, Thick);
-            Sides[BorderSides.TopRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y, Thick, Thick);
-            Sides[BorderSides.Right].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Thick, Thick, Height - Thick * 2);
-            Sides[BorderSides.BottomRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Height - Thick, Thick, Thick);
-            Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y + Height - Thick, Width - Thick * 2, Thick);
-            Sides[BorderSides.BottomLeft].Region = new Rectangle(TopLeft.X, TopLeft.Y + Height - Thick, Thick, Thick);
-            Sides[BorderSides.Left].Region = new Rectangle(TopLeft.X, TopLeft.Y + Thick, Thick, Height - Thick * 2);
+        {
+            if (Width < Thick * 2 || Height < Thick * 2)
+            {
+                Sides[BorderSides.TopLeft].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.Top].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.TopRight].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.Right].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.BottomRight].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft, Size.Empty); 
+                Sides[BorderSides.BottomLeft].Region = new Rectangle(TopLeft, Size.Empty);
+                Sides[BorderSides.Left].Region = new Rectangle(TopLeft, Size.Empty);
+            }
+            else
+            {
+                Sides[BorderSides.TopLeft].Region = new Rectangle(TopLeft, new Size(Thick, Thick));
+                Sides[BorderSides.Top].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y, Width - Thick * 2, Thick);
+                Sides[BorderSides.TopRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y, Thick, Thick);
+                Sides[BorderSides.Right].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Thick, Thick, Height - Thick * 2);
+                Sides[BorderSides.BottomRight].Region = new Rectangle(TopLeft.X + Width - Thick, TopLeft.Y + Height - Thick, Thick, Thick);
+                Sides[BorderSides.Bottom].Region = new Rectangle(TopLeft.X + Thick, TopLeft.Y + Height - Thick, Width - Thick * 2, Thick);
+                Sides[BorderSides.BottomLeft].Region = new Rectangle(TopLeft.X, TopLeft.Y + Height - Thick, Thick, Thick);
+                Sides[BorderSides.Left].Region = new Rectangle(TopLeft.X, TopLeft.Y + Thick, Thick, Height - Thick * 2);
+            }
         }
 
         private MouseEventArgs _MouseEventArgs;

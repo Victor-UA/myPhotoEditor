@@ -43,8 +43,48 @@ namespace myPhotoEditor.Objects
         }
         private Point OldPosition { get; set; }
         public Point Offset { get; set; }
-        public Control Parent { get; set; }
-        private Cursor ParentCursor { get; set; }
+        private Control _Parent;
+        public Control Parent
+        {
+            get
+            {
+                return _Parent;
+            }
+
+            set
+            {
+                _Parent = value;
+            }
+        }
+        private Cursor oldParentCursor { get; set; }
+        private Cursor BlockedCursor { get; set; }
+        private bool _CursorIsBlocked;
+        public bool CursorIsBlocked
+        {
+            get
+            {
+                return _CursorIsBlocked;
+            }
+
+            set
+            {
+                _CursorIsBlocked = value;
+                if (value)
+                {
+                    BlockedCursor = Cursor.Current;
+                }
+                else
+                {
+                    if (!MouseEntered)
+                    {
+                        Parent.Cursor = oldParentCursor;
+                    }
+                }
+                
+            }
+        }
+
+        bool MouseDownInside;
 
         private Size _Size;
         public Size Size
@@ -151,7 +191,7 @@ namespace myPhotoEditor.Objects
         public bool isSizing { get; set; }
         public bool isResizing { get; set; }
         private BorderSides ResizingSide { get; set; }
-        private Size oldRealSize { get; set; }
+        private Size oldRealSize { get; set; }        
 
         private bool _MouseEntered;
         public bool MouseEntered
@@ -167,17 +207,30 @@ namespace myPhotoEditor.Objects
                     _MouseEntered = value;
                     if (value)
                     {
-                        ParentCursor = Parent.Cursor;
+                        if (!CursorIsBlocked)
+                        {
+                            oldParentCursor = Parent.Cursor;
+                        }
+                        else
+                        {
+                            Parent.Cursor = BlockedCursor;
+                        }
                         MouseEnter(this, MouseEventArgs);
                     }
                     else
                     {
-                        
-                        Parent.Cursor = ParentCursor;
+                        if (!CursorIsBlocked)
+                        {
+                            Parent.Cursor = oldParentCursor;
+                        }
+                        else
+                        {
+                            Parent.Cursor = BlockedCursor;
+                        }
                         MouseLeave(this, MouseEventArgs);
                     }
                 }
-                if (value && !Border.MouseEntered && !isSizing && !isMoving)
+                if (value && !Border.MouseEntered && !CursorIsBlocked)
                 {
                     Parent.Cursor = Cursors.Hand;
                 }
@@ -216,7 +269,9 @@ namespace myPhotoEditor.Objects
                 _SelectionStyle = value;
                 SelectionStyleChanged(this, new EventArgs());
             }
-        }        
+        }
+
+        public bool MouseDownInsideBorder { get; private set; }
 
         public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent)
         {
@@ -233,7 +288,8 @@ namespace myPhotoEditor.Objects
             isResizing = false;
             Offset = Point.Empty;
             Parent = parent;
-            ParentCursor = Parent.Cursor;
+            oldParentCursor = Parent.Cursor;
+            CursorIsBlocked = false;
         }
         public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Control parent) : this(position, 0, 0, 1, mouseButtonsState, parent) { }
 
@@ -245,6 +301,10 @@ namespace myPhotoEditor.Objects
                 MouseLeftButtonDownPosition = e.Location;
                 OldPosition = MiddlePointPosition;
                 oldRealSize = RealSize;
+                MouseDownInside = getRegion().Contains(MouseLeftButtonDownPosition);
+                MouseDownInsideBorder = Border.Contains(MouseLeftButtonDownPosition);
+                ResizingSide = Border.ActiveSide;
+                Debug.WriteLine(string.Format("{0}, {1}, {2}", e.Location, MouseDownInside, MouseDownInsideBorder));
             }
         }
         public void MouseUp(object sender, MouseEventArgs e)
@@ -255,6 +315,19 @@ namespace myPhotoEditor.Objects
                 isMoving = false;
                 isResizing = false;
             }
+
+            bool anyMove = false;
+            foreach (var item in MouseButtonsState.Values)
+            {
+                if (anyMove |= item.Move)
+                {                    
+                    break;
+                }
+            }
+            if (!anyMove)
+            {
+                CursorIsBlocked = false;
+            }
         }
         public void MouseClick(object sender, MouseEventArgs e)
         {
@@ -263,18 +336,22 @@ namespace myPhotoEditor.Objects
                 if (isSizing)
                 {
                     isSizing = false;
+                    CursorIsBlocked = false;
                 }
                 else
                 {
                     if (!isMoving && !isResizing)
                     {
+                        isSizing = true;
+                        CursorIsBlocked = true;
+
                         RealSizeRecalc(Size.Empty);
                         MiddlePointPosition = e.Location;
                         MiddlePointRealPosition = new Point(
                             (int)((e.X + Offset.X + 1) / Scale),
                             (int)((e.Y + Offset.Y + 1) / Scale)
                         );
-                        isSizing = true;
+                        
                     }
                 }
             }
@@ -283,11 +360,11 @@ namespace myPhotoEditor.Objects
         {
             if (MouseButtonsState[MouseButtons.Left].State)
             {
-                if (getRegion().Contains(MouseLeftButtonDownPosition))
-                {
+                if (MouseDownInside)
+                {                    
                     if (!MouseButtonsState[MouseButtons.Left].Move)
                     {
-                        if (!Border.Contains(MouseLeftButtonDownPosition))
+                        if (!MouseDownInsideBorder)
                         {
                             if (!isMoving)
                             {
@@ -297,14 +374,19 @@ namespace myPhotoEditor.Objects
                         else
                         {
                             if (!isResizing)
-                            {
-                                ResizingSide = Border.ActiveSide;
+                            {                                
                                 if (ResizingSide != BorderSides.None)
                                     isResizing = true;
                             }
                         }
                     }
                     MouseButtonsState[MouseButtons.Left].Move = true;
+                    CursorIsBlocked = true;
+                }
+                else
+                {
+                    if (MouseDownInside && MouseDownInsideBorder)
+                        Debug.WriteLine("Error");
                 }
                 if (isMoving)
                 {
@@ -385,7 +467,7 @@ namespace myPhotoEditor.Objects
 
         private void Border_Side_MouseEnter(object sender, EventArgs e)
         {
-            if (!isSizing && !isMoving)
+            if (!CursorIsBlocked)
             {
                 switch ((sender as BorderSide).Side)
                 {
