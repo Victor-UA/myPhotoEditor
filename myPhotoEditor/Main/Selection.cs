@@ -23,28 +23,12 @@ namespace myPhotoEditor.Objects
             }
         }
 
-        public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : base(position, 0, 0, 1, mouseButtonsState, sensor) { }
+        public Selection(Point position, Sensor sensor) 
+            : base(position, 0, 0, sensor) { }
 
 
         public event EventHandler SelectionStyleChanged = delegate { };
-
-
-        public new void MouseDown(object sender, MouseEventArgs e)
-        {
-            base.MouseDown(sender, e);
-        }
-        public new void MouseUp(object sender, MouseEventArgs e)
-        {
-            base.MouseUp(sender, e);
-        }
-        public new void MouseClick(object sender, MouseEventArgs e)
-        {
-            base.MouseClick(sender, e);
-        }
-        public new void MouseMove(object sender, MouseEventArgs e)
-        {
-            base.MouseMove(sender, e);
-        }        
+        
 
         public override void Draw(Image image)
         {

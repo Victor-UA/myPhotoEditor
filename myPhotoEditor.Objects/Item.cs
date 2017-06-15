@@ -18,11 +18,17 @@ namespace myPhotoEditor.Objects
         public Point MiddlePointPosition {
             get
             {
-                return MiddlePointReal2MiddlePoint();
+                return new Point(
+                    (int)(MiddlePointRealPosition.X * Scale) - Offset.X,
+                    (int)(MiddlePointRealPosition.Y * Scale) - Offset.Y
+                );
             }
             set
             {
-                MiddlePointRealPosition = MiddlePoint2MiddleRealPoint(value);
+                MiddlePointRealPosition = new Point(
+                    (int)((value.X + Offset.X) / Scale),
+                    (int)((value.Y + Offset.Y) / Scale)
+                );
             }
         }
         private Point _MiddlePointRealPosition;
@@ -102,7 +108,10 @@ namespace myPhotoEditor.Objects
         {
             get
             {
-                return Real2Size();
+                return new Size(
+                    (int)(RealSize.Width * Scale),
+                    (int)(RealSize.Height * Scale)
+                );
             }
         }
         public int Width
@@ -168,7 +177,7 @@ namespace myPhotoEditor.Objects
                 return _Scale;
             }
 
-            set
+            internal set
             {
                 _Scale = value;
                 Border.Change(MidPoint2TopLeft(), Width, Height);
@@ -251,26 +260,30 @@ namespace myPhotoEditor.Objects
 
         public bool MouseDownInsideBorder { get; private set; }
 
-        public Item(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor)
+        public Item(Point position, int width, int height, Sensor sensor)
         {
-            MouseButtonsState = mouseButtonsState;
             Border = new Border();
             Border.MouseEnterBorderSide += Border_Side_MouseEnter;
             Border.MouseLeave += Border_MouseLeave;
-            Scale = scale;
+
+            Sensor = sensor;
+            Sensor.Items.Add(this);
+            _Scale = Sensor.ImageScale;
+            Offset = Sensor.Location;
+            MouseButtonsState = Sensor.MouseButtonsState;
+
             MiddlePointPosition = position;
             RealSize = new Size(width, height);
             State = ItemStates.Creating;            
-            Offset = Point.Empty;
-            Sensor = sensor;
             _CursorIsBlocked = false;
         }
-        public Item(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : this(position, 0, 0, 1, mouseButtonsState, sensor) { }
-
+        public Item(Point position, Sensor sensor) 
+            : this(position, 0, 0, sensor) { }
 
 
         public void MouseDown(object sender, MouseEventArgs e)
         {
+            Debug.WriteLine("MouseDown");
             if (MouseButtonsState[MouseButtons.Left].State)
             {
                 MouseLeftButtonDownPosition = e.Location;
@@ -279,6 +292,7 @@ namespace myPhotoEditor.Objects
                 MouseDownInside = getRegion().Contains(MouseLeftButtonDownPosition);
                 MouseDownInsideBorder = Border.Contains(MouseLeftButtonDownPosition);
                 ResizingSide = Border.ActiveSide;
+                Debug.WriteLine(MouseDownInside);
             }
         }
         public void MouseUp(object sender, MouseEventArgs e)
@@ -321,25 +335,27 @@ namespace myPhotoEditor.Objects
                 }
                 else
                 {
-                    if (!MouseDownInside &&
-                        !(Array.Exists(new ItemStates[] 
-                        {
-                            ItemStates.Moving,
-                            ItemStates.Resizing
-                        }, item => item == State))
-                    )
-                    {
-                        State = ItemStates.Creating;
-                        CursorIsBlocked = true;
+                    //if (!MouseDownInside &&
+                    //    !(Array.Exists(new ItemStates[] 
+                    //    {
+                    //        ItemStates.Moving,
+                    //        ItemStates.Resizing
+                    //    }, item => item == State))
+                    //)
+                    //{
+                    //    State = ItemStates.Creating;
+                    //    CursorIsBlocked = true;
 
-                        RealSizeRecalc(Size.Empty);
-                        MiddlePointPosition = e.Location;                        
-                    }
+                    //    RealSizeRecalc(Size.Empty);
+                    //    MiddlePointPosition = e.Location;                        
+                    //}
                 }
             }
         }
         public void MouseMove(object sender, MouseEventArgs e)
         {
+            MouseEntered = getRegion().Contains(e.Location);
+            Border.MouseEventArgs = e;
             if (MouseButtonsState[MouseButtons.Left].State)
             {
                 MouseButtonsState[MouseButtons.Left].Moving = true;
@@ -423,12 +439,12 @@ namespace myPhotoEditor.Objects
             {
                 if (State == ItemStates.Creating)
                 {
-                    RealSizeRecalc(new Size(
-                        Math.Abs(e.X - MiddlePointPosition.X) * 2,
-                        Math.Abs(e.Y - MiddlePointPosition.Y) * 2
-                    ));
+                    RealSize = new Size(
+                        (int)(Math.Abs(e.X - MiddlePointPosition.X) * 2 / Scale),
+                        (int)(Math.Abs(e.Y - MiddlePointPosition.Y) * 2 / Scale)
+                    );
                 }
-            }
+            }            
         }
 
         public event EventHandler SizeChanged = delegate { };
@@ -482,7 +498,7 @@ namespace myPhotoEditor.Objects
             MouseLeaveBorder(sender, e);
         }
 
-        protected Point MidPoint2TopLeft()
+        public Point MidPoint2TopLeft()
         {
             return new Point()
             {
@@ -490,48 +506,14 @@ namespace myPhotoEditor.Objects
                 Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2))
             };
         }
-        protected Point TopLeft2MidPoint()
+        public Point TopLeft2MidPoint()
         {
             return new Point()
             {
                 X = (int)(((double)Location.X + Size.Width / 2)),
                 Y = (int)(((double)Location.Y + Size.Height / 2))
             };
-        }
-
-        private Size Size2Real(Size size)
-        {
-            return new Size(
-                (int)(size.Width / Scale),
-                (int)(size.Height / Scale)
-            );
-        }
-        public void RealSizeRecalc(Size size)
-        {
-            RealSize = Size2Real(size);
-        }
-        private Size Real2Size()
-        {
-            return new Size(
-                    (int)(RealSize.Width * Scale),
-                    (int)(RealSize.Height * Scale)
-                );
-        }
-
-        private Point MiddlePointReal2MiddlePoint()
-        {
-            return new Point(
-                (int)(MiddlePointRealPosition.X * Scale) - Offset.X,
-                (int)(MiddlePointRealPosition.Y * Scale) - Offset.Y
-            );
-        }
-        private Point MiddlePoint2MiddleRealPoint(Point point)
-        {
-            return new Point(
-                (int)((point.X + Offset.X) / Scale),
-                (int)((point.Y + Offset.Y) / Scale)
-            );
-        }
+        }        
 
         public abstract void Draw(Image image);
 
