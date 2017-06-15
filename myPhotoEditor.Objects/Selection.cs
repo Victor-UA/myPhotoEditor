@@ -209,7 +209,7 @@ namespace myPhotoEditor.Objects
                 if (_MouseEntered != value)
                 {
                     _MouseEntered = value;
-                    if (!value)
+                    if (value)
                     {
                         Sensor.Cursor = BlockedCursor;
                         MouseEnter(this, MouseEventArgs);
@@ -283,7 +283,7 @@ namespace myPhotoEditor.Objects
             isResizing = false;
             Offset = Point.Empty;
             Sensor = sensor;
-            CursorIsBlocked = false;
+            _CursorIsBlocked = false;
         }
         public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : this(position, 0, 0, 1, mouseButtonsState, sensor) { }                
 
@@ -313,7 +313,8 @@ namespace myPhotoEditor.Objects
             bool anyMove = false;
             foreach (var item in MouseButtonsState.Values)
             {
-                if (anyMove |= item.Move)
+                anyMove |= item.Move;
+                if (anyMove)
                 {                    
                     break;
                 }
