@@ -13,7 +13,7 @@ namespace myPhotoEditor.Objects
             get
             {
                 return MidPoint2TopLeft();
-            }            
+            }
         }
         public Point MiddlePointPosition {
             get
@@ -22,7 +22,7 @@ namespace myPhotoEditor.Objects
             }
             set
             {
-                MiddlePointRealPosition = MiddlePoint2MiddleRealPoint(value);                
+                MiddlePointRealPosition = MiddlePoint2MiddleRealPoint(value);
             }
         }
         private Point _MiddlePointRealPosition;
@@ -91,7 +91,7 @@ namespace myPhotoEditor.Objects
                         Sensor.Cursor = Sensor.MyCursor;
                     }
                 }
-                
+
             }
         }
 
@@ -103,21 +103,21 @@ namespace myPhotoEditor.Objects
             get
             {
                 return Real2Size();
-            }           
+            }
         }
         public int Width
         {
             get
             {
                 return Size.Width;
-            }            
+            }
         }
         public int Height
         {
             get
             {
                 return Size.Height;
-            }            
+            }
         }
         private Size _RealSize;
         private Size RealSize
@@ -125,7 +125,7 @@ namespace myPhotoEditor.Objects
             get
             {
                 return _RealSize;
-            }     
+            }
             set
             {
                 if (value.Width >= 0 && value.Height >= 0)
@@ -134,7 +134,7 @@ namespace myPhotoEditor.Objects
                 }
                 Border.Change(MidPoint2TopLeft(), Width, Height);
                 SizeChanged(this, new EventArgs());
-            }       
+            }
         }
         public int RealWidth
         {
@@ -176,24 +176,36 @@ namespace myPhotoEditor.Objects
         }
         public Border Border { get; private set; }
 
-        
-
-        private bool _isMoving;
-        public bool isMoving
+        private ItemStates _State;
+        public ItemStates State
         {
             get
             {
-                return _isMoving;
+                return _State;
             }
-            protected set
+
+            set
             {
-                _isMoving = value;                
+                _State = value;
             }
         }
+
+        //private bool _isMoving;
+        //public bool isMoving
+        //{
+        //    get
+        //    {
+        //        return _isMoving;
+        //    }
+        //    protected set
+        //    {
+        //        _isMoving = value;                
+        //    }
+        //}
         public bool isSizing { get; set; }
         public bool isResizing { get; set; }
         private BorderSides ResizingSide { get; set; }
-        private Size oldRealSize { get; set; }        
+        private Size oldRealSize { get; set; }
 
         private bool _MouseEntered;
         public bool MouseEntered
@@ -230,7 +242,7 @@ namespace myPhotoEditor.Objects
                     Sensor.Cursor = Cursors.Hand;
                 }
             }
-        }        
+        }
 
         private MouseEventArgs _MouseEventArgs;
         public MouseEventArgs MouseEventArgs
@@ -244,11 +256,11 @@ namespace myPhotoEditor.Objects
             {
                 _MouseEventArgs = value;
 
-                MouseEntered = getRegion().Contains(value.Location);                
+                MouseEntered = getRegion().Contains(value.Location);
                 Border.MouseEventArgs = value;
             }
         }
-        protected Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }        
+        protected Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }
 
         private SelectionStyles _SelectionStyle;
         public SelectionStyles SelectionStyle
@@ -265,7 +277,7 @@ namespace myPhotoEditor.Objects
             }
         }
 
-        public bool MouseDownInsideBorder { get; private set; }        
+        public bool MouseDownInsideBorder { get; private set; }
 
         public Item(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor)
         {
@@ -276,14 +288,14 @@ namespace myPhotoEditor.Objects
             Scale = scale;
             MiddlePointPosition = position;
             RealSize = new Size(width, height);
-            isMoving = false;
+            State = ItemStates.Creating;
             isSizing = false;
             isResizing = false;
             Offset = Point.Empty;
             Sensor = sensor;
             _CursorIsBlocked = false;
         }
-        public Item(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : this(position, 0, 0, 1, mouseButtonsState, sensor) { }                
+        public Item(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : this(position, 0, 0, 1, mouseButtonsState, sensor) { }
 
 
 
@@ -303,17 +315,17 @@ namespace myPhotoEditor.Objects
         {
             if (e.Button == MouseButtons.Left)
             {
-                MouseButtonsState[MouseButtons.Left].Move = false;
-                isMoving = false;
+                MouseButtonsState[MouseButtons.Left].Moving = false;
                 isResizing = false;
+                State = ItemStates.Normal;
             }
 
             bool anyMove = false;
             foreach (var item in MouseButtonsState.Values)
             {
-                anyMove |= item.Move;
+                anyMove |= item.Moving;
                 if (anyMove)
-                {                    
+                {
                     break;
                 }
             }
@@ -333,7 +345,13 @@ namespace myPhotoEditor.Objects
                 }
                 else
                 {
-                    if (!MouseDownInside && !isMoving && !isResizing)
+                    if (!MouseDownInside &&
+                        !(Array.Exists(new ItemStates[] 
+                        {
+                            ItemStates.Moving,
+                            ItemStates.Moving
+                        }, item => item == State))
+                    )
                     {
                         isSizing = true;
                         CursorIsBlocked = true;
@@ -348,15 +366,15 @@ namespace myPhotoEditor.Objects
         {
             if (MouseButtonsState[MouseButtons.Left].State)
             {
-                MouseButtonsState[MouseButtons.Left].Move = true;
+                MouseButtonsState[MouseButtons.Left].Moving = true;
                 CursorIsBlocked = true;
                 if (MouseDownInside)
                 {
                     if (!MouseDownInsideBorder)
                     {
-                        if (!isMoving)
+                        if (State != ItemStates.Moving)
                         {
-                            isMoving = true;
+                            State = ItemStates.Moving;
                         }
                     }
                     else
@@ -364,12 +382,15 @@ namespace myPhotoEditor.Objects
                         if (!isResizing)
                         {
                             if (ResizingSide != BorderSides.None)
+                            {
                                 isResizing = true;
+                                State = ItemStates.Resizing;
+                            }
                         }
                     }
 
                 }
-                if (isMoving)
+                if (State == ItemStates.Moving)
                 {
                     MiddlePointPosition = new Point(
                         OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),

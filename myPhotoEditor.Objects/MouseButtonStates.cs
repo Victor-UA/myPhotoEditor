@@ -9,12 +9,12 @@ namespace myPhotoEditor
     public class MouseButtonStates
     {
         public bool State;        
-        public bool Move;
+        public bool Moving;
 
         public MouseButtonStates()
         {
             State = false;
-            Move = false;
+            Moving = false;
         }
     }
 }
