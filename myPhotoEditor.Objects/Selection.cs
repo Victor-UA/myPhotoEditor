@@ -41,7 +41,20 @@ namespace myPhotoEditor.Objects
             }
         }
         private Point OldPosition { get; set; }
-        public Point Offset { get; set; }
+        private Point _Offset;
+        public Point Offset
+        {
+            get
+            {
+                return _Offset;
+            }
+
+            set
+            {
+                _Offset = value;
+                Border.Change(MidPoint2TopLeft(), Width, Height);
+            }
+        }
         private Sensor _Sensor;
         public Sensor Sensor
         {
@@ -55,7 +68,6 @@ namespace myPhotoEditor.Objects
                 _Sensor = value;
             }
         }
-        //private Cursor oldParentCursor { get; set; }
         private Cursor BlockedCursor { get; set; }
         private bool _CursorIsBlocked;
         public bool CursorIsBlocked
@@ -163,6 +175,7 @@ namespace myPhotoEditor.Objects
             set
             {
                 _Scale = value;
+                Border.Change(MidPoint2TopLeft(), Width, Height);
             }
         }
         public Border Border { get; private set; }
@@ -254,7 +267,7 @@ namespace myPhotoEditor.Objects
             }
         }
 
-        public bool MouseDownInsideBorder { get; private set; }
+        public bool MouseDownInsideBorder { get; private set; }        
 
         public Selection(Point position, int width, int height, double scale, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor)
         {
@@ -546,16 +559,16 @@ namespace myPhotoEditor.Objects
                             g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
                             g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
-                            /*
+                            
                             foreach (BorderSide item in Border.Sides.Values)
                             {
                                 if (item.MouseEntered)
                                 {
                                     g.FillRectangle(Brushes.Lime, item.Region);
                                 }
-                                //g.DrawRectangle(pen, item.Region);
+                                g.DrawRectangle(pen, item.Region);
                             } 
-                            */                           
+                                                       
                             break;
                     }
                 }

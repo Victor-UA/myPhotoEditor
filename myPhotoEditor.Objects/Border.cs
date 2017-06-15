@@ -28,7 +28,7 @@ namespace myPhotoEditor.Objects
 
         public Border()
         {
-            Thick = 6;
+            Thick = 10;
             Sides = new Dictionary<BorderSides, BorderSide>() {
                 { BorderSides.TopLeft, new BorderSide(BorderSides.TopLeft) },
                 { BorderSides.Top, new BorderSide(BorderSides.Top) },
