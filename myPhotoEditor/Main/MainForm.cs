@@ -66,8 +66,6 @@ namespace myPhotoEditor.Main
         private Point MouseMiddleButtonDownPosition { get; set; }
         private Point MouseLeftButtonDownPosition { get; set; }
 
-        private bool MouseInside { get; set; }        
-
         private bool tSSL_SelectionWidth_MouseEntered;
         private bool tSSL_SelectionHeight_MouseEntered;
         private bool tSSL_SelectionMidPosX_MouseEntered;
@@ -107,7 +105,6 @@ namespace myPhotoEditor.Main
             Selection = null;
 
             ImageScale = 1;
-            MouseInside = false;
             MiddleCrossLines = true;
             
 
@@ -515,18 +512,7 @@ namespace myPhotoEditor.Main
         private void splitContainer1_Panel1_MouseMove(object sender, MouseEventArgs e)
         {            
             pb_OriginalSensor_MouseMove(sender, Panel1_2_pb_OriginalSensor(e));
-        }
-
-
-        private void pb_OriginalSensor_MouseEnter(object sender, EventArgs e)
-        {
-            MouseInside = true;
-            pb_OriginalSensor.Focus();
-        }
-        private void pb_OriginalSensor_MouseLeave(object sender, EventArgs e)
-        {
-            MouseInside = false;
-        }
+        }        
 
         private void pb_OriginalSensor_MouseDown(object sender, MouseEventArgs e)
         {            

@@ -102,7 +102,6 @@ namespace myPhotoEditor.Objects
         }
 
         private bool MouseDownInside { get; set; }
-        private Point MouseLeftButtonDownPosition { get; set; }
 
         public Size Size
         {
@@ -286,11 +285,10 @@ namespace myPhotoEditor.Objects
             Debug.WriteLine("MouseDown");
             if (MouseButtonsState[MouseButtons.Left].State)
             {
-                MouseLeftButtonDownPosition = e.Location;
                 OldPosition = MiddlePointPosition;
                 oldRealSize = RealSize;
-                MouseDownInside = getRegion().Contains(MouseLeftButtonDownPosition);
-                MouseDownInsideBorder = Border.Contains(MouseLeftButtonDownPosition);
+                MouseDownInside = getRegion().Contains(MouseButtonsState[MouseButtons.Left].Location);
+                MouseDownInsideBorder = Border.Contains(MouseButtonsState[MouseButtons.Left].Location);
                 ResizingSide = Border.ActiveSide;
                 Debug.WriteLine(MouseDownInside);
             }
@@ -384,8 +382,8 @@ namespace myPhotoEditor.Objects
                 if (State == ItemStates.Moving)
                 {
                     MiddlePointPosition = new Point(
-                        OldPosition.X + (e.X - MouseLeftButtonDownPosition.X),
-                        OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)
+                        OldPosition.X + (e.X - MouseButtonsState[MouseButtons.Left].Location.X),
+                        OldPosition.Y + (e.Y - MouseButtonsState[MouseButtons.Left].Location.Y)
                     );                    
                 }
                 if (State == ItemStates.Resizing)
@@ -394,39 +392,39 @@ namespace myPhotoEditor.Objects
                     {
                         case BorderSides.TopLeft:
                             RealSize = new Size(
-                                oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2),
-                                oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2)
+                                oldRealSize.Width - (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2),
+                                oldRealSize.Height - (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2)
                             );
                             break;
                         case BorderSides.Top:
-                            RealHeight = oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            RealHeight = oldRealSize.Height - (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2);
                             break;
                         case BorderSides.TopRight:                            
                             RealSize = new Size(
-                                oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2),
-                                oldRealSize.Height - (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2)
+                                oldRealSize.Width + (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2),
+                                oldRealSize.Height - (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2)
                             );                            
                             break;
                         case BorderSides.Right:
-                            RealWidth = oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);                            
+                            RealWidth = oldRealSize.Width + (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2);                            
                             break;
                         case BorderSides.BottomRight:
                             RealSize = new Size(
-                                oldRealSize.Width + (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2),
-                                oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2)
+                                oldRealSize.Width + (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2),
+                                oldRealSize.Height + (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2)
                             );                            
                             break;
                         case BorderSides.Bottom:
-                            RealHeight = oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2);
+                            RealHeight = oldRealSize.Height + (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2);
                             break;
                         case BorderSides.BottomLeft:
                             RealSize = new Size(
-                                oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2),
-                                oldRealSize.Height + (int)((e.Y - MouseLeftButtonDownPosition.Y) / Scale * 2)
+                                oldRealSize.Width - (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2),
+                                oldRealSize.Height + (int)((e.Y - MouseButtonsState[MouseButtons.Left].Location.Y) / Scale * 2)
                             );
                             break;
                         case BorderSides.Left:
-                            RealWidth = oldRealSize.Width - (int)((e.X - MouseLeftButtonDownPosition.X) / Scale * 2);
+                            RealWidth = oldRealSize.Width - (int)((e.X - MouseButtonsState[MouseButtons.Left].Location.X) / Scale * 2);
                             break;
                         case BorderSides.None:
                             break;

@@ -74,7 +74,7 @@ namespace myPhotoEditor.Objects
             });
             MouseDown += ((object sender, MouseEventArgs e) =>
             {
-                MouseButtonsState[e.Button].State = true;
+                MouseButtonsState[e.Button].setState(true, e.Location);
                 foreach (var item in Items)
                 {
                     try
@@ -88,7 +88,7 @@ namespace myPhotoEditor.Objects
             });
             MouseUp += ((object sender, MouseEventArgs e) =>
             {
-                MouseButtonsState[e.Button].State = false;
+                MouseButtonsState[e.Button].setState(false, e.Location);
                 foreach (var item in Items)
                 {
                     try
@@ -112,6 +112,10 @@ namespace myPhotoEditor.Objects
                     {
                     }
                 }
+            });
+            MouseEnter += ((object sender, EventArgs e) => 
+            {
+                Focus();
             });
             LocationChanged += ((object sender, EventArgs e) => 
             {

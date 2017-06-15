@@ -36,11 +36,11 @@ namespace myPhotoEditor.Main
             this.contextMenuStrip_OriginalSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearSelectionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndMiddleOrthoAxisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Original = new System.Windows.Forms.PictureBox();
-            this.pb_OriginalSensor = new Sensor();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,10 +55,11 @@ namespace myPhotoEditor.Main
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectionStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndDiagonlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndOrthoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_X = new System.Windows.Forms.ToolStripStatusLabel();
@@ -74,20 +75,19 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearSelectionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pb_OriginalSensor = new myPhotoEditor.Objects.Sensor();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.contextMenuStrip_OriginalSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).BeginInit();
             this.contextMenuStrip_CropSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -132,19 +132,26 @@ namespace myPhotoEditor.Main
             this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(153, 98);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(150, 76);
             // 
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(146, 6);
+            // 
+            // clearSelectionToolStripMenuItem1
+            // 
+            this.clearSelectionToolStripMenuItem1.Name = "clearSelectionToolStripMenuItem1";
+            this.clearSelectionToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
+            this.clearSelectionToolStripMenuItem1.Text = "ClearSelection";
+            this.clearSelectionToolStripMenuItem1.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
@@ -152,7 +159,7 @@ namespace myPhotoEditor.Main
             this.boxAndDiagonalsToolStripMenuItem,
             this.boxAndMiddleOrthoAxisToolStripMenuItem});
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItem4.Text = "Selection style";
             // 
             // boxAndDiagonalsToolStripMenuItem
@@ -178,24 +185,6 @@ namespace myPhotoEditor.Main
             this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
-            // 
-            // pb_OriginalSensor
-            // 
-            this.pb_OriginalSensor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pb_OriginalSensor.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
-            this.pb_OriginalSensor.Location = new System.Drawing.Point(0, 0);
-            this.pb_OriginalSensor.Name = "pb_OriginalSensor";
-            this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
-            this.pb_OriginalSensor.TabIndex = 1;
-            this.pb_OriginalSensor.TabStop = false;
-            this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
-            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
-            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
-            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseDown);
-            this.pb_OriginalSensor.MouseEnter += new System.EventHandler(this.pb_OriginalSensor_MouseEnter);
-            this.pb_OriginalSensor.MouseLeave += new System.EventHandler(this.pb_OriginalSensor_MouseLeave);
-            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
-            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
             // 
             // pb_CropSensor
             // 
@@ -314,6 +303,18 @@ namespace myPhotoEditor.Main
             this.middleCrosslinesToolStripMenuItem.Text = "Middle Crosslines";
             this.middleCrosslinesToolStripMenuItem.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(164, 6);
+            // 
+            // clearSelectionToolStripMenuItem
+            // 
+            this.clearSelectionToolStripMenuItem.Name = "clearSelectionToolStripMenuItem";
+            this.clearSelectionToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.clearSelectionToolStripMenuItem.Text = "Clear Selection";
+            this.clearSelectionToolStripMenuItem.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
+            // 
             // selectionStyleToolStripMenuItem
             // 
             this.selectionStyleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -336,13 +337,6 @@ namespace myPhotoEditor.Main
             this.boxAndOrthoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.boxAndOrthoToolStripMenuItem.Text = "Box and middle ortho axis";
             this.boxAndOrthoToolStripMenuItem.Click += new System.EventHandler(this.boxAndOrthoToolStripMenuItem_Click);
-            // 
-            // clearSelectionToolStripMenuItem
-            // 
-            this.clearSelectionToolStripMenuItem.Name = "clearSelectionToolStripMenuItem";
-            this.clearSelectionToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.clearSelectionToolStripMenuItem.Text = "Clear Selection";
-            this.clearSelectionToolStripMenuItem.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -500,17 +494,23 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
-            // toolStripMenuItem3
+            // pb_OriginalSensor
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(164, 6);
-            // 
-            // clearSelectionToolStripMenuItem1
-            // 
-            this.clearSelectionToolStripMenuItem1.Name = "clearSelectionToolStripMenuItem1";
-            this.clearSelectionToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.clearSelectionToolStripMenuItem1.Text = "ClearSelection";
-            this.clearSelectionToolStripMenuItem1.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
+            this.pb_OriginalSensor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pb_OriginalSensor.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
+            this.pb_OriginalSensor.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pb_OriginalSensor.ImageScale = 0D;
+            this.pb_OriginalSensor.Location = new System.Drawing.Point(0, 0);
+            this.pb_OriginalSensor.Name = "pb_OriginalSensor";
+            this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
+            this.pb_OriginalSensor.TabIndex = 1;
+            this.pb_OriginalSensor.TabStop = false;
+            this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
+            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
+            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
+            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseDown);
+            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
+            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
             // 
             // MainForm
             // 
@@ -531,7 +531,6 @@ namespace myPhotoEditor.Main
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip_OriginalSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).EndInit();
             this.contextMenuStrip_CropSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).EndInit();
@@ -539,6 +538,7 @@ namespace myPhotoEditor.Main
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
