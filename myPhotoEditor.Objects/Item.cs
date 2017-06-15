@@ -176,6 +176,8 @@ namespace myPhotoEditor.Objects
         }
         public Border Border { get; private set; }
 
+        
+
         private bool _isMoving;
         public bool isMoving
         {
@@ -248,8 +250,8 @@ namespace myPhotoEditor.Objects
         }
         protected Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }        
 
-        private SelectionStyle _SelectionStyle;
-        public SelectionStyle SelectionStyle
+        private SelectionStyles _SelectionStyle;
+        public SelectionStyles SelectionStyle
         {
             get
             {

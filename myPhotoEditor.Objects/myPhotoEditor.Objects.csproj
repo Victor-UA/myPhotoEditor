@@ -45,11 +45,11 @@
     <Compile Include="Border.cs" />
     <Compile Include="BorderSide.cs" />
     <Compile Include="BorderSides.cs" />
+    <Compile Include="ItemStates.cs" />
     <Compile Include="MouseButtonStates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="Selection.cs" />
-    <Compile Include="SelectionStyle.cs" />
+    <Compile Include="SelectionStyles.cs" />
     <Compile Include="Sensor.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using static myPhotoEditor.Objects.Selection;
+using myPhotoEditor.Objects;
 
 namespace myPhotoEditor.Objects
 {
@@ -10,6 +10,7 @@ namespace myPhotoEditor.Objects
     {
         public BorderSides Side { get; private set; }
         public Rectangle Region { get; internal set; }
+
         private bool _MouseEntered;
         public bool MouseEntered
         {

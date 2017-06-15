@@ -124,7 +124,7 @@ namespace myPhotoEditor.Main
                 item.MouseLeave += Selection_MouseLeaveBorderSide;
             }
 
-            Selection.SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+            Selection.SelectionStyle = SelectionStyles.BoxMiddleOrthoAxis;
 
 
             ImageScale = 1;
@@ -163,12 +163,12 @@ namespace myPhotoEditor.Main
         }
         private void boxAndDiagonlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Selection.SelectionStyle = SelectionStyle.BoxDiagonal;
+            Selection.SelectionStyle = SelectionStyles.BoxDiagonal;
             SelectionReDraw();
         }
         private void boxAndOrthoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Selection.SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+            Selection.SelectionStyle = SelectionStyles.BoxMiddleOrthoAxis;
             SelectionReDraw();
         }
         private void clearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -290,13 +290,13 @@ namespace myPhotoEditor.Main
         {
             switch (Selection.SelectionStyle)
             {
-                case SelectionStyle.BoxDiagonal:
+                case SelectionStyles.BoxDiagonal:
                     boxAndDiagonlsToolStripMenuItem.Checked =
                         boxAndDiagonalsToolStripMenuItem.Checked = true;
                     boxAndOrthoToolStripMenuItem.Checked =
                         boxAndMiddleOrthoAxisToolStripMenuItem.Checked = false;
                     break;
-                case SelectionStyle.BoxMiddleOrthoAxis:
+                case SelectionStyles.BoxMiddleOrthoAxis:
                     boxAndDiagonlsToolStripMenuItem.Checked =
                         boxAndDiagonalsToolStripMenuItem.Checked = false;
                     boxAndOrthoToolStripMenuItem.Checked =

@@ -38,7 +38,7 @@ namespace myPhotoEditor.Objects
                 {
                     switch (SelectionStyle)
                     {
-                        case SelectionStyle.BoxDiagonal:
+                        case SelectionStyles.BoxDiagonal:
                             g.DrawLine(pen, Location.X, Location.Y, Location.X + Width, Location.Y + Height);
                             g.DrawLine(pen, Location.X, Location.Y + Height, Location.X + Width, Location.Y);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);

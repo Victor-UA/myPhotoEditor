@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -24,7 +23,7 @@ namespace myPhotoEditor.Objects
 
             }
         }
-        private int Thick;        
+        private int Thick;
 
         public Border()
         {
@@ -41,8 +40,14 @@ namespace myPhotoEditor.Objects
             };
             foreach (BorderSide item in Sides.Values)
             {
-                item.MouseEnter += new EventHandler(delegate (object sender, EventArgs e) { MouseEnterBorderSide(sender, e); });
-                item.MouseLeave += new EventHandler(delegate (object sender, EventArgs e) { MouseLeaveBorderSide(sender, e); });
+                item.MouseEnter += new EventHandler(delegate (object sender, EventArgs e) 
+                {
+                    MouseEnterBorderSide(sender, e);
+                });
+                item.MouseLeave += new EventHandler(delegate (object sender, EventArgs e) 
+                {
+                    MouseLeaveBorderSide(sender, e);
+                });
             }
 
             _MouseEntered = false;
@@ -55,7 +60,7 @@ namespace myPhotoEditor.Objects
             {                
                 return _MouseEntered;
             }
-            set
+            private set
             {
                 if (value != MouseEntered)
                 {

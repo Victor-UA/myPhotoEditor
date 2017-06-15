@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace myPhotoEditor.Objects
 {
-    public enum SelectionStyle
+    public enum SelectionStyles
     {
         BoxDiagonal,
         BoxMiddleOrthoAxis
