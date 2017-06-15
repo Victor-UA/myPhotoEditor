@@ -174,6 +174,7 @@ namespace myPhotoEditor.Objects
                 Border.Change(MidPoint2TopLeft(), Width, Height);
             }
         }
+
         public Border Border { get; private set; }
 
         private ItemStates _State;
@@ -189,21 +190,7 @@ namespace myPhotoEditor.Objects
                 _State = value;
             }
         }
-
-        //private bool _isMoving;
-        //public bool isMoving
-        //{
-        //    get
-        //    {
-        //        return _isMoving;
-        //    }
-        //    protected set
-        //    {
-        //        _isMoving = value;                
-        //    }
-        //}
-        public bool isSizing { get; set; }
-        public bool isResizing { get; set; }
+        
         private BorderSides ResizingSide { get; set; }
         private Size oldRealSize { get; set; }
 
@@ -273,9 +260,7 @@ namespace myPhotoEditor.Objects
             Scale = scale;
             MiddlePointPosition = position;
             RealSize = new Size(width, height);
-            State = ItemStates.Creating;
-            isSizing = false;
-            isResizing = false;
+            State = ItemStates.Creating;            
             Offset = Point.Empty;
             Sensor = sensor;
             _CursorIsBlocked = false;
@@ -301,8 +286,14 @@ namespace myPhotoEditor.Objects
             if (e.Button == MouseButtons.Left)
             {
                 MouseButtonsState[MouseButtons.Left].Moving = false;
-                isResizing = false;
-                State = ItemStates.Normal;
+                if (Array.Exists(new ItemStates[] 
+                    {
+                        ItemStates.Moving,
+                        ItemStates.Resizing
+                    }, item => item == State))
+                {
+                    State = ItemStates.Normal;
+                }
             }
 
             bool anyMove = false;
@@ -323,9 +314,9 @@ namespace myPhotoEditor.Objects
         {
             if (MouseButtonsState[MouseButtons.Left].State)
             {
-                if (isSizing)
+                if (State == ItemStates.Creating)
                 {
-                    isSizing = false;
+                    State = ItemStates.Normal;
                     CursorIsBlocked = false;
                 }
                 else
@@ -334,11 +325,11 @@ namespace myPhotoEditor.Objects
                         !(Array.Exists(new ItemStates[] 
                         {
                             ItemStates.Moving,
-                            ItemStates.Moving
+                            ItemStates.Resizing
                         }, item => item == State))
                     )
                     {
-                        isSizing = true;
+                        State = ItemStates.Creating;
                         CursorIsBlocked = true;
 
                         RealSizeRecalc(Size.Empty);
@@ -364,11 +355,10 @@ namespace myPhotoEditor.Objects
                     }
                     else
                     {
-                        if (!isResizing)
+                        if (State != ItemStates.Resizing)
                         {
                             if (ResizingSide != BorderSides.None)
                             {
-                                isResizing = true;
                                 State = ItemStates.Resizing;
                             }
                         }
@@ -382,7 +372,7 @@ namespace myPhotoEditor.Objects
                         OldPosition.Y + (e.Y - MouseLeftButtonDownPosition.Y)
                     );                    
                 }
-                if (isResizing)
+                if (State == ItemStates.Resizing)
                 {
                     switch (ResizingSide)
                     {
@@ -431,7 +421,7 @@ namespace myPhotoEditor.Objects
             }
             else
             {
-                if (isSizing)
+                if (State == ItemStates.Creating)
                 {
                     RealSizeRecalc(new Size(
                         Math.Abs(e.X - MiddlePointPosition.X) * 2,

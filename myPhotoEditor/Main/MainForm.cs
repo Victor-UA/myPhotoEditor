@@ -214,7 +214,7 @@ namespace myPhotoEditor.Main
                         pb_Original.Location = new Point(0, 0);
                         splitContainer1.Panel1.Focus();
                         ImageLoaded = true;
-                        Selection.isSizing = false;
+                        Selection.State = ItemStates.Normal;
                         ImageScale = 1;
                         Text = "myPhotoEditor: " + OriginalImageFile;
                         ImageScaleToFit();
@@ -223,7 +223,7 @@ namespace myPhotoEditor.Main
                     {
                         OriginalImageFile = "";
                         ImageLoaded = false;
-                        Selection.isSizing = false;
+                        Selection.State = ItemStates.Normal;
                     }
                 }
             }
@@ -322,7 +322,7 @@ namespace myPhotoEditor.Main
         }
         private void ImageScaleTo(Point focusReal, double scale)
         {
-            Selection.isSizing = false;
+            Selection.State = ItemStates.Normal;
 
             int newWidth = pb_Original.Width,
                 newHeight = pb_Original.Height,
@@ -589,7 +589,7 @@ namespace myPhotoEditor.Main
         }
         private void splitContainer1_Panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (Selection.isSizing)
+            //if (Selection.State == ItemStates.Creating)
                 pb_OriginalSensor_MouseClick(sender, e);
         }
         
