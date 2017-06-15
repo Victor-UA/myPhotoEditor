@@ -556,16 +556,16 @@ namespace myPhotoEditor.Objects
                             g.DrawLine(pen, Location.X, Location.Y + Height / 2, Location.X + Width, Location.Y + Height / 2);
                             g.DrawLine(pen, Location.X + Width / 2, Location.Y, Location.X + Width / 2, Location.Y + Height);
                             g.DrawRectangle(pen, Location.X, Location.Y, Width, Height);
-                            
-                            //foreach (BorderSide item in Border.Sides.Values)
-                            //{
-                            //    if (item.MouseEntered)
-                            //    {
-                            //        g.FillRectangle(Brushes.Lime, item.Region);
-                            //    }
-                            //    g.DrawRectangle(pen, item.Region);
-                            //} 
-                                                       
+
+                            foreach (BorderSide item in Border.Sides.Values)
+                            {
+                                if (item.MouseEntered)
+                                {
+                                    g.FillRectangle(Brushes.Lime, item.Region);
+                                }
+                                g.DrawRectangle(pen, item.Region);
+                            }
+
                             break;
                     }
                 }
