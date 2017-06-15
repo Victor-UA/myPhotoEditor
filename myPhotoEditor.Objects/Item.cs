@@ -260,22 +260,7 @@ namespace myPhotoEditor.Objects
                 Border.MouseEventArgs = value;
             }
         }
-        protected Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }
-
-        private SelectionStyles _SelectionStyle;
-        public SelectionStyles SelectionStyle
-        {
-            get
-            {
-                return _SelectionStyle;
-            }
-
-            set
-            {
-                _SelectionStyle = value;
-                SelectionStyleChanged(this, new EventArgs());
-            }
-        }
+        protected Dictionary<MouseButtons, MouseButtonStates> MouseButtonsState { get; set; }        
 
         public bool MouseDownInsideBorder { get; private set; }
 
@@ -457,8 +442,7 @@ namespace myPhotoEditor.Objects
         }
 
         public event EventHandler SizeChanged = delegate { };
-        public event EventHandler LocationChanged = delegate { };
-        public event EventHandler SelectionStyleChanged = delegate { };
+        public event EventHandler LocationChanged = delegate { };        
         public event MouseEventHandler MouseEnter = delegate { };
         public event MouseEventHandler MouseLeave = delegate { };
         public event EventHandler MouseEnterBorder = delegate { };

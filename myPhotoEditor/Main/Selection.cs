@@ -8,7 +8,26 @@ namespace myPhotoEditor.Objects
 {
     public class Selection : Item
     {
+        private SelectionStyles _SelectionStyle;
+        public SelectionStyles SelectionStyle
+        {
+            get
+            {
+                return _SelectionStyle;
+            }
+
+            set
+            {
+                _SelectionStyle = value;
+                SelectionStyleChanged(this, new EventArgs());
+            }
+        }
+
         public Selection(Point position, Dictionary<MouseButtons, MouseButtonStates> mouseButtonsState, Sensor sensor) : base(position, 0, 0, 1, mouseButtonsState, sensor) { }
+
+
+        public event EventHandler SelectionStyleChanged = delegate { };
+
 
         public new void MouseDown(object sender, MouseEventArgs e)
         {
