@@ -128,11 +128,7 @@ namespace myPhotoEditor.Objects
             }     
             set
             {
-                if (value.Width < 0 || value.Height < 0)
-                {
-                    _RealSize = Size.Empty;
-                }
-                else
+                if (value.Width >= 0 && value.Height >= 0)
                 {
                     _RealSize = value;
                 }
