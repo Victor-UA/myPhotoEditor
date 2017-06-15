@@ -531,11 +531,11 @@ namespace myPhotoEditor.Main
             if (ImageLoaded)
             {
                 Point focus = ExpandMousePosition(e as MouseEventArgs);
-                if (myMouseButtons[MouseButtons.Middle].State)
+                if ((e as MouseEventArgs).Button == MouseButtons.Middle)
                 {
                     ImageScaleToFit();
                 }
-                if (myMouseButtons[MouseButtons.Left].State)
+                if ((e as MouseEventArgs).Button == MouseButtons.Left)
                 {
                     Point focusReal = new Point(
                         (int)((focus.X - (pb_Original.Location.X < 0 ? pb_Original.Location.X : 0)) / ImageScale),
@@ -545,7 +545,11 @@ namespace myPhotoEditor.Main
                     ImageScaleTo(focusReal, ImageScale * 2);
                 }
             }
-        }        
+        }
+        private void splitContainer1_Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            pb_OriginalSensor_DoubleClick(sender, Panel1_2_pb_OriginalSensor(e)); 
+        }
         private void pb_OriginalSensor_LocationChanged(object sender, EventArgs e)
         {
             //Selection.Offset = pb_OriginalSensor.Location;

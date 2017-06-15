@@ -41,6 +41,7 @@ namespace myPhotoEditor.Main
             this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndMiddleOrthoAxisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pb_Original = new System.Windows.Forms.PictureBox();
+            this.pb_OriginalSensor = new myPhotoEditor.Objects.Sensor();
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,19 +76,18 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.pb_OriginalSensor = new myPhotoEditor.Objects.Sensor();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.contextMenuStrip_OriginalSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).BeginInit();
             this.contextMenuStrip_CropSide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -106,6 +106,7 @@ namespace myPhotoEditor.Main
             this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.splitContainer1_Panel1_SizeChanged);
             this.splitContainer1.Panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragDrop);
             this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
+            this.splitContainer1.Panel1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseDoubleClick);
             this.splitContainer1.Panel1.MouseEnter += new System.EventHandler(this.splitContainer1_Panel1_MouseEnter);
             this.splitContainer1.Panel1MinSize = 200;
             // 
@@ -180,6 +181,23 @@ namespace myPhotoEditor.Main
             this.pb_Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb_Original.TabIndex = 0;
             this.pb_Original.TabStop = false;
+            // 
+            // pb_OriginalSensor
+            // 
+            this.pb_OriginalSensor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pb_OriginalSensor.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
+            this.pb_OriginalSensor.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pb_OriginalSensor.ImageScale = 0D;
+            this.pb_OriginalSensor.Location = new System.Drawing.Point(0, 0);
+            this.pb_OriginalSensor.Name = "pb_OriginalSensor";
+            this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
+            this.pb_OriginalSensor.TabIndex = 1;
+            this.pb_OriginalSensor.TabStop = false;
+            this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
+            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
+            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
+            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
+            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
             // 
             // pb_CropSensor
             // 
@@ -489,23 +507,6 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
-            // pb_OriginalSensor
-            // 
-            this.pb_OriginalSensor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pb_OriginalSensor.ContextMenuStrip = this.contextMenuStrip_OriginalSide;
-            this.pb_OriginalSensor.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pb_OriginalSensor.ImageScale = 0D;
-            this.pb_OriginalSensor.Location = new System.Drawing.Point(0, 0);
-            this.pb_OriginalSensor.Name = "pb_OriginalSensor";
-            this.pb_OriginalSensor.Size = new System.Drawing.Size(416, 371);
-            this.pb_OriginalSensor.TabIndex = 1;
-            this.pb_OriginalSensor.TabStop = false;
-            this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
-            this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
-            this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
-            this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
-            this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -525,6 +526,7 @@ namespace myPhotoEditor.Main
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip_OriginalSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Original)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_CropSensor)).EndInit();
             this.contextMenuStrip_CropSide.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Crop)).EndInit();
@@ -532,7 +534,6 @@ namespace myPhotoEditor.Main
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_OriginalSensor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
