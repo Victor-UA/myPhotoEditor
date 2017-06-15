@@ -536,24 +536,17 @@ namespace myPhotoEditor.Objects
             );
         }
 
-        public abstract void Draw(Image image);       
+        public abstract void Draw(Image image);
 
         public Rectangle getRegion()
-        {
-            try
-            {
-                Point TopLeft = new Point()
-                {
-                    X = (int)(((double)MiddlePointPosition.X - Size.Width / 2)),
-                    Y = (int)(((double)MiddlePointPosition.Y - Size.Height / 2))
-                };
-                return new Rectangle(TopLeft, Size);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+        {            
+            return new Rectangle(
+                new Point(
+                    MiddlePointPosition.X - Size.Width / 2,
+                    MiddlePointPosition.Y - Size.Height / 2
+                ), 
+                Size
+            );
         }
         public Rectangle getRegionReal()
         {
