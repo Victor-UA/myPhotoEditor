@@ -106,12 +106,7 @@ namespace myPhotoEditor.Main
             this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.splitContainer1_Panel1_SizeChanged);
             this.splitContainer1.Panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragDrop);
             this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
-            this.splitContainer1.Panel1.DoubleClick += new System.EventHandler(this.splitContainer1_Panel1_DoubleClick);
-            this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseClick);
-            this.splitContainer1.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseDown);
             this.splitContainer1.Panel1.MouseEnter += new System.EventHandler(this.splitContainer1_Panel1_MouseEnter);
-            this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseMove);
-            this.splitContainer1.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.splitContainer1_Panel1_MouseUp);
             this.splitContainer1.Panel1MinSize = 200;
             // 
             // splitContainer1.Panel2
@@ -508,7 +503,6 @@ namespace myPhotoEditor.Main
             this.pb_OriginalSensor.LocationChanged += new System.EventHandler(this.pb_OriginalSensor_LocationChanged);
             this.pb_OriginalSensor.DoubleClick += new System.EventHandler(this.pb_OriginalSensor_DoubleClick);
             this.pb_OriginalSensor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseClick);
-            this.pb_OriginalSensor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseDown);
             this.pb_OriginalSensor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseMove);
             this.pb_OriginalSensor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_OriginalSensor_MouseUp);
             // 
