@@ -164,10 +164,12 @@ namespace myPhotoEditor.Main
         private void boxAndDiagonlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Selection.SelectionStyle = SelectionStyle.BoxDiagonal;
+            SelectionReDraw();
         }
         private void boxAndOrthoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Selection.SelectionStyle = SelectionStyle.BoxMiddleOrthoAxis;
+            SelectionReDraw();
         }
         private void clearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
