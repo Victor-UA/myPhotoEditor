@@ -113,6 +113,10 @@ namespace myPhotoEditor.Main
                     OpenFile(fileName);
                 }
             }
+            else
+            {
+                LoadOriginalImage(OriginalImageSourceTypes.Clipboard);
+            }
         }        
 
 
@@ -214,12 +218,12 @@ namespace myPhotoEditor.Main
                 ImageScale = 1;
                 Text = "myPhotoEditor: " + OriginalImageFile;
                 ImageScaleToFit();
+                clearSelectionToolStripMenuItem_Click(this, new EventArgs());
             }
             catch (Exception)
             {
                 OriginalImageFile = "";
                 ImageLoaded = false;
-                Selection.State = ItemStates.Normal;
             }
         }
 
