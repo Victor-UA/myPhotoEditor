@@ -134,6 +134,10 @@ namespace myPhotoEditor.Main
         {
             SaveFileAs();
         }
+        private void sendToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(pb_Crop.Image);
+        }
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Grayscale = !Grayscale;
@@ -736,6 +740,6 @@ namespace myPhotoEditor.Main
         private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosY_MouseEntered = false;
-        }        
+        }
     }
 }

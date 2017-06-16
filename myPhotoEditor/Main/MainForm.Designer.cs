@@ -35,6 +35,7 @@ namespace myPhotoEditor.Main
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.contextMenuStrip_OriginalSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFromBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.clearSelectionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +46,7 @@ namespace myPhotoEditor.Main
             this.pb_CropSensor = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip_CropSide = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.grayscaleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +54,10 @@ namespace myPhotoEditor.Main
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFromClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,8 +81,6 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openFromBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFromClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -131,7 +134,7 @@ namespace myPhotoEditor.Main
             this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 120);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 98);
             // 
             // openToolStripMenuItem1
             // 
@@ -139,6 +142,13 @@ namespace myPhotoEditor.Main
             this.openToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // openFromBufferToolStripMenuItem
+            // 
+            this.openFromBufferToolStripMenuItem.Name = "openFromBufferToolStripMenuItem";
+            this.openFromBufferToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openFromBufferToolStripMenuItem.Text = "Open from Clipboard";
+            this.openFromBufferToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -217,35 +227,43 @@ namespace myPhotoEditor.Main
             // 
             this.contextMenuStrip_CropSide.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAsToolStripMenuItem1,
+            this.sendToClipboardToolStripMenuItem1,
             this.toolStripMenuItem1,
             this.grayscaleToolStripMenuItem1,
             this.middleCrosslinesToolStripMenuItem1});
             this.contextMenuStrip_CropSide.Name = "contextMenuStrip_CropSide";
-            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(168, 76);
+            this.contextMenuStrip_CropSide.Size = new System.Drawing.Size(170, 98);
             // 
             // saveAsToolStripMenuItem1
             // 
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
-            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             this.saveAsToolStripMenuItem1.Text = "SaveAs";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // sendToClipboardToolStripMenuItem1
+            // 
+            this.sendToClipboardToolStripMenuItem1.Name = "sendToClipboardToolStripMenuItem1";
+            this.sendToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
+            this.sendToClipboardToolStripMenuItem1.Text = "Send to Clipboard";
+            this.sendToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.sendToClipboardToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(166, 6);
             // 
             // grayscaleToolStripMenuItem1
             // 
             this.grayscaleToolStripMenuItem1.Name = "grayscaleToolStripMenuItem1";
-            this.grayscaleToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.grayscaleToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             this.grayscaleToolStripMenuItem1.Text = "Grayscale";
             this.grayscaleToolStripMenuItem1.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
             // 
             // middleCrosslinesToolStripMenuItem1
             // 
             this.middleCrosslinesToolStripMenuItem1.Name = "middleCrosslinesToolStripMenuItem1";
-            this.middleCrosslinesToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.middleCrosslinesToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             this.middleCrosslinesToolStripMenuItem1.Text = "Middle Crosslines";
             this.middleCrosslinesToolStripMenuItem1.Click += new System.EventHandler(this.middleCrosslinesToolStripMenuItem_Click);
             // 
@@ -275,7 +293,9 @@ namespace myPhotoEditor.Main
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.openFromClipboardToolStripMenuItem,
-            this.saveAsToolStripMenuItem});
+            this.toolStripMenuItem5,
+            this.saveAsToolStripMenuItem,
+            this.sendToClipboardToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -287,12 +307,31 @@ namespace myPhotoEditor.Main
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
+            // openFromClipboardToolStripMenuItem
+            // 
+            this.openFromClipboardToolStripMenuItem.Name = "openFromClipboardToolStripMenuItem";
+            this.openFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openFromClipboardToolStripMenuItem.Text = "Open from Clipboard";
+            this.openFromClipboardToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(184, 6);
+            // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.saveAsToolStripMenuItem.Text = "SaveAs";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // sendToClipboardToolStripMenuItem
+            // 
+            this.sendToClipboardToolStripMenuItem.Name = "sendToClipboardToolStripMenuItem";
+            this.sendToClipboardToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.sendToClipboardToolStripMenuItem.Text = "Send to Clipboard";
+            this.sendToClipboardToolStripMenuItem.Click += new System.EventHandler(this.sendToClipboardToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -511,20 +550,6 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
-            // openFromBufferToolStripMenuItem
-            // 
-            this.openFromBufferToolStripMenuItem.Name = "openFromBufferToolStripMenuItem";
-            this.openFromBufferToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.openFromBufferToolStripMenuItem.Text = "Open from Clipboard";
-            this.openFromBufferToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
-            // 
-            // openFromClipboardToolStripMenuItem
-            // 
-            this.openFromClipboardToolStripMenuItem.Name = "openFromClipboardToolStripMenuItem";
-            this.openFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.openFromClipboardToolStripMenuItem.Text = "Open from Clipboard";
-            this.openFromClipboardToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -605,6 +630,9 @@ namespace myPhotoEditor.Main
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem openFromBufferToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFromClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sendToClipboardToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem sendToClipboardToolStripMenuItem;
     }
 }
 
