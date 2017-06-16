@@ -121,7 +121,11 @@ namespace myPhotoEditor.Main
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFile();
-        }        
+        }
+        private void openFromClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadOriginalImage(OriginalImageSourceTypes.Clipboard);
+        }
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileAs();
@@ -181,28 +185,41 @@ namespace myPhotoEditor.Main
                 }
                 if (!string.IsNullOrWhiteSpace(OriginalImageFile))
                 {
-                    try
-                    {
-                        pb_Original.Load(OriginalImageFile);
-                        pb_Original.Size = pb_Original.Image.Size;
-                        pb_Original.Location = new Point(0, 0);
-                        pb_OriginalSensor.Focus();
-                        ImageLoaded = true;
-                        ImageScale = 1;
-                        Text = "myPhotoEditor: " + OriginalImageFile;
-                        ImageScaleToFit();
-                    }
-                    catch (Exception)
-                    {
-                        OriginalImageFile = "";
-                        ImageLoaded = false;
-                        Selection.State = ItemStates.Normal;
-                    }
+                    LoadOriginalImage(OriginalImageSourceTypes.File);
                 }
             }
             catch (Exception)
             {
                 OriginalImageFile = "";
+            }
+        }
+
+        private void LoadOriginalImage(OriginalImageSourceTypes sourceType)
+        {
+            try
+            {
+                switch (sourceType)
+                {
+                    case OriginalImageSourceTypes.File:
+                        pb_Original.Load(OriginalImageFile);
+                        break;
+                    case OriginalImageSourceTypes.Clipboard:
+                        pb_Original.Image = Clipboard.GetImage();
+                        break;                    
+                }
+                pb_Original.Size = pb_Original.Image.Size;
+                pb_Original.Location = new Point(0, 0);
+                pb_OriginalSensor.Focus();
+                ImageLoaded = true;
+                ImageScale = 1;
+                Text = "myPhotoEditor: " + OriginalImageFile;
+                ImageScaleToFit();
+            }
+            catch (Exception)
+            {
+                OriginalImageFile = "";
+                ImageLoaded = false;
+                Selection.State = ItemStates.Normal;
             }
         }
 

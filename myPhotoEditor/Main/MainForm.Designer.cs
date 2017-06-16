@@ -76,6 +76,8 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
+            this.openFromBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFromClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -124,28 +126,29 @@ namespace myPhotoEditor.Main
             // 
             this.contextMenuStrip_OriginalSide.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem1,
+            this.openFromBufferToolStripMenuItem,
             this.toolStripMenuItem2,
             this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(150, 76);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 120);
             // 
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(146, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(184, 6);
             // 
             // clearSelectionToolStripMenuItem1
             // 
             this.clearSelectionToolStripMenuItem1.Name = "clearSelectionToolStripMenuItem1";
-            this.clearSelectionToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
+            this.clearSelectionToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.clearSelectionToolStripMenuItem1.Text = "ClearSelection";
             this.clearSelectionToolStripMenuItem1.Click += new System.EventHandler(this.clearSelectionToolStripMenuItem_Click);
             // 
@@ -155,7 +158,7 @@ namespace myPhotoEditor.Main
             this.boxAndDiagonalsToolStripMenuItem,
             this.boxAndMiddleOrthoAxisToolStripMenuItem});
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(187, 22);
             this.toolStripMenuItem4.Text = "Selection style";
             // 
             // boxAndDiagonalsToolStripMenuItem
@@ -271,6 +274,7 @@ namespace myPhotoEditor.Main
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.openFromClipboardToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -279,14 +283,14 @@ namespace myPhotoEditor.Main
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.saveAsToolStripMenuItem.Text = "SaveAs";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -507,6 +511,20 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
+            // openFromBufferToolStripMenuItem
+            // 
+            this.openFromBufferToolStripMenuItem.Name = "openFromBufferToolStripMenuItem";
+            this.openFromBufferToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openFromBufferToolStripMenuItem.Text = "Open from Clipboard";
+            this.openFromBufferToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
+            // 
+            // openFromClipboardToolStripMenuItem
+            // 
+            this.openFromClipboardToolStripMenuItem.Name = "openFromClipboardToolStripMenuItem";
+            this.openFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openFromClipboardToolStripMenuItem.Text = "Open from Clipboard";
+            this.openFromClipboardToolStripMenuItem.Click += new System.EventHandler(this.openFromClipboardToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -585,6 +603,8 @@ namespace myPhotoEditor.Main
         private System.Windows.Forms.ToolStripMenuItem clearSelectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearSelectionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem openFromBufferToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFromClipboardToolStripMenuItem;
     }
 }
 

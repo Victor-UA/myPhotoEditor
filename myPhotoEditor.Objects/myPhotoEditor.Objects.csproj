@@ -48,6 +48,7 @@
     <Compile Include="ItemsList.cs" />
     <Compile Include="ItemStates.cs" />
     <Compile Include="MouseButtonStates.cs" />
+    <Compile Include="OriginalImageSourceTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="SelectionStyles.cs" />
