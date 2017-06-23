@@ -81,6 +81,8 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAllToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -131,10 +133,11 @@ namespace myPhotoEditor.Main
             this.openToolStripMenuItem1,
             this.openFromBufferToolStripMenuItem,
             this.toolStripMenuItem2,
+            this.selectAllToolStripMenuItem1,
             this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 98);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 142);
             // 
             // openToolStripMenuItem1
             // 
@@ -339,6 +342,7 @@ namespace myPhotoEditor.Main
             this.grayscaleToolStripMenuItem,
             this.middleCrosslinesToolStripMenuItem,
             this.toolStripMenuItem3,
+            this.selectAllToolStripMenuItem,
             this.clearSelectionToolStripMenuItem,
             this.selectionStyleToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -550,6 +554,20 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
             // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // selectAllToolStripMenuItem1
+            // 
+            this.selectAllToolStripMenuItem1.Name = "selectAllToolStripMenuItem1";
+            this.selectAllToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
+            this.selectAllToolStripMenuItem1.Text = "Select All";
+            this.selectAllToolStripMenuItem1.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -633,6 +651,8 @@ namespace myPhotoEditor.Main
         private System.Windows.Forms.ToolStripMenuItem sendToClipboardToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem sendToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
     }
 }
 

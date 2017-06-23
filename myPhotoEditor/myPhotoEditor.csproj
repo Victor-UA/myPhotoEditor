@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\uapefs002\VOL1\APP4\APP4.3\Tokman\myPhotoEditor\</PublishUrl>
+    <PublishUrl>\\uapefs002\VOL1\LK\Tokman\myPhotoEditor\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>

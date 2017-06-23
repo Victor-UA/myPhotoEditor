@@ -281,8 +281,7 @@ namespace myPhotoEditor.Objects
 
 
         public void MouseDown(object sender, MouseEventArgs e)
-        {
-            Debug.WriteLine("MouseDown");
+        {            
             if (MouseButtonsState[MouseButtons.Left].State)
             {
                 OldPosition = MiddlePointPosition;
@@ -290,7 +289,6 @@ namespace myPhotoEditor.Objects
                 MouseDownInside = getRegion().Contains(MouseButtonsState[MouseButtons.Left].Location);
                 MouseDownInsideBorder = Border.Contains(MouseButtonsState[MouseButtons.Left].Location);
                 ResizingSide = Border.ActiveSide;
-                Debug.WriteLine(MouseDownInside);
             }
         }
         public void MouseUp(object sender, MouseEventArgs e)

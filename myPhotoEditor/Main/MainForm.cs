@@ -27,7 +27,7 @@ namespace myPhotoEditor.Main
             {
                 _ImageScale = value;
                 pb_OriginalSensor.ImageScale = value;
-                tSSL_ImageScale.Text = Math.Round(value, 2).ToString();                
+                tSSL_ImageScale.Text = Math.Round(value, 2).ToString();
             }
         }
         private bool _Grayscale;
@@ -40,7 +40,7 @@ namespace myPhotoEditor.Main
             set
             {
                 _Grayscale = value;
-                grayscaleToolStripMenuItem1.Checked = 
+                grayscaleToolStripMenuItem1.Checked =
                     grayscaleToolStripMenuItem.Checked = value;
                 GrayscaleSwitched();
             }
@@ -55,13 +55,13 @@ namespace myPhotoEditor.Main
             set
             {
                 _MiddleCrossLines = value;
-                middleCrosslinesToolStripMenuItem.Checked = 
+                middleCrosslinesToolStripMenuItem.Checked =
                     middleCrosslinesToolStripMenuItem1.Checked = value;
                 MiddleCrossLinesSwitched();
             }
         }
 
-        private Dictionary<MouseButtons, MouseButtonStates> myMouseButtons { get; set; }        
+        private Dictionary<MouseButtons, MouseButtonStates> myMouseButtons { get; set; }
 
         private bool tSSL_SelectionWidth_MouseEntered;
         private bool tSSL_SelectionHeight_MouseEntered;
@@ -73,9 +73,9 @@ namespace myPhotoEditor.Main
         //-------Constructor-------
         public MainForm(string[] args)
         {
-            InitializeComponent();            
+            InitializeComponent();
 
-            pb_Original.Controls.Add(pb_OriginalSensor);            
+            pb_Original.Controls.Add(pb_OriginalSensor);
             pb_OriginalSensor.Size = splitContainer1.Panel1.ClientSize;
             pb_OriginalSensor.Location = new Point(0, 0);
             pb_OriginalSensor.BackColor = Color.Transparent;
@@ -97,16 +97,16 @@ namespace myPhotoEditor.Main
             tSSL_SelectionWidth_MouseEntered = false;
 
             OriginalImageFile = "";
-            ImageLoaded = false;            
+            ImageLoaded = false;
 
             Selection = null;
 
             ImageScale = 1;
             MiddleCrossLines = true;
-            
+
 
             if (args.Length > 0)
-            {                
+            {
                 string fileName = args[0];
                 if (File.Exists(fileName))
                 {
@@ -117,7 +117,7 @@ namespace myPhotoEditor.Main
             {
                 LoadOriginalImage(OriginalImageSourceTypes.Clipboard);
             }
-        }        
+        }
 
 
 
@@ -156,12 +156,22 @@ namespace myPhotoEditor.Main
             Selection.SelectionStyle = SelectionStyles.BoxMiddleOrthoAxis;
             SensorReDraw();
         }
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pb_OriginalSensor.Items.Remove(Selection);
+            CreateSelection(new Point(0, 0));
+            Selection.MiddlePointRealPosition = new Point(pb_Original.Image.Width / 2, pb_Original.Image.Height / 2);
+            Selection.RealWidth = pb_Original.Image.Width;
+            Selection.RealHeight = pb_Original.Image.Height;
+            Selection.State = ItemStates.Normal;
+            SensorReDraw();
+        }
         private void clearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pb_OriginalSensor.Items.Remove(Selection);
             Selection = null;
             SensorReDraw();
-        }        
+        }
 
 
         //-------Methods-------
@@ -213,7 +223,7 @@ namespace myPhotoEditor.Main
                         break;
                     case OriginalImageSourceTypes.Clipboard:
                         pb_Original.Image = Clipboard.GetImage();
-                        break;                    
+                        break;
                 }
                 pb_Original.Size = pb_Original.Image.Size;
                 pb_Original.Location = new Point(0, 0);
@@ -265,7 +275,7 @@ namespace myPhotoEditor.Main
         }
 
         private void GrayscaleSwitched()
-        {            
+        {
             CropImage();
         }
         private void MiddleCrossLinesSwitched()
@@ -342,10 +352,10 @@ namespace myPhotoEditor.Main
                     ImageScale = scale;
                     pb_Original.Size = size;
                     pb_Original.Location = TopLeft;
-                    
-                    ChangeSensorLocation();                    
+
+                    ChangeSensorLocation();
                 }
-            }            
+            }
             GC.Collect();
         }
         private void ImageMove(Point offset)
@@ -360,7 +370,7 @@ namespace myPhotoEditor.Main
             Point TopLeft = new Point(newX, newY);
             if (Check_pb_Original_Visibility(new Rectangle(TopLeft, pb_Original.Size)))
             {
-                pb_Original.Location = TopLeft;                
+                pb_Original.Location = TopLeft;
             }
         }
         private void ImageMoveToCenter(Point focusReal)
@@ -390,7 +400,7 @@ namespace myPhotoEditor.Main
 
         private void Selection_SizeChanged(object sender, EventArgs e)
         {
-            Size size = ((Selection)sender).Size;            
+            Size size = ((Selection)sender).Size;
             tSSL_SelectionWidth.Text = Math.Round((size.Width) / ImageScale).ToString();
             tSSL_SelectionHeight.Text = Math.Round((size.Height) / ImageScale).ToString();
             SensorReDraw();
@@ -405,7 +415,7 @@ namespace myPhotoEditor.Main
             CropImage();
         }
         private void Selection_MouseEnterBorder(object sender, EventArgs e)
-        {            
+        {
             SensorReDraw();
         }
         private void Selection_MouseLeaveBorder(object sender, EventArgs e)
@@ -425,14 +435,14 @@ namespace myPhotoEditor.Main
         {
             try
             {
-                pb_OriginalSensor.Draw();                
+                pb_OriginalSensor.Draw();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message + "\r" + ex.StackTrace);
             }
         }
-        
+
         private void ChangeSensorLocation()
         {
             int newX = pb_Original.Location.X;
@@ -441,7 +451,7 @@ namespace myPhotoEditor.Main
             pb_OriginalSensor.Hide();
 
             pb_OriginalSensor.Location = new Point(
-                newX < 0 ? -newX : 0, 
+                newX < 0 ? -newX : 0,
                 newY < 0 ? -newY : 0
             );
 
@@ -503,7 +513,7 @@ namespace myPhotoEditor.Main
                 e.Delta
             );
         }
-                
+
         private Point ExpandMousePosition(MouseEventArgs e)
         {
             return new Point(e.X < -2048 ? 65536 - e.X : e.X, e.Y < -2048 ? 65536 - e.Y : e.Y);
@@ -522,7 +532,7 @@ namespace myPhotoEditor.Main
 
         //-------EventHadlers-------
         private void pb_OriginalSensor_MouseMove(object sender, MouseEventArgs e)
-        {            
+        {
             tSSL_X.Text = Math.Round((e.X + pb_OriginalSensor.Location.X) / ImageScale).ToString();
             tSSL_Y.Text = Math.Round((e.Y + pb_OriginalSensor.Location.Y) / ImageScale).ToString();
 
@@ -530,14 +540,14 @@ namespace myPhotoEditor.Main
             {
                 ImageMove(e.X - myMouseButtons[MouseButtons.Middle].Location.X, e.Y - myMouseButtons[MouseButtons.Middle].Location.Y);
             }
-        }        
+        }
         private void pb_OriginalSensor_MouseUp(object sender, MouseEventArgs e)
-        {            
+        {
             if (e.Button == MouseButtons.Middle)
-            {                
+            {
                 ChangeSensorLocation();
-            }            
-        }        
+            }
+        }
         private void pb_OriginalSensor_MouseClick(object sender, MouseEventArgs e)
         {
             if (ImageLoaded)
@@ -550,7 +560,7 @@ namespace myPhotoEditor.Main
                     }
                 }
             }
-        }        
+        }
         private void pb_OriginalSensor_DoubleClick(object sender, EventArgs e)
         {
             if (ImageLoaded)
@@ -573,7 +583,7 @@ namespace myPhotoEditor.Main
         }
         private void splitContainer1_Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            pb_OriginalSensor_DoubleClick(sender, Panel1_2_pb_OriginalSensor(e)); 
+            pb_OriginalSensor_DoubleClick(sender, Panel1_2_pb_OriginalSensor(e));
         }
         private void pb_OriginalSensor_LocationChanged(object sender, EventArgs e)
         {
@@ -633,14 +643,14 @@ namespace myPhotoEditor.Main
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X + ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1),
                         Selection.MiddlePointRealPosition.Y
-                    );                    
+                    );
                 }
                 else
                 {
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X - ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1),
                         Selection.MiddlePointRealPosition.Y
-                    );                    
+                    );
                 }
                 CropImage();
                 return;
@@ -659,7 +669,7 @@ namespace myPhotoEditor.Main
                     Selection.MiddlePointRealPosition = new Point(
                         Selection.MiddlePointRealPosition.X,
                         Selection.MiddlePointRealPosition.Y - ((int)(1 / ImageScale) > 0 ? (int)(1 / ImageScale) : 1)
-                    );                    
+                    );
                 }
                 CropImage();
                 return;
@@ -677,7 +687,7 @@ namespace myPhotoEditor.Main
             if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
                 ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
                 e.Effect = DragDropEffects.Move;
-        }        
+        }
         private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
         {
             Debug.WriteLine("DragDrop");
@@ -689,7 +699,7 @@ namespace myPhotoEditor.Main
                     OpenFile(objects[0]);
                 }
             }
-        }        
+        }
 
         private void pb_CropSensor_Resize(object sender, EventArgs e)
         {
@@ -721,7 +731,7 @@ namespace myPhotoEditor.Main
 
         private void statusStrip1_MouseEnter(object sender, EventArgs e)
         {
-            statusStrip1.Focus();            
+            statusStrip1.Focus();
         }
 
         private void tSSL_SelectionMidPosX_MouseEnter(object sender, EventArgs e)
@@ -740,6 +750,6 @@ namespace myPhotoEditor.Main
         private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosY_MouseEntered = false;
-        }
+        }        
     }
 }
