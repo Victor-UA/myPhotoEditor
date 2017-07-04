@@ -690,7 +690,6 @@ namespace myPhotoEditor.Main
         }
         private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
         {
-            Debug.WriteLine("DragDrop");
             if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Effect == DragDropEffects.Move)
             {
                 string[] objects = (string[])e.Data.GetData(DataFormats.FileDrop);
