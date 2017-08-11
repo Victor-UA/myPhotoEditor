@@ -37,6 +37,7 @@ namespace myPhotoEditor.Main
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openFromBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.selectAllToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSelectionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndDiagonalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +63,7 @@ namespace myPhotoEditor.Main
             this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.middleCrosslinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectionStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxAndDiagonlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,8 +83,6 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionWidth = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSSL_SelectionHeight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectAllToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -137,7 +137,7 @@ namespace myPhotoEditor.Main
             this.clearSelectionToolStripMenuItem1,
             this.toolStripMenuItem4});
             this.contextMenuStrip_OriginalSide.Name = "contextMenuStrip_OriginalSide";
-            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 142);
+            this.contextMenuStrip_OriginalSide.Size = new System.Drawing.Size(188, 120);
             // 
             // openToolStripMenuItem1
             // 
@@ -157,6 +157,13 @@ namespace myPhotoEditor.Main
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(184, 6);
+            // 
+            // selectAllToolStripMenuItem1
+            // 
+            this.selectAllToolStripMenuItem1.Name = "selectAllToolStripMenuItem1";
+            this.selectAllToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
+            this.selectAllToolStripMenuItem1.Text = "Select All";
+            this.selectAllToolStripMenuItem1.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // clearSelectionToolStripMenuItem1
             // 
@@ -183,6 +190,8 @@ namespace myPhotoEditor.Main
             // 
             // boxAndMiddleOrthoAxisToolStripMenuItem
             // 
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.Checked = true;
+            this.boxAndMiddleOrthoAxisToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.boxAndMiddleOrthoAxisToolStripMenuItem.Name = "boxAndMiddleOrthoAxisToolStripMenuItem";
             this.boxAndMiddleOrthoAxisToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.boxAndMiddleOrthoAxisToolStripMenuItem.Text = "Box and middle ortho axis";
@@ -368,6 +377,13 @@ namespace myPhotoEditor.Main
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(164, 6);
             // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
             // clearSelectionToolStripMenuItem
             // 
             this.clearSelectionToolStripMenuItem.Name = "clearSelectionToolStripMenuItem";
@@ -393,6 +409,8 @@ namespace myPhotoEditor.Main
             // 
             // boxAndOrthoToolStripMenuItem
             // 
+            this.boxAndOrthoToolStripMenuItem.Checked = true;
+            this.boxAndOrthoToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.boxAndOrthoToolStripMenuItem.Name = "boxAndOrthoToolStripMenuItem";
             this.boxAndOrthoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.boxAndOrthoToolStripMenuItem.Text = "Box and middle ortho axis";
@@ -553,20 +571,6 @@ namespace myPhotoEditor.Main
             this.tSSL_SelectionHeight.ToolTipText = "Selection height";
             this.tSSL_SelectionHeight.MouseEnter += new System.EventHandler(this.tSSL_SelectionHeight_MouseEnter);
             this.tSSL_SelectionHeight.MouseLeave += new System.EventHandler(this.tSSL_SelectionHeight_MouseLeave);
-            // 
-            // selectAllToolStripMenuItem
-            // 
-            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.selectAllToolStripMenuItem.Text = "Select All";
-            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
-            // 
-            // selectAllToolStripMenuItem1
-            // 
-            this.selectAllToolStripMenuItem1.Name = "selectAllToolStripMenuItem1";
-            this.selectAllToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
-            this.selectAllToolStripMenuItem1.Text = "Select All";
-            this.selectAllToolStripMenuItem1.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // MainForm
             // 
