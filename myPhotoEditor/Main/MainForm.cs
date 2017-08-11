@@ -211,6 +211,11 @@ namespace myPhotoEditor.Main
             Selection = null;
             SensorReDraw();
         }
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.ShowDialog();
+        }
 
 
         //-------Methods-------
@@ -774,12 +779,6 @@ namespace myPhotoEditor.Main
         private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosY_MouseEntered = false;
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AboutBox aboutBox = new AboutBox();
-            aboutBox.ShowDialog();
-        }
+        }        
     }
 }
