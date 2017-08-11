@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using myPhotoEditor.About;
 using myPhotoEditor.Objects;
 using myPhotoEditor.Tools;
 
@@ -773,6 +774,12 @@ namespace myPhotoEditor.Main
         private void tSSL_SelectionMidPosY_MouseLeave(object sender, EventArgs e)
         {
             tSSL_SelectionMidPosY_MouseEntered = false;
-        }        
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.ShowDialog();
+        }
     }
 }
