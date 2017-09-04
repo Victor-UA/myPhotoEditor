@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using myPhotoEditor.About;
 using myPhotoEditor.Objects;
+using myPhotoEditor.Properties;
 using myPhotoEditor.Tools;
 
 namespace myPhotoEditor.Main
@@ -141,8 +142,6 @@ namespace myPhotoEditor.Main
             Selection = null;
 
             ImageScale = 1;
-            MiddleCrossLines = true;
-
 
             if (args.Length > 0)
             {
@@ -158,6 +157,40 @@ namespace myPhotoEditor.Main
             }
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (Settings.Default.MainWindowLocation != null)
+            {
+                Location = Settings.Default.MainWindowLocation;
+            }
+            if (Settings.Default.MainWindowSize != null)
+            {
+                Size = Settings.Default.MainWindowSize;
+            }
+            if (Settings.Default.MainWindowState != FormWindowState.Minimized)
+            {
+                WindowState = Settings.Default.MainWindowState;
+            }            
+            MiddleCrossLines = Settings.Default.MiddleCrossLines;
+            SelectionStyle = Settings.Default.SelectionStyle;
+        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Settings.Default.MainWindowLocation = Location;
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                Settings.Default.MainWindowSize = Size;
+            }
+            else
+            {
+                Settings.Default.MainWindowSize = RestoreBounds.Size;
+            }
+            Settings.Default.MainWindowState = WindowState;
+            Settings.Default.MiddleCrossLines = MiddleCrossLines;
+            Settings.Default.SelectionStyle = SelectionStyle;
+
+            Settings.Default.Save();
+        }
 
 
         //---------Menu---------
@@ -407,7 +440,10 @@ namespace myPhotoEditor.Main
 
         private void CreateSelection(Point point)
         {
-            Selection = new Selection(point, pb_OriginalSensor);
+            Selection = new Selection(point, pb_OriginalSensor)
+            {
+                SelectionStyle = SelectionStyle
+            };
             Selection.SizeChanged += Selection_SizeChanged;
             Selection.LocationChanged += Selection_LocationChanged;            
             Selection.Border.MouseEnter += Selection_MouseEnterBorder;
@@ -418,14 +454,14 @@ namespace myPhotoEditor.Main
                 item.MouseLeave += Selection_MouseLeaveBorderSide;
             }
             Selection_LocationChanged(Selection, new EventArgs());
-            if (boxAndDiagonlsToolStripMenuItem.Checked)
-            {
-                SelectionStyle = SelectionStyles.BoxDiagonal;
-            }
-            else
-            {
-                SelectionStyle = SelectionStyles.BoxMiddleOrthoAxis;
-            }
+            //if (boxAndDiagonlsToolStripMenuItem.Checked)
+            //{
+            //    SelectionStyle = SelectionStyles.BoxDiagonal;
+            //}
+            //else
+            //{
+            //    SelectionStyle = SelectionStyles.BoxMiddleOrthoAxis;
+            //}
         }
 
         private void Selection_SizeChanged(object sender, EventArgs e)
