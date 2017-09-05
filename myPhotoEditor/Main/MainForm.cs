@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using myPhotoEditor.About;
 using myPhotoEditor.Objects;
@@ -98,7 +99,7 @@ namespace myPhotoEditor.Main
                     middleCrosslinesToolStripMenuItem1.Checked = value;
                 MiddleCrossLinesSwitched();
             }
-        }
+        }        
 
         private Dictionary<MouseButtons, MouseButtonStates> myMouseButtons { get; set; }
 
@@ -156,7 +157,6 @@ namespace myPhotoEditor.Main
                 LoadOriginalImage(OriginalImageSourceTypes.Clipboard);
             }
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (Settings.Default.MainWindowLocation != null)
@@ -172,7 +172,17 @@ namespace myPhotoEditor.Main
                 WindowState = Settings.Default.MainWindowState;
             }            
             MiddleCrossLines = Settings.Default.MiddleCrossLines;
-            SelectionStyle = Settings.Default.SelectionStyle;
+
+            if (Settings.Default.LastOpenedFiles != null)
+            {
+                foreach (string item in Settings.Default.LastOpenedFiles)
+                {
+                    AddLastOpenedFileToMenu(item);
+                }
+                tsmi_LastOpenFilesTopBoard.Visible = Settings.Default.LastOpenedFiles.Count > 0;
+            }
+
+            SelectionStyle = Settings.Default.SelectionStyle;            
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -189,8 +199,20 @@ namespace myPhotoEditor.Main
             Settings.Default.MiddleCrossLines = MiddleCrossLines;
             Settings.Default.SelectionStyle = SelectionStyle;
 
+            int TopBoardIndex = fileToolStripMenuItem.DropDownItems.IndexOf(tsmi_LastOpenFilesTopBoard);            
+            int BottomBoardIndex = fileToolStripMenuItem.DropDownItems.IndexOf(tsmi_LastOpenFilesBottomBoard);
+            if (BottomBoardIndex - TopBoardIndex > 1)
+            {
+                Settings.Default.LastOpenedFiles.Clear();
+                for (int index = BottomBoardIndex - 1; index > TopBoardIndex; index--)
+                {
+                    Settings.Default.LastOpenedFiles.Add(fileToolStripMenuItem.DropDownItems[index].Text);
+                }
+            }
+
             Settings.Default.Save();
         }
+
 
 
         //---------Menu---------
@@ -205,6 +227,33 @@ namespace myPhotoEditor.Main
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileAs();
+        }
+        private void LastOpenedFile_Click(object sender, EventArgs e)
+        {
+            OpenFile(((ToolStripMenuItem)sender).Text);
+        }
+        private void AddLastOpenedFileToMenu(string fileName)
+        {
+            if (!fileToolStripMenuItem.DropDownItems.ContainsKey(fileName))
+            {
+                Image image = null;
+                try
+                {
+                    image = Image.FromFile(fileName);
+                }
+                catch (Exception){ }
+                ToolStripMenuItem menuItem = new ToolStripMenuItem(fileName, image, LastOpenedFile_Click)
+                {
+                    Name = fileName
+                };
+                int TopBoardIndex = fileToolStripMenuItem.DropDownItems.IndexOf(tsmi_LastOpenFilesTopBoard);
+                fileToolStripMenuItem.DropDownItems.Insert(TopBoardIndex + 1, menuItem);
+                int BottomBoardIndex = fileToolStripMenuItem.DropDownItems.IndexOf(tsmi_LastOpenFilesBottomBoard);
+                for (int index = TopBoardIndex + 11; index < BottomBoardIndex; index++)
+                {
+                    fileToolStripMenuItem.DropDownItems.RemoveAt(index);
+                }
+            }
         }
         private void sendToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -310,6 +359,7 @@ namespace myPhotoEditor.Main
                 Text = "myPhotoEditor: " + OriginalImageFile;
                 ImageScaleToFit();
                 clearSelectionToolStripMenuItem_Click(this, new EventArgs());
+                AddLastOpenedFileToMenu(OriginalImageFile);
             }
             catch (Exception)
             {

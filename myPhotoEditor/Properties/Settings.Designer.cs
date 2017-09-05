@@ -85,10 +85,9 @@ namespace myPhotoEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastOpenedFiles {
+        public global::System.Collections.Specialized.StringCollection LastOpenedFiles {
             get {
-                return ((string)(this["LastOpenedFiles"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["LastOpenedFiles"]));
             }
             set {
                 this["LastOpenedFiles"] = value;

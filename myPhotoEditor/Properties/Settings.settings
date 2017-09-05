@@ -17,7 +17,7 @@
     <Setting Name="SelectionStyle" Type="myPhotoEditor.Objects.SelectionStyles" Scope="User">
       <Value Profile="(Default)">BoxMiddleOrthoAxis</Value>
     </Setting>
-    <Setting Name="LastOpenedFiles" Type="System.String" Scope="User">
+    <Setting Name="LastOpenedFiles" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
