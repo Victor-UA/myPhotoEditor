@@ -178,8 +178,7 @@ namespace myPhotoEditor.Main
                 foreach (string item in Settings.Default.LastOpenedFiles)
                 {
                     AddLastOpenedFileToMenu(item);
-                }
-                tsmi_LastOpenFilesTopBoard.Visible = Settings.Default.LastOpenedFiles.Count > 0;
+                }                
             }
 
             SelectionStyle = Settings.Default.SelectionStyle;            
@@ -203,7 +202,7 @@ namespace myPhotoEditor.Main
             int BottomBoardIndex = fileToolStripMenuItem.DropDownItems.IndexOf(tsmi_LastOpenFilesBottomBoard);
             if (BottomBoardIndex - TopBoardIndex > 1)
             {
-                Settings.Default.LastOpenedFiles.Clear();
+                Settings.Default.LastOpenedFiles = new System.Collections.Specialized.StringCollection();
                 for (int index = BottomBoardIndex - 1; index > TopBoardIndex; index--)
                 {
                     Settings.Default.LastOpenedFiles.Add(fileToolStripMenuItem.DropDownItems[index].Text);
@@ -253,6 +252,7 @@ namespace myPhotoEditor.Main
                 {
                     fileToolStripMenuItem.DropDownItems.RemoveAt(index);
                 }
+                tsmi_LastOpenFilesTopBoard.Visible = BottomBoardIndex - TopBoardIndex > 1;
             }
         }
         private void sendToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
